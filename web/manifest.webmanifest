@@ -1,0 +1,20 @@
+{
+  "name": "Preuet · La cistella més barata",
+  "short_name": "Preuet",
+  "description": "Compara la cistella sencera entre els supermercats de l'àrea de Barcelona: preus reals, qualitat-preu, nutrició, estoc col·laboratiu i receptes.",
+  "lang": "ca",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6F4F7",
+  "theme_color": "#47235C",
+  "categories": ["shopping", "food", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
