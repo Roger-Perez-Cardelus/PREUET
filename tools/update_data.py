@@ -6,6 +6,8 @@
 
     python3 tools/update_data.py apply-prices CAPTURES.json [--date YYYY-MM-DD] [--accept-big] [--dry-run]
         CAPTURES.json = {"<page url>": [{"name": "...", "price": 1.23, "promo": "..."}, ...], ...}
+        A page that is not in the source list (found again through a web search) is accepted when its site
+        identifies the chain, or written as {"<page url>": {"chain": "<chain id>", "items": [...]}}.
         Matches each captured product to a tracked one of the same chain by name, then updates its price,
         unit price, promotion and date. Products not seen keep their old price and date (the app marks
         prices older than 30 days). A unit-price change above 50 % is held back unless --accept-big.
@@ -74,13 +76,34 @@ def days(a, b):
 
 
 def chain_of_url(d, url):
+    """Chain of a page: exact match in the source list, else by site (a page found again through a web search)."""
     for s in d["sources"]:
         if s["url"] == url:
             return s["c"]
     for o in d["offerings"]:
         if o.get("src") == url:
             return o["c"]
-    return None
+    m = re.match(r"^https://([^/]+)(/[^?#]*)?", url or "")
+    if not m:
+        return None
+    host, path = m.group(1).lower(), (m.group(2) or "").lower()
+    if host.endswith("radarsuper.com") or host.endswith("leaflets.schwarz"):
+        for c in ("lidl", "aldi"):
+            if ("/" + c in path) or (host.endswith("leaflets.schwarz") and c == "lidl"):
+                return c
+        return None
+    hosts = collections.defaultdict(set)
+    for s in d["sources"]:
+        hm = re.match(r"^https://([^/]+)", s["url"])
+        if hm:
+            hosts[hm.group(1).lower()].add(s["c"])
+    for c in d["chains"]:
+        for key in ("site", "shop"):
+            hm = re.match(r"^https://([^/]+)", c.get(key) or "")
+            if hm:
+                hosts[hm.group(1).lower()].add(c["id"])
+    found = hosts.get(host, set())
+    return next(iter(found)) if len(found) == 1 else None
 
 
 # ---------------------------------------------------------------- worklist
@@ -127,10 +150,14 @@ def cmd_apply_prices(args):
     caps = json.loads(pathlib.Path(args.captures).read_text(encoding="utf-8"))
     rep = collections.defaultdict(collections.Counter)
     held, unmatched, seen = [], [], set()
-    for url, items in caps.items():
-        chain = chain_of_url(d, url)
-        if not chain:
-            unmatched.append((url, "page not in the source list"))
+    for url, entry in caps.items():
+        items = entry.get("items", []) if isinstance(entry, dict) else entry
+        chain = entry.get("chain") if isinstance(entry, dict) and entry.get("chain") else chain_of_url(d, url)
+        if chain not in {c["id"] for c in d["chains"]}:
+            unmatched.append((url, "unknown chain: give it as {\"chain\": \"<id>\", \"items\": [...]}"))
+            continue
+        if not str(url).startswith("https://"):
+            unmatched.append((url, "not an https page"))
             continue
         same_page = [o for o in d["offerings"] if o["c"] == chain and o["src"] == url]
         same_chain = [o for o in d["offerings"] if o["c"] == chain]
@@ -164,12 +191,15 @@ def cmd_apply_prices(args):
                     rep[chain]["price changed"] += 1
                 else:
                     rep[chain]["same price"] += 1
-                o["price"], o["up"], o["promo"], o["date"] = price, new_up, promo, day
+                if o["src"] != url:
+                    rep[chain]["read on a new page"] += 1
+                o["price"], o["up"], o["promo"], o["date"], o["src"] = price, new_up, promo, day, url
     stale = collections.Counter(o["c"] for o in d["offerings"] if days(o["date"], day) > FRESH_DAYS)
     print(f"prices for {day}")
     for c in sorted(set(rep) | set(stale)):
         r = rep.get(c, {})
-        print(f"  {c:10s} changed {r.get('price changed', 0):3d} · same {r.get('same price', 0):3d} · bad {r.get('bad price', 0)} · older than {FRESH_DAYS} days {stale.get(c, 0)}")
+        moved = f" · from a new page {r.get('read on a new page')}" if r.get("read on a new page") else ""
+        print(f"  {c:10s} changed {r.get('price changed', 0):3d} · same {r.get('same price', 0):3d} · bad {r.get('bad price', 0)} · older than {FRESH_DAYS} days {stale.get(c, 0)}{moved}")
     if held:
         print(f"held back ({len(held)} unit-price changes over {int(BIG_CHANGE * 100)} %; re-check the page, then rerun with --accept-big):")
         for h in held[:40]:

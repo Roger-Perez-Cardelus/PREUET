@@ -9,13 +9,13 @@ Procediment que segueix la tasca programada cada dilluns, i que també pot fer q
 | Peça | On |
 |---|---|
 | App publicada (artifact de Claude) | https://claude.ai/artifact/4fU8NevMmyCkJDCLxAryWZ |
-| Codi i dades | El repositori de GitHub, si existeix (vegeu README). Si no, els mateixos fitxers publicats dins l'artifact (`src/…`, `tools/…`, `data/…`, `web/…`, `supabase/…`, `README.md`). |
+| Codi i dades | El repositori de GitHub, si existeix (vegeu README). Si no, l'artifact mateix: el projecte hi és sencer a `source/…` i les dades a `data/preuet-data.json`. |
 | Dades | `data/preuet-data.json` |
 | Eines | `tools/update_data.py` (aplica i valida) i `tools/build.py` (construeix l'app) |
 
 ## 1. Preparar
 
-1. Obtén el projecte: clona el repositori o, si no n'hi ha, baixa de l'artifact tots els fitxers que llista `Artifact list scope=files` (amb `Artifact read` i `paths`) i reconstrueix l'arbre de carpetes.
+1. Obtén el projecte: clona el repositori o, si no n'hi ha, llegeix l'artifact (`Artifact read` de l'URL), llista'n els fitxers (`Artifact list`, `scope: files`) i baixa'ls tots amb `Artifact read` i `paths`. Munta una carpeta amb `source/X` → `X` i `data/preuet-data.json` → `data/preuet-data.json`.
 2. Comprova que les dades són bones abans de tocar res: `python3 tools/update_data.py check` (ha d'acabar sense problemes).
 3. Genera la llista de feina: `python3 tools/update_data.py worklist --out worklist.json`. Per a cada cadena hi ha les pàgines a llegir i, per a cada pàgina, els noms exactes dels productes que Preuet hi segueix (`track`).
 
@@ -37,7 +37,7 @@ Desa el resultat a `captures.json`, una entrada per pàgina, amb l'URL exacte de
 ```
 
 - El preu és el del **paquet**, no el preu per kg o per litre. L'eina recalcula el preu unitari.
-- Si una pàgina falla (bloqueig, error, pàgina buida), deixa-la fora i anota-ho per a l'informe.
+- Si una pàgina falla (bloqueig, error, pàgina buida), busca la mateixa categoria amb WebSearch i llegeix la pàgina del resultat. Posa-la a `captures.json` amb la seva URL nova; si el web no identifica la cadena (per exemple, un comparador), escriu l'entrada com `{"chain": "mercadona", "items": [...]}`. Si tampoc no es pot, deixa-la fora i anota-ho per a l'informe.
 - No cal que el nom sigui idèntic: l'eina accepta majúscules, accents i espais diferents, però exigeix que les xifres del nom (mides de paquet) coincideixin.
 
 Notes per cadena:
@@ -100,7 +100,7 @@ python3 tools/build.py                        # dist/artifact i dist/web
 
 ## 5. Publicar
 
-1. **Artifact**: llegeix-lo primer (`Artifact read` de l'URL) i publica `dist/artifact/index.html` al mateix `url`, amb `files` = `{"data/preuet-data.json": "dist/artifact/data/preuet-data.json"}`. No passis `capabilities` (es conserven).
+1. **Artifact**: llegeix-lo primer (`Artifact read` de l'URL) i publica `dist/artifact/index.html` al mateix `url`, amb `files` = `{"data/preuet-data.json": "dist/artifact/data/preuet-data.json"}`. No passis `capabilities` (es conserven) ni toquis els fitxers de `source/` (es conserven sols).
 2. **GitHub** (si hi ha repositori): commit de `data/preuet-data.json` amb el missatge `Preus i ofertes del AAAA-MM-DD` i push a `main`. GitHub Pages es torna a publicar sol.
 
 ## 6. Informe

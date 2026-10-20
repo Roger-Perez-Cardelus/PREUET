@@ -22,7 +22,7 @@ Bilingüe (català i castellà), tema clar i fosc, pensada per al mòbil.
 
 | | Artifact de Claude | Web a GitHub Pages |
 |---|---|---|
-| Enllaç | https://claude.ai/artifact/4fU8NevMmyCkJDCLxAryWZ | `https://<usuari>.github.io/<repositori>/` |
+| Enllaç | https://claude.ai/artifact/4fU8NevMmyCkJDCLxAryWZ | https://roger-perez-cardelus.github.io/PREUET/ |
 | Aportacions compartides (estoc, preus, comentaris, fitxes S01–S10) | Base de dades de l'artifact | Supabase (o només al navegador si no es configura) |
 | Qui hi entra | Les persones amb qui la comparteixis | Qualsevol persona amb l'enllaç |
 | S'instal·la al mòbil i obre sense connexió | No | Sí («Afegeix a la pantalla d'inici») |
@@ -55,7 +55,7 @@ Obre http://localhost:8000. Sense Supabase, l'app funciona en mode local: tot es
 
 ## Publicar-la a GitHub Pages
 
-1. Crea un repositori a GitHub (públic, perquè Pages és gratuït en repositoris públics) i puja-hi tot aquest projecte.
+1. El repositori és https://github.com/Roger-Perez-Cardelus/PREUET (públic: Pages és gratuït en repositoris públics).
 2. Al repositori: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 3. Cada push a `main` executa l'acció «Publica Preuet a GitHub Pages», que valida les dades, construeix la web i la publica. L'adreça surt a l'acció i a Settings → Pages.
 
