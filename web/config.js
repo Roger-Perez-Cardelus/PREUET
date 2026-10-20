@@ -9,7 +9,7 @@
  *   - supabaseAnonKey: Project Settings → API Keys → anon public    (clau pública; les dades les protegeix RLS)
  */
 window.PREUET_CONFIG = {
-  supabaseUrl: "",
+  supabaseUrl: "https://vxsorejvvfgpmfzsihjy.supabase.co",
   supabaseAnonKey: "",
   supabaseJs: "vendor/supabase-js-2.117.1.umd.js",
 };
