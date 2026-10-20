@@ -75,7 +75,7 @@ const Store = {
     return true;
   },
   async initSupabase(cfg) {
-    if (!cfg || !cfg.supabaseUrl || !window.supabase) return false;
+    if (!cfg || !cfg.supabaseUrl || !cfg.supabaseAnonKey || !window.supabase) return false;
     const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true } });
     let { data } = await sb.auth.getSession();
     let session = data && data.session;

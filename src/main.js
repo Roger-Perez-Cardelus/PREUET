@@ -74,7 +74,7 @@ async function boot() {
   fetchNewerData();
   const cfg = window.PREUET_CONFIG || null;
   let ok = false;
-  if (cfg && cfg.supabaseUrl) {
+  if (cfg && cfg.supabaseUrl && cfg.supabaseAnonKey) {
     try {
       if (!window.supabase && cfg.supabaseJs) await loadScript(cfg.supabaseJs);
       ok = await Store.initSupabase(cfg);
