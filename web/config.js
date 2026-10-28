@@ -10,6 +10,6 @@
  */
 window.PREUET_CONFIG = {
   supabaseUrl: "https://vxsorejvvfgpmfzsihjy.supabase.co",
-  supabaseAnonKey: "",
+  supabaseAnonKey: "sb_publishable_RaVIkwJJQDoF3Jy_U3W7cg_5LNIQnag",
   supabaseJs: "vendor/supabase-js-2.117.1.umd.js",
 };
