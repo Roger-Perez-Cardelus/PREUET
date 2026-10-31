@@ -35,15 +35,45 @@ UA = "Preuet/1.0 (EETAC-UPC student project; https://github.com/Roger-Perez-Card
 FIELDS = "code,product_name,product_name_es,product_name_ca,generic_name,brands,quantity,image_front_url,countries_tags"
 LOOSE = re.compile(r"granel|\bpieza\b|\b1 u\.?$|\bunitat\b|\bunidad\b", re.I)
 
-# Own brands (and their sub-brands) as they appear in shelf names, mapped to how Open Food Facts usually spells the brand.
+# Brands as they appear in shelf names (own brands and their sub-brands, then national brands), mapped to one spelling.
 OWN = {
-    "hacendado": "hacendado", "deliplus": "deliplus", "bosque verde": "bosque verde", "carrefour": "carrefour", "dia": "dia",
-    "la almazara del olivar": "dia", "nuestra alacena": "dia", "seleccion de dia": "dia", "bonpreu": "bonpreu", "bonnatur": "bonpreu",
-    "ametller origen": "ametller origen", "essencials": "ametller origen", "consum": "consum", "bonarea": "bonarea",
-    "milbona": "milbona", "chef select": "chef select", "la collita": "bonpreu",
+    "hacendado": "hacendado", "deliplus": "deliplus", "bosque verde": "bosque verde", "carrefour": "carrefour",
+    "la almazara del olivar": "dia", "nuestra alacena": "dia", "seleccion de dia": "dia", "dia lactea": "dia", "el molino de dia": "dia",
+    "vegecampo": "dia", "dia": "dia", "bonpreu": "bonpreu", "bonnatur": "bonpreu", "la collita": "bonpreu", "ametller origen": "ametller origen",
+    "essencials": "ametller origen", "consum": "consum", "bonarea": "bonarea", "milbona": "milbona", "chef select": "chef select",
+    "campo largo": "campo largo", "combino": "combino", "crownfield": "crownfield", "olisone": "olisone", "cien": "cien",
 }
+NATIONAL = ["llet nostra", "central lechera asturiana", "asturiana", "pascual", "puleva", "president", "danone", "activia", "la fageda",
+            "ato", "el castillo", "bimbo", "calvo", "gallo", "de cecco", "garofalo", "luengo", "marcilla", "nocilla", "fairy", "coca cola",
+            "font vella", "bezoya", "solan de cabras", "font natura", "fuente primavera", "font agudes", "veri", "font d or", "incarlopsa",
+            "entrepinares", "argal", "el pozo", "heinz", "prima", "cadi", "marbu", "reina apicola", "sal costa", "terra i tast", "sucrebo",
+            "aromas del sur", "entremont", "zespri", "happy bio", "aragonesa", "kaiku", "alpro", "oatly", "flora", "tulipan"]
+for _b in NATIONAL:
+    OWN.setdefault(_b, _b)
 STOP = set("de del la el les els los las en amb con sin sense i y a al per para x u ud uds unidades unitats pack paquete paquet brick briks "
-           "bandeja safata bossa bolsa malla tarro pot lata latas llaunes tarrinas tarrines rodajas lonchas talls botella ampolla garrafa caixa caja aprox approx gr g kg ml l cl litre litro".split())
+           "brik bric brics bandeja safata bossa bolsa malla tarro pot lata latas llaunes tarrinas tarrines rodajas botella ampolla garrafa "
+           "caixa caja aprox approx gr g kg ml l cl litre litro litros paq grans grande mini familiar original classic extra n nº".split())
+# shelf names mix Catalan and Spanish (and Open Food Facts mixes more): compare in one vocabulary
+SYN = {"llet": "leche", "sencera": "entera", "ratllat": "rallado", "rayado": "rallado", "iogurt": "yogur", "yogurt": "yogur", "formatge": "queso",
+       "formatges": "quesos", "pa": "pan", "motlle": "molde", "crosta": "corteza", "escorca": "corteza", "pernil": "jamon", "cuit": "cocido",
+       "cuits": "cocido", "cocidos": "cocido", "cocida": "cocido", "pollastre": "pollo", "pit": "pechuga", "filet": "filete", "filetes": "filete",
+       "oli": "aceite", "arros": "arroz", "llarg": "largo", "rodo": "redondo", "cigrons": "garbanzo", "cigro": "garbanzo", "garbanzos": "garbanzo",
+       "llenties": "lentejas", "mongetes": "alubia", "alubias": "alubia", "tonyina": "atun", "aigua": "agua", "suc": "zumo", "taronja": "naranja",
+       "galetes": "galletas", "galleta": "galletas", "mel": "miel", "maduixa": "fresa", "melmelada": "mermelada", "mantega": "mantequilla",
+       "ous": "huevos", "sucre": "azucar", "quetxup": "ketchup", "maionesa": "mayonesa", "macarrons": "macarrones", "macarron": "macarrones",
+       "spaghetti": "espaguetis", "civada": "avena", "flocs": "copos", "cacau": "cacao", "xampu": "champu", "lleixiu": "lejia",
+       "rentaplats": "lavavajillas", "bolquers": "panales", "blanc": "blanco", "blanca": "blanco", "rustic": "rustico", "grec": "griego",
+       "xocolata": "chocolate", "llimona": "limon", "llescat": "lonchas", "llesques": "lonchas", "talls": "lonchas", "higienic": "higienico",
+       "cuina": "cocina", "girasol": "girasol", "gira": "girasol", "verge": "virgen", "suau": "suave", "molt": "molido", "kefir": "kefir",
+       "quefir": "kefir", "nata": "nata", "cuinar": "cocinar", "vedella": "vacuno", "porc": "cerdo", "llom": "lomo", "gall": "pavo", "dindi": "pavo",
+       "indiot": "pavo", "salmo": "salmon", "lluc": "merluza", "patata": "patatas", "pastanaga": "zanahoria", "pastanagues": "zanahoria"}
+JOIN = [("sin ", "sin"), ("sense ", "sin"), ("0 ", "sin"), ("4 quesos", "cuatroquesos"), ("4 formatges", "cuatroquesos"), ("con sal", "consal"),
+        ("amb sal", "consal")]
+# words that make a different product: both names must agree on them
+VARIANT = {"entera", "semidesnatada", "desnatada", "sinlactosa", "integral", "light", "sinsal", "consal", "singluten", "sincorteza",
+           "sinazucar", "sinazucares", "zero", "rallado", "lonchas", "emmental", "mozzarella", "gouda", "cheddar", "cuatroquesos", "griego",
+           "fresa", "chocolate", "vainilla", "limon", "stracciatella", "rustico", "virgen", "suave", "refinado", "girasol", "canola",
+           "vaporizado", "redondo", "largo", "higienico", "cocina", "hummus", "fundido", "ketchup", "mayonesa", "barritas"}
 
 
 def norm(s):
@@ -52,26 +82,44 @@ def norm(s):
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", s)).strip()
 
 
-def words(s):
-    return {w for w in norm(s).split() if w not in STOP and not re.match(r"^\d", w) and len(w) > 1}
+def tokens(s, drop=()):
+    n = " " + norm(s) + " "
+    for k, v in JOIN:
+        n = re.sub(r"\b" + k + r"(\w)", v + r"\1", n) if k.endswith(" ") else n.replace(" " + k + " ", " " + v + " ")
+    out = set()
+    for w in n.split():
+        w = SYN.get(w, w)
+        if w in STOP or re.match(r"^\d", w) or len(w) < 2:
+            continue
+        out.add(w)
+    return out - set(drop)
 
 
 def brand_of(name):
     n = " " + norm(name) + " "
-    for k, v in OWN.items():
+    for k in sorted(OWN, key=len, reverse=True):
         if " " + k + " " in n:
-            return v
+            return OWN[k]
     first = str(name).split(" ")[0]
     if len(first) > 2 and first.isupper():  # Bonpreu writes the brand first, in capitals: "HEINZ Quètxup"
         return norm(first)
     return None
 
 
+def brand_words(*names):
+    out = set()
+    for b in names:
+        out |= set(norm(b).split())
+    return out
+
+
 def grams(q):
     """Size in g or ml from Open Food Facts' quantity, like '1 l', '500 g', '6 x 1 L', '3 x 56 g', '1,5 L'."""
     s = str(q or "").lower().replace(",", ".")
+    s = re.sub(r"\b(litros|litro|litres|litre)\b", "l", s)
+    s = re.sub(r"\b(gramos|grams|grs)\b", "g", s)
     unit = r"(kg|g|gr|l|ml|cl)\b"
-    m = re.search(r"(\d+)\s*[x×]\s*(\d+(?:\.\d+)?)\s*" + unit, s)
+    m = re.search(r"(\d+)\s*(?:[x×]|latas de|botes de|unidades de|uds? de|u de|tarrinas de)\s*(\d+(?:\.\d+)?)\s*" + unit, s)
     k = 1.0
     if m:
         k, val, u = float(m.group(1)), float(m.group(2)), m.group(3)
@@ -129,21 +177,26 @@ def name_of(h):
 
 
 def score(o, h, want_brand, unit):
-    hb = norm(" ".join(h.get("brands") if isinstance(h.get("brands"), list) else [h.get("brands") or ""]))
-    if want_brand and want_brand not in hb and want_brand not in norm(name_of(h)):
+    hb = " ".join(h.get("brands") if isinstance(h.get("brands"), list) else [h.get("brands") or ""])
+    if want_brand and want_brand not in " " + norm(hb) + " " and " " + want_brand + " " not in " " + norm(name_of(h)) + " ":
         return 0, "brand"
-    mine = words(o["name"]) - set(want_brand.split() if want_brand else [])
-    theirs = words(name_of(h)) | words(hb)
-    if not mine:
+    drop = brand_words(want_brand or "", hb)
+    mine, theirs = tokens(o["name"], drop), tokens(name_of(h), drop)
+    if not mine or not theirs:
         return 0, "no words"
-    s = len(mine & theirs) / len(mine)
+    if (mine & VARIANT) != (theirs & VARIANT):
+        return 0, "variant %s / %s" % (sorted(mine & VARIANT), sorted(theirs & VARIANT))
+    common = mine & theirs
+    base = len(common) / len(mine)
+    if base < 0.6 or len(common) < (1 if want_brand else 2):
+        return 0, "words"
+    s = base
     a, b = size_of(o, unit), grams(h.get("quantity") or name_of(h))
     if a and b:
         if abs(a - b) > 0.15 * max(a, b):
             return 0, "size %s vs %s" % (a, b)
         s += 0.2
-    tags = h.get("countries_tags") or []
-    if "en:spain" in tags:
+    if "en:spain" in (h.get("countries_tags") or []):
         s += 0.1
     return s, ""
 
@@ -181,10 +234,12 @@ def main():
         tried += 1
         want = brand_of(o["name"])
         q = " ".join(w for w in norm(o["name"]).split() if not re.match(r"^\d", w) and w not in STOP)
+        o.pop("img", None)
+        o.pop("ean", None)
         best, why = None, "no hits"
         for h in search(q):
             s, reason = score(o, h, want, P[o["p"]]["unit"])
-            if s >= 0.6 and h.get("code") and (not best or s > best[0]):
+            if s > 0 and h.get("code") and (not best or s > best[0]):
                 best = (s, h)
             elif reason:
                 why = reason
@@ -210,9 +265,19 @@ def main():
     # product photo: a real pack when there is one (the cheapest pack with a photo), otherwise keep what it had
     for p in d["products"]:
         packs = sorted((o for o in d["offerings"] if o["p"] == p["id"] and o.get("img")), key=lambda o: (o["rank"], o["up"]))
+        if p.get("img") and not p["img"].get("n"):
+            p["img0"] = p["img"]  # keep the generic photo for when no pack matches any more
         if packs:
             o = packs[0]
             p["img"] = dict(o["img"], a="Open Food Facts", l="CC BY-SA 3.0", n=o["name"], c=o["c"])
+        elif (p.get("img") or {}).get("n"):
+            p["img"] = p.get("img0")
+            if not p["img"]:
+                p.pop("img")
+    used = {pathlib.Path(o["img"]["f"]).stem for o in d["offerings"] if o.get("img")}
+    for f in OUT.glob("*.jpg"):
+        if f.stem.replace("-s", "") not in used:
+            f.unlink()  # photos of packs that no longer match
     MATCHES.write_text(json.dumps(log, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
     txt = json.dumps(d, ensure_ascii=False, separators=(",", ":"))
     if "</" in txt:
