@@ -1,26 +1,20 @@
 {
  "aldi | Aceite de oliva suave Aldi 1 L": {
-  "code": "7506495006983",
-  "match": "aceite de oliva",
-  "why": "no front photo"
+  "match": null,
+  "why": "variant ['suave'] / []"
  },
  "ametller | Aigua Font d'Or 1.5l": {
-  "brands": [
-   "Bonpreu"
-  ],
-  "code": "8422410539079",
-  "match": "Aigua",
-  "quantity": "1.5 l",
-  "score": 0.63
+  "match": null,
+  "why": "brand"
  },
  "ametller | Aigua Veri 1,5L": {
   "brands": [
-   "Bonpreu"
+   "Veri"
   ],
-  "code": "8422410539079",
-  "match": "Aigua",
-  "quantity": "1.5 l",
-  "score": 0.8
+  "code": "8413384222005",
+  "match": "Agua",
+  "quantity": null,
+  "score": 1.1
  },
  "ametller | Aigua mineral Solan de cabras 1.5l": {
   "brands": [
@@ -29,7 +23,7 @@
   "code": "3458547001030",
   "match": "Agua mineral natural",
   "quantity": null,
-  "score": 0.85
+  "score": 1.1
  },
  "ametller | Arròs extra Essencials 1kg": {
   "match": null,
@@ -52,13 +46,8 @@
   "why": "brand"
  },
  "ametller | Cigró cuit Essencials 570g": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8436551860978",
-  "match": "Cigro castella",
-  "quantity": "570 g",
-  "score": 0.63
+  "match": null,
+  "why": "brand"
  },
  "ametller | Cornflakes Essencials 375g": {
   "match": null,
@@ -74,20 +63,15 @@
  },
  "ametller | Estrelles sense gluten Granoro 400g": {
   "match": null,
-  "why": "size 400.0 vs 500.0"
+  "why": "variant ['singluten'] / []"
  },
  "ametller | Filet de salmó Ametller Origen": {
   "match": null,
-  "why": "size 270.0 vs 1000.0"
+  "why": "words"
  },
  "ametller | Filet pollastre Ametller Origen - 6u.": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8436607856702",
-  "match": "Pollastre",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "words"
  },
  "ametller | Flocs blat de moro sense sucres Ametller Origen 400g": {
   "brands": [
@@ -103,26 +87,16 @@
   "why": "brand"
  },
  "ametller | Formatge Emmental francès ratllat Ametller Origen 200g": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8436583954676",
-  "match": "Emmental ratllat",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "variant ['emmental', 'rallado'] / []"
  },
  "ametller | Formatge Emmental francès ratllat Entremont 160g": {
-  "brands": [
-   "Entremont"
-  ],
-  "code": "2412817019805",
-  "match": "Queso Emmental, Francés",
-  "quantity": null,
-  "score": 0.7
+  "match": null,
+  "why": "brand"
  },
  "ametller | Formatge Gouda llescat Ametller Origen 150g": {
   "match": null,
-  "why": "size 150.0 vs 1000.0"
+  "why": "variant ['gouda', 'lonchas'] / []"
  },
  "ametller | Formatge mescla semi llescat Essencials 150g": {
   "match": null,
@@ -134,7 +108,7 @@
  },
  "ametller | Gel de bany relaxant OMA GERTRUDE 500 ml": {
   "match": null,
-  "why": "size 500.0 vs 1000.0"
+  "why": "words"
  },
  "ametller | Iogurt grec natural Ametller Origen 125g - 4u.": {
   "match": null,
@@ -149,13 +123,12 @@
   "why": "brand"
  },
  "ametller | Iogurt natural La Fageda 125g - 4u": {
-  "brands": [
-   "La Fageda"
-  ],
-  "code": "8424395141704",
-  "match": "Iogurt La fageda",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "brand"
+ },
+ "ametller | Kiwi verd Zespri": {
+  "match": null,
+  "why": "words"
  },
  "ametller | Llet semidesnatada A2 Llet Llet Ametller Origen 1l": {
   "brands": [
@@ -168,21 +141,21 @@
  },
  "ametller | Llet semidesnatada ATO 1l - caixa 6u.": {
   "brands": [
-   "Ametller Origen"
+   "ato"
   ],
-  "code": "8436607853725",
-  "match": "Llet Fresca Semidesnatada",
+  "code": "8410135901417",
+  "match": "leche semidesnatada",
   "quantity": null,
-  "score": 0.77
+  "score": 1.1
  },
  "ametller | Llet semidesnatada Ato 1l": {
   "brands": [
-   "Llet Nostra"
+   "ato"
   ],
-  "code": "8437004314031",
-  "match": "Llet Semidesnatada",
-  "quantity": "1 l",
-  "score": 0.97
+  "code": "8410135901417",
+  "match": "leche semidesnatada",
+  "quantity": null,
+  "score": 1.1
  },
  "ametller | Llet sencera A2 Llet LLet Ametller Origen 1l": {
   "brands": [
@@ -194,20 +167,12 @@
   "score": 0.77
  },
  "ametller | Llet sencera ATO 1l - caixa 6u.": {
-  "brands": null,
-  "code": "8410285127552",
-  "match": "Llet sencera",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "variant ['entera'] / []"
  },
  "ametller | Llet sencera Ato 1l": {
-  "brands": [
-   "Terra i Tast"
-  ],
-  "code": "8422410782598",
-  "match": "Llet sencera",
-  "quantity": "1 l",
-  "score": 0.97
+  "match": null,
+  "why": "variant ['entera'] / []"
  },
  "ametller | Llet sencera Llet nostra 1l": {
   "brands": [
@@ -220,7 +185,7 @@
  },
  "ametller | Macarrons Ametller Origen 500 g": {
   "match": null,
-  "why": "size 500.0 vs 200.0"
+  "why": "words"
  },
  "ametller | Macarrons Essencials 500g": {
   "match": null,
@@ -236,7 +201,7 @@
  },
  "ametller | Melmelada extra de maduixa Ametller Origen 260g": {
   "match": null,
-  "why": "size 260.0 vs 200.0"
+  "why": "variant ['fresa'] / []"
  },
  "ametller | Melmelada extra de maduixa Essencials 340g": {
   "match": null,
@@ -263,13 +228,8 @@
   "why": "brand"
  },
  "ametller | Pa de motlle blanc Essencials 460g": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8436583958605",
-  "match": "Pa de motlle rústic",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "brand"
  },
  "ametller | Pa de motlle blanc sense crosta Essencials 460g": {
   "brands": [
@@ -281,35 +241,20 @@
   "score": 0.7
  },
  "ametller | Pa de motlle integral Essencials 460g": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8436583958605",
-  "match": "Pa de motlle rústic",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "variant ['integral'] / ['rustico']"
  },
  "ametller | Pasta de dents Happy Bio 75ml": {
-  "brands": [
-   "Happy Pasta"
-  ],
-  "code": "8016419002353",
-  "match": "Winter pasta",
-  "quantity": null,
-  "score": 0.6
- },
- "ametller | Pebrot Vermell Essencials - malla 1,2kg aprox.": {
   "match": null,
   "why": "brand"
  },
+ "ametller | Pebrot Vermell Essencials - malla 1,2kg aprox.": {
+  "match": null,
+  "why": "words"
+ },
  "ametller | Pernil cuit Duroc llescat Ametller Origen 100g": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8435039087159",
-  "match": "Pernil cuit duroc",
-  "quantity": null,
-  "score": 0.85
+  "match": null,
+  "why": "brand"
  },
  "ametller | Pernil serrano reserva Ametller Origen 120 g": {
   "code": "8436607852070",
@@ -317,22 +262,12 @@
   "why": "no front photo"
  },
  "ametller | Pernilets de pollastre Ametller Origen - 4u.": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8436607856702",
-  "match": "Pollastre",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "words"
  },
  "ametller | Pit de pollastre Ametller Origen - 2u.": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8436607856702",
-  "match": "Pollastre",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "brand"
  },
  "ametller | Pit de pollastre filetejat Ametller Origen": {
   "code": "2149494004724",
@@ -345,7 +280,7 @@
  },
  "ametller | Rentavaixelles romaní Frosch 750ml": {
   "match": null,
-  "why": "size 750.0 vs 300.0"
+  "why": "no words"
  },
  "ametller | Suc taronja 100% espremut Ametller Origen 1L": {
   "brands": [
@@ -358,12 +293,12 @@
  },
  "ametller | Sucre blanc SUCREBÓ 1kg": {
   "brands": [
-   "css"
+   "Sucrebo"
   ],
-  "code": "3700557100365",
-  "match": "sucre blanc souki",
-  "quantity": "1 kg",
-  "score": 0.87
+  "code": "8437014885019",
+  "match": "Azucar blanco",
+  "quantity": null,
+  "score": 1.1
  },
  "ametller | Suprema de salmó Ametller Origen": {
   "code": "2155888008582",
@@ -372,7 +307,7 @@
  },
  "ametller | Xampú cura diaria OMA GERTRUDE 500ml": {
   "match": null,
-  "why": "size 500.0 vs 1000.0"
+  "why": "words"
  },
  "bonarea | Arròs extra bonÀrea 1 kg": {
   "match": null,
@@ -384,7 +319,7 @@
  },
  "bonarea | Contracuixes de pollastre blanc bonÀrea": {
   "match": null,
-  "why": "size 692.0 vs 24.0"
+  "why": "no words"
  },
  "bonarea | Cuixes de pollastre blanc bonÀrea": {
   "code": "00655621200620003378",
@@ -392,9 +327,13 @@
   "why": "no front photo"
  },
  "bonarea | Iogurt grec natural paq. 4 u.": {
-  "code": "8437012324169",
-  "match": "Iogurt grec",
-  "why": "no front photo"
+  "brands": [
+   "Bonpreu"
+  ],
+  "code": "8422410861583",
+  "match": "Iogurt grec natural",
+  "quantity": null,
+  "score": 1.1
  },
  "bonarea | Llet desnatada paq. de 6 brics": {
   "brands": [
@@ -403,39 +342,39 @@
   "code": "2000001811795",
   "match": "Llet desnatada",
   "quantity": "6 x 1l",
-  "score": 0.8
+  "score": 1.3
  },
  "bonarea | Llet semidesnatada paq. de 6 brics": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8436607853725",
-  "match": "Llet Fresca Semidesnatada",
+  "brands": null,
+  "code": "8422410782642",
+  "match": "Llet semidesnatada",
   "quantity": null,
-  "score": 0.6
+  "score": 1.1
  },
  "bonarea | Llet sencera paq. de 6 brics": {
   "brands": null,
   "code": "8410285127552",
   "match": "Llet sencera",
   "quantity": null,
-  "score": 0.6
+  "score": 1.1
  },
  "bonarea | Llet sense lactosa semidesnatada paq. de 6 brics": {
-  "brands": null,
-  "code": "8436037001048",
-  "match": "Llet Semidesnatada Sense Lactosa",
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000107206",
+  "match": "Leche semidesnatada sin lactosa",
   "quantity": null,
-  "score": 0.7
+  "score": 1.1
  },
  "bonarea | Nata líquida uht 18% per cuinar, 200 ml": {
   "brands": [
-   "Bonpreu"
+   "Pascual"
   ],
-  "code": "8422410126750",
-  "match": "Nata líquida per cuinar",
-  "quantity": "200 ml",
-  "score": 1.05
+  "code": "8410128050047",
+  "match": "Nata líquida para montar y cocinar uht m.g.",
+  "quantity": null,
+  "score": 1.1
  },
  "bonarea | Oli d'oliva verge extra bonÀrea 3 l": {
   "match": null,
@@ -443,7 +382,7 @@
  },
  "bonarea | Pernilets de pollastre blanc bonÀrea": {
   "match": null,
-  "why": "size 1056.0 vs 24.0"
+  "why": "no words"
  },
  "bonarea | Pit de pollastre blanc filetejat bonÀrea": {
   "match": null,
@@ -467,13 +406,8 @@
   "why": "brand"
  },
  "bonpreu | ACTIVIA Quefir natural": {
-  "brands": [
-   "Danone"
-  ],
-  "code": "8410500021474",
-  "match": "Activia natural",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "no words"
  },
  "bonpreu | ALBO Tonyina clara en oli d'oliva": {
   "match": null,
@@ -485,24 +419,19 @@
  },
  "bonpreu | ANETO Brou de pollastre 2 x 1L": {
   "match": null,
-  "why": "brand"
+  "why": "no words"
  },
  "bonpreu | ARGAL Pernil cuit extra tall fi Bonnatur 130g": {
   "match": null,
   "why": "brand"
  },
  "bonpreu | ARGAL Pernil cuit rostit Bonnatur": {
-  "brands": [
-   "Bonpreu"
-  ],
-  "code": "8422410129553",
-  "match": "Pernil cuit",
-  "quantity": "125 g",
-  "score": 0.7
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | ARIEL Detergent líquid de 80 dosis": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "bonpreu | ASTURIANA Llet semidesnatada en cartró": {
   "match": null,
@@ -514,7 +443,7 @@
  },
  "bonpreu | AZUCARERA Sucre fi 1 kg": {
   "match": null,
-  "why": "brand"
+  "why": "no words"
  },
  "bonpreu | BERRUTO Espaguetis 0,5 kg": {
   "match": null,
@@ -536,7 +465,7 @@
   "code": "8412600029879",
   "match": "Pa De Motlle Amb Escorça Blanca De Bimbo",
   "quantity": null,
-  "score": 0.77
+  "score": 1.1
  },
  "bonpreu | BIMBO Pa de motlle natural 100%": {
   "brands": [
@@ -548,13 +477,8 @@
   "score": 0.77
  },
  "bonpreu | BIMBO Pa de motlle sense gluten": {
-  "brands": [
-   "Bimbo"
-  ],
-  "code": "8412600029879",
-  "match": "Pa De Motlle Amb Escorça Blanca De Bimbo",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | BONKA Cafè molt natural 250 g": {
   "code": "7613036081474",
@@ -605,19 +529,14 @@
   "brands": [
    "Bonpreu"
   ],
-  "code": "8422410073818",
-  "match": "Flocs de civada",
-  "quantity": "500 g",
-  "score": 0.7
+  "code": "8422410619818",
+  "match": "Flocs de civada integral",
+  "quantity": null,
+  "score": 0.85
  },
  "bonpreu | BONPREU Formatge ratllat emmental": {
-  "brands": [
-   "Bonpreu"
-  ],
-  "code": "8422410573660",
-  "match": "Formatge ratllat 4 formatges",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "variant ['emmental', 'rallado'] / []"
  },
  "bonpreu | BONPREU Formatge ratllat mozzarella": {
   "brands": [
@@ -647,13 +566,8 @@
   "score": 0.97
  },
  "bonpreu | BONPREU Llet sencera 6x1,5L en ampolla": {
-  "brands": [
-   "Bonpreu"
-  ],
-  "code": "8422410341344",
-  "match": "Llet semidesnatada bonpreu",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | BONPREU Llet sencera 6x1L en cartró": {
   "match": null,
@@ -689,10 +603,10 @@
   "brands": [
    "Bonpreu"
   ],
-  "code": "8422410599097",
-  "match": "Pa motlle integral - Bonpreu - Bonpreu",
-  "quantity": null,
-  "score": 0.85
+  "code": "8422410598656",
+  "match": "Pan de molde 100% integral",
+  "quantity": "460 g",
+  "score": 1.05
  },
  "bonpreu | BONPREU Pa de motlle sense crosta (0.45kg)": {
   "brands": [
@@ -701,7 +615,7 @@
   "code": "8422410301164",
   "match": "Pa de motlle sense crosta",
   "quantity": null,
-  "score": 1.1
+  "score": 0.85
  },
  "bonpreu | BONPREU Pa de motlle sense crosta 450 g": {
   "brands": [
@@ -730,7 +644,7 @@
  },
  "bonpreu | BONPREU Pernil serrano reserva 50% duroc Bonpreu en talls de 150 g": {
   "match": null,
-  "why": "brand"
+  "why": "variant ['lonchas'] / []"
  },
  "bonpreu | BONPREU Pit de pollastre": {
   "match": null,
@@ -787,10 +701,10 @@
  },
  "bonpreu | Barra de pa d'espiga": {
   "brands": null,
-  "code": "00116169",
-  "match": "Barra de espiga",
+  "code": "2604099000682",
+  "match": "Barra de pan espiga",
   "quantity": null,
-  "score": 0.77
+  "score": 1.1
  },
  "bonpreu | CADÍ Formatge ratllat semigras": {
   "brands": [
@@ -799,25 +713,25 @@
   "code": "8410672000772",
   "match": "Formatge Ratllat Cadi 100 GRS C / 12",
   "quantity": null,
-  "score": 0.67
+  "score": 0.87
  },
  "bonpreu | CALVO Tonyina clara en oli de girasol": {
   "brands": [
-   "calvo"
+   "Calvo"
   ],
-  "code": "8410090052391",
-  "match": "Tonyina Cla Calvo Ol. girasol 5+1",
-  "quantity": "5+1",
-  "score": 0.6
+  "code": "8410090040213",
+  "match": "Atún claro en aceite de girasol Calvo",
+  "quantity": null,
+  "score": 0.85
  },
  "bonpreu | CALVO Tonyina clara en oli de girasol 6 x 0.065kg": {
   "brands": [
-   "calvo"
+   "Calvo"
   ],
-  "code": "8410090052391",
-  "match": "Tonyina Cla Calvo Ol. girasol 5+1",
-  "quantity": "5+1",
-  "score": 0.6
+  "code": "8410090040213",
+  "match": "Atún claro en aceite de girasol Calvo",
+  "quantity": null,
+  "score": 0.7
  },
  "bonpreu | CARBONELL Oli d'oliva verge extra 1 L": {
   "match": null,
@@ -833,44 +747,31 @@
  },
  "bonpreu | DANONE Iogurt grec natural": {
   "match": null,
-  "why": "brand"
+  "why": "variant ['griego'] / []"
  },
  "bonpreu | DE CECCO Macarrons Nº41 500 g": {
-  "brands": null,
-  "code": "4001056320506",
-  "match": "D Cecco",
-  "quantity": "500g",
-  "score": 0.7
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | DE CECCO Pasta espaguetis Nº11 500 g": {
-  "brands": [
-   "Spar"
-  ],
-  "code": "8480013091189",
-  "match": "Pasta Espaguetis",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | DIXAN Detergent líquid blau de 55 dosis": {
   "match": null,
   "why": "brand"
  },
  "bonpreu | EL CASTILLO Llet UHT semidesnatada en cartró": {
-  "brands": [
-   "Bonpreu"
-  ],
-  "code": "8422410811786",
-  "match": "Llet uht semidesnatada",
-  "quantity": "1 l",
-  "score": 0.9
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | EL POZO Pit d'indiot natural sense additius": {
   "match": null,
-  "why": "size 120.0 vs 1000.0"
+  "why": "brand"
  },
  "bonpreu | FAIRY Sabó de rentar plats Ultra Original": {
   "match": null,
-  "why": "size 820.0 vs 400.0"
+  "why": "brand"
  },
  "bonpreu | FONT VELLA Aigua mineral natural 6x1,5 L": {
   "brands": [
@@ -879,11 +780,11 @@
   "code": "8410055125016",
   "match": "Agua mineral natural",
   "quantity": null,
-  "score": 0.85
+  "score": 1.1
  },
  "bonpreu | GALLINA BLANCA Brou casolà de pollastre 1 L": {
   "match": null,
-  "why": "size 1000.0 vs 100.0"
+  "why": "words"
  },
  "bonpreu | GALLO Espaguetis sense gluten": {
   "brands": [
@@ -892,7 +793,7 @@
   "code": "8410069018540",
   "match": "Spaghetti sin gluten",
   "quantity": "450 g",
-  "score": 0.8
+  "score": 1.3
  },
  "bonpreu | GALLO Macarrons sense gluten": {
   "match": null,
@@ -900,24 +801,19 @@
  },
  "bonpreu | GALLO Pasta espaguetis XL 0,45 kg": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "bonpreu | GALLO Pasta macarrons bronze 0,45 kg": {
   "match": null,
   "why": "brand"
  },
  "bonpreu | GAROFALO Macarrons sense gluten": {
-  "brands": [
-   "Garofalo"
-  ],
-  "code": "07224",
-  "match": "Garofalo Gluten Free Pasta",
-  "quantity": "400g",
-  "score": 0.7
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | HEINZ Quètxup": {
   "match": null,
-  "why": "size 700.0 vs 250.0"
+  "why": "no words"
  },
  "bonpreu | HOJIBLANCA Oli d'oliva verge extra 1 L": {
   "match": null,
@@ -937,13 +833,8 @@
   "why": "brand"
  },
  "bonpreu | LA COLLITA Pastanagues en bossa de 500 g": {
-  "brands": [
-   "Bonpreu"
-  ],
-  "code": "8422410472116",
-  "match": "La collita",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "words"
  },
  "bonpreu | LA COLLITA Patata per bullir en bossa de 2 kg": {
   "match": null,
@@ -958,22 +849,12 @@
   "why": "brand"
  },
  "bonpreu | LA COLLITA Taronges malla de 2 kg": {
-  "brands": [
-   "Bonpreu"
-  ],
-  "code": "8422410472116",
-  "match": "La collita",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "words"
  },
  "bonpreu | LA FAGEDA Iogurt natural": {
-  "brands": [
-   "La Fageda"
-  ],
-  "code": "8424395141704",
-  "match": "Iogurt La fageda",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | LLET NOSTRA Llet sencera en cartró": {
   "brands": [
@@ -986,28 +867,23 @@
  },
  "bonpreu | LUENGO Cigrons cuits 400 g": {
   "match": null,
-  "why": "size 400.0 vs 1000.0"
+  "why": "words"
  },
  "bonpreu | LUENGO Llentia pardina 500 g": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "bonpreu | LUENGO Llenties cuites 400 g": {
   "match": null,
-  "why": "size 400.0 vs 570.0"
+  "why": "words"
  },
  "bonpreu | LUENGO Mongetes cuites 400 g": {
   "match": null,
-  "why": "size 400.0 vs 1000.0"
+  "why": "words"
  },
  "bonpreu | MARBÚ DORADA Galetes Maria 600 g": {
-  "brands": [
-   "Artiach"
-  ],
-  "code": "8436048963847",
-  "match": "Marbú dorada",
-  "quantity": "600 g",
-  "score": 0.63
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | MISTOL Sabó de rentar plats Ultra Plus": {
   "match": null,
@@ -1015,30 +891,27 @@
  },
  "bonpreu | MONTSIA Arròs rodó extra 1kg": {
   "match": null,
-  "why": "brand"
+  "why": "no words"
  },
  "bonpreu | NESTLE Quefir natural": {
   "match": null,
-  "why": "size 600.0 vs 1000.0"
+  "why": "no words"
  },
  "bonpreu | OATLY Beguda de civada Barista en cartró": {
   "match": null,
-  "why": "brand"
+  "why": "no words"
  },
  "bonpreu | ORLANDO Tomàquet fregit 3x350 g": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "bonpreu | ORLANDO Tomàquet triturat 400 g": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "bonpreu | PRIMA Maionesa Original 400 g": {
-  "brands": null,
-  "code": "8410118047842",
-  "match": "Ketchup Prima Original",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "variant ['mayonesa'] / []"
  },
  "bonpreu | REINA APICOLA Mel de mil flors 1 kg": {
   "brands": [
@@ -1047,7 +920,7 @@
   "code": "8437010244780",
   "match": "Miel mil flores con propóleo",
   "quantity": null,
-  "score": 0.6
+  "score": 0.77
  },
  "bonpreu | REINA APICOLA Mel de mil flors 500 g": {
   "brands": [
@@ -1056,16 +929,11 @@
   "code": "8437010244780",
   "match": "Miel mil flores con propóleo",
   "quantity": null,
-  "score": 0.6
+  "score": 0.77
  },
  "bonpreu | SAL COSTA Sal amb iode i fluor 1 kg": {
-  "brands": [
-   "sal costa"
-  ],
-  "code": "8410604000290",
-  "match": "Sal Marina con Yodo Flúor",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "brand"
  },
  "bonpreu | SCOTTEX Paper higiènic Original 12 un.": {
   "match": null,
@@ -1073,29 +941,24 @@
  },
  "bonpreu | SOLIS Tomàquet fregit 350 g": {
   "match": null,
-  "why": "size 350.0 vs 550.0"
+  "why": "words"
  },
  "bonpreu | SUCREBÓ Sucre blanc 1 kg": {
-  "match": null,
-  "why": "brand"
+  "brands": [
+   "Sucrebo"
+  ],
+  "code": "8437014885019",
+  "match": "Azucar blanco",
+  "quantity": null,
+  "score": 1.1
  },
  "bonpreu | TERRA I TAST Cigrons cuits 0.5kg": {
-  "brands": [
-   "Terra i Tast"
-  ],
-  "code": "8422410977642",
-  "match": "Hummus",
-  "quantity": "500 g",
-  "score": 0.63
+  "match": null,
+  "why": "words"
  },
  "bonpreu | TERRA I TAST Llenties cuites 0.5kg": {
-  "brands": [
-   "Terra i Tast"
-  ],
-  "code": "8422410977642",
-  "match": "Hummus",
-  "quantity": "500 g",
-  "score": 0.63
+  "match": null,
+  "why": "words"
  },
  "bonpreu | VERI Aigua mineral natural 6x1,5 L": {
   "match": null,
@@ -1110,51 +973,32 @@
   "why": "brand"
  },
  "bonpreu | ZESPRI Kiwi verd en safata de 500 g": {
-  "brands": null,
-  "code": "2303832003453",
-  "match": "Kiwi verde zespri",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "words"
  },
  "carrefour | Aceite de oliva original 0,4º Carbonell 1 l.": {
-  "code": "7506495006983",
-  "match": "aceite de oliva",
-  "why": "no front photo"
+  "match": null,
+  "why": "words"
  },
  "carrefour | Aceite de oliva suave 0,4º Carrefour Classic 1 l.": {
   "match": null,
   "why": "brand"
  },
  "carrefour | Aceite de oliva virgen extra Aromas del Sur 5 l.": {
-  "brands": [
-   "El Corte Inglés"
-  ],
-  "code": "8433329060141",
-  "match": "Aceite de oliva virgen extra",
-  "quantity": "1 litro",
-  "score": 0.77
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Aceite de oliva virgen extra Carrefour Extra 1 l.": {
-  "brands": [
-   "Carrefour"
-  ],
-  "code": "7798159713638",
-  "match": "aceite canola y oliva extra virgen carrefour",
-  "quantity": null,
-  "score": 1.0
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Aceite refinado de girasol Carrefour Classic 1 l.": {
   "match": null,
-  "why": "size 1000.0 vs 170.0"
+  "why": "variant ['girasol', 'refinado'] / []"
  },
  "carrefour | Agua mineral Bezoya 1,5 l.": {
-  "brands": [
-   "agua de chóvar"
-  ],
-  "code": "8414807510341",
-  "match": "Agua mineral natural",
-  "quantity": "1.5l",
-  "score": 0.97
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Agua mineral Font Natura 1,5 l.": {
   "brands": [
@@ -1176,7 +1020,7 @@
  },
  "carrefour | Alubias cocidas categoría extra Classic Carrefour 400 g.": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "carrefour | Arroz categoría primera Carrefour 1 kg.": {
   "brands": [
@@ -1188,8 +1032,13 @@
   "score": 1.3
  },
  "carrefour | Arroz largo categoria 1 Carrefour Classic 1 kg.": {
-  "match": null,
-  "why": "brand"
+  "brands": [
+   "Carrefour"
+  ],
+  "code": "8431876343557",
+  "match": "Arroz largo categoría 1",
+  "quantity": "1 kg",
+  "score": 1.3
  },
  "carrefour | Atún claro en aceite de girasol Carrefour pack de 6 latas de 52 g.": {
   "match": null,
@@ -1204,17 +1053,12 @@
   "why": "brand"
  },
  "carrefour | Barra de pan Carrefour 250 g": {
-  "brands": [
-   "Carrefour"
-  ],
-  "code": "2993402000755",
-  "match": "Barra Meiga Carrefour",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Barra de pan pistola Carrefour 3 ud": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "carrefour | Brócoli Carrefour 500 g": {
   "brands": [
@@ -1227,38 +1071,23 @@
  },
  "carrefour | Café molido natural Carrefour Classic 250 g.": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "carrefour | Caldo de pollo Classic Carrefour sin gluten brik 1 l.": {
-  "brands": [
-   "Carrefour"
-  ],
-  "code": "8431876248449",
-  "match": "Caldo de pollo bajo en sal",
-  "quantity": "1 L",
-  "score": 0.7
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Cereales de maíz sin azúcar añadido Corn Flakes Carrefour 500 g.": {
   "match": null,
   "why": "brand"
  },
  "carrefour | Coca Cola botella 1,25 l.": {
-  "brands": [
-   "Coca-Cola"
-  ],
-  "code": "5449000034298",
-  "match": "Pack Coca-Cola",
-  "quantity": "2 Litros",
-  "score": 1.1
+  "match": null,
+  "why": "no words"
  },
  "carrefour | Coca Cola pack 24 latas 33 cl.": {
-  "brands": [
-   "Coca-Cola"
-  ],
-  "code": "5449000034298",
-  "match": "Pack Coca-Cola",
-  "quantity": "2 Litros",
-  "score": 1.1
+  "match": null,
+  "why": "no words"
  },
  "carrefour | Copos de avena integral Original Carrefour 500 g.": {
   "match": null,
@@ -1266,7 +1095,7 @@
  },
  "carrefour | Detergente liquido ciclos cortos eficacia express Skip 37 lavados.": {
   "match": null,
-  "why": "no hits"
+  "why": "words"
  },
  "carrefour | Detergente líquido Marsella y flores de naranjo Essential Carrefour 80 lavados.": {
   "match": null,
@@ -1277,17 +1106,17 @@
   "why": "brand"
  },
  "carrefour | Garbanzo cocido categoría extra Luengo 400 g.": {
-  "brands": [
-   "tamarindo"
-  ],
-  "code": "8412258304311",
-  "match": "Garbanzo cocido categoría extra",
-  "quantity": null,
-  "score": 0.9
- },
- "carrefour | Garbanzos cocidos categoría extra Classic Carrefour 400 g.": {
   "match": null,
   "why": "brand"
+ },
+ "carrefour | Garbanzos cocidos categoría extra Classic Carrefour 400 g.": {
+  "brands": [
+   "Carrefour"
+  ],
+  "code": "8431876310658",
+  "match": "Garbanzos cocidos con espinacas",
+  "quantity": null,
+  "score": 0.77
  },
  "carrefour | Harina de trigo Classic Carrefour 1 kg.": {
   "match": null,
@@ -1323,17 +1152,24 @@
   "match": null,
   "why": "brand"
  },
+ "carrefour | Kiwi Zespri 1 kg aprox": {
+  "brands": null,
+  "code": "2959489002754",
+  "match": "Kiwi Zespri",
+  "quantity": null,
+  "score": 1.1
+ },
  "carrefour | Kéfir natural Carrefour Sensation 500 g.": {
   "match": null,
-  "why": "size 500.0 vs 2000.0"
+  "why": "words"
  },
  "carrefour | Kétchup Classic Carrefour envase 560 g.": {
   "match": null,
-  "why": "brand"
+  "why": "variant ['ketchup'] / []"
  },
  "carrefour | Lavavajillas a mano Power Clean Carrefour Expert 1 l.": {
   "match": null,
-  "why": "size 1000.0 vs 750.0"
+  "why": "words"
  },
  "carrefour | Lavavajillas a mano Ultra Original Fairy 654 ml.": {
   "brands": [
@@ -1342,7 +1178,7 @@
   "code": "4015400591337",
   "match": "Lavavajillas Ultra",
   "quantity": null,
-  "score": 0.7
+  "score": 0.77
  },
  "carrefour | Lavavajillas a mano ultra concentrado power clean Carrefour Expert 1,3 l.": {
   "match": null,
@@ -1354,12 +1190,12 @@
  },
  "carrefour | Leche entera Président brik 1 l.": {
   "brands": [
-   "Pascual"
+   "President"
   ],
-  "code": "8410128010096",
-  "match": "Leche entera",
-  "quantity": "1 l",
-  "score": 0.8
+  "code": "8411610001943",
+  "match": "Leche Entera President",
+  "quantity": null,
+  "score": 1.1
  },
  "carrefour | Leche entera brik 1 l. (Carrefour Classic)": {
   "match": null,
@@ -1367,20 +1203,16 @@
  },
  "carrefour | Leche semidesnatada Carrefour brik 1 l.": {
   "match": null,
-  "why": "size 1000.0 vs 200.0"
+  "why": "variant ['semidesnatada'] / []"
  },
  "carrefour | Leche semidesnatada Carrefour sin lactosa brik 1 l.": {
   "match": null,
   "why": "brand"
  },
  "carrefour | Leche semidesnatada Pascual brik 1 l.": {
-  "brands": [
-   "Puleva"
-  ],
-  "code": "8411700004250",
-  "match": "5053\nLECHE SEMIDESNATADA PULEVA BRIK 1L",
-  "quantity": "1 l",
-  "score": 1.05
+  "code": "0410218790875",
+  "match": "Leche semidesnatada",
+  "why": "no front photo"
  },
  "carrefour | Lenteja pardina categoría extra Classic Carrefour 1 kg.": {
   "match": null,
@@ -1396,7 +1228,7 @@
  },
  "carrefour | Mayonesa con aceite de girasol Carrefour tarro 450 ml.": {
   "match": null,
-  "why": "size 450.0 vs 280.0"
+  "why": "variant ['girasol', 'mayonesa'] / []"
  },
  "carrefour | Miel de flores Carrefour Classic 1 kg.": {
   "match": null,
@@ -1407,13 +1239,8 @@
   "why": "brand"
  },
  "carrefour | Pan de molde blanco con corteza Carrefour Classic sin azúcares añadidos 820 g.": {
-  "brands": [
-   "Carrefour"
-  ],
-  "code": "8431876281088",
-  "match": "Pan molde blanco con corteza",
-  "quantity": "820 g",
-  "score": 0.87
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Pan de molde integral sin corteza Carrefour 450 g.": {
   "match": null,
@@ -1425,20 +1252,15 @@
  },
  "carrefour | Papel de cocina compact Carrefour 3 rollos": {
   "match": null,
-  "why": "brand"
+  "why": "variant ['cocina'] / []"
  },
  "carrefour | Papel de cocina compact Carrefour 3 rollos.": {
   "match": null,
-  "why": "brand"
+  "why": "variant ['cocina'] / []"
  },
  "carrefour | Papel higiénico 2 capas Simpl Choice 12 rollos": {
-  "brands": [
-   "Auchan 3 capas"
-  ],
-  "code": "8433111000201",
-  "match": "Rollos de papel cocina",
-  "quantity": "6 rollos",
-  "score": 0.6
+  "match": null,
+  "why": "variant ['higienico'] / []"
  },
  "carrefour | Papel higiénico compact doble rollo Carrefour 12 rollos": {
   "match": null,
@@ -1454,16 +1276,11 @@
  },
  "carrefour | Pasta macarrones Carrefour Classic 1 kg.": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "carrefour | Pasta spaghetti nº3 Gallo 400 g.": {
-  "brands": [
-   "Iper"
-  ],
-  "code": "8029513119308",
-  "match": "Spaghetti Pasta di semola integrale di grano duro",
-  "quantity": null,
-  "score": 0.67
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Patata Lavada Carrefour 1 kg aprox": {
   "match": null,
@@ -1474,13 +1291,8 @@
   "why": "brand"
  },
  "carrefour | Patata lavada para todo uso Carrefour El Mercado 5 kg": {
-  "brands": [
-   "Carrefour"
-  ],
-  "code": "8431876145915",
-  "match": "Patata lavada",
-  "quantity": "5 kg",
-  "score": 0.7
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Pechuga de pollo certificado en filetes Carrefour 500 g aprox": {
   "match": null,
@@ -1506,13 +1318,8 @@
   "why": "brand"
  },
  "carrefour | Queso gouda tierno en lonchas Carrefour Classic 300 g.": {
-  "brands": [
-   "Carrefour"
-  ],
-  "code": "8431876239799",
-  "match": "Queso lonchas tierno light",
-  "quantity": "200",
-  "score": 0.6
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Queso mozzarella rallado Carrefour Classic 200 g.": {
   "match": null,
@@ -1532,7 +1339,7 @@
  },
  "carrefour | Tomate pera Carrefour 1 kg aprox": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "carrefour | Tomate rama Carrefour 1 kg aprox": {
   "match": null,
@@ -1544,16 +1351,11 @@
  },
  "carrefour | Traseros de Pollo Carrefour 1 kg aprox": {
   "match": null,
-  "why": "size 1000.0 vs 200.0"
+  "why": "words"
  },
  "carrefour | Yogur griego natural Carrefour Extra pack de 6 unidades de 125 g.": {
-  "brands": [
-   "Carrefour"
-  ],
-  "code": "8431876294316",
-  "match": "Yogur griego stracciatella",
-  "quantity": "8",
-  "score": 0.6
+  "match": null,
+  "why": "brand"
  },
  "carrefour | Yogur natural Carrefour pack de 8 unidades de 125 g.": {
   "match": null,
@@ -1561,24 +1363,24 @@
  },
  "carrefour | Yogur natural Danone pack de 8 unidades de 120 g.": {
   "brands": [
-   "La Ermita"
+   "Danone"
   ],
-  "code": "8436019988077",
-  "match": "Yogur natural",
-  "quantity": "1000g",
-  "score": 0.97
+  "code": "5060360505039",
+  "match": "Danone Natural yogurt",
+  "quantity": null,
+  "score": 1.0
  },
  "carrefour | Zanahoria Círculo de Calidad Carrefour 1 kg": {
   "match": null,
-  "why": "size 1000.0 vs 205.0"
+  "why": "words"
  },
  "carrefour | Zanahoria Círculo de Calidad Carrefour 500 g": {
   "match": null,
-  "why": "size 500.0 vs 205.0"
+  "why": "words"
  },
  "carrefour | Zanahoria ecológica Carrefour Bio 750 g": {
   "match": null,
-  "why": "size 750.0 vs 250.0"
+  "why": "words"
  },
  "consum | ASTURIANA Leche Semidesnatada Brik 1 L": {
   "brands": [
@@ -1587,7 +1389,7 @@
   "code": "8410297115394",
   "match": "Leche asturiana semidesnatada",
   "quantity": null,
-  "score": 0.77
+  "score": 1.1
  },
  "consum | CALVO Atún Claro Aceite Oliva Pack de 3 x 52 Gr": {
   "brands": [
@@ -1600,16 +1402,11 @@
  },
  "consum | COLA CAO Cacao Soluble Caja 2,2 Kg": {
   "match": null,
-  "why": "size 2200.0 vs 383.0"
+  "why": "words"
  },
  "consum | CONSUM Arroz Redondo Extra Origen España 1 Kg": {
-  "brands": [
-   "Consum"
-  ],
-  "code": "8414807542250",
-  "match": "Arroz de Valencia - Denominación de origen",
-  "quantity": "1 kg",
-  "score": 0.7
+  "match": null,
+  "why": "brand"
  },
  "consum | CONSUM Leche Entera Brik 1 L": {
   "match": null,
@@ -1630,7 +1427,7 @@
  },
  "consum | CONSUM Spaghetti Paquete 500 Gr": {
   "match": null,
-  "why": "size 500.0 vs 1000.0"
+  "why": "words"
  },
  "consum | DIXAN Detergente Líquido 55 Lv": {
   "match": null,
@@ -1655,13 +1452,8 @@
   "score": 0.97
  },
  "consum | NOCILLA Crema de Cacao Original 360 Gr": {
-  "brands": [
-   "Nocilla"
-  ],
-  "code": "8410014477743",
-  "match": "Original",
-  "quantity": "360 g",
-  "score": 0.63
+  "match": null,
+  "why": "brand"
  },
  "dia | Aceite de oliva suave Dia La Almazara del Olivar 1 L": {
   "match": null,
@@ -1727,27 +1519,23 @@
  },
  "dia | Espagueti Dia Al Diante 1 Kg": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "dia | Garbanzos cocidos Dia Vegecampo 400 g": {
   "match": null,
   "why": "brand"
  },
  "dia | Huevos grandes L Dia 18 unidades": {
-  "code": "7451080800012",
-  "match": "Huevos del dia",
-  "why": "no front photo"
+  "match": null,
+  "why": "brand"
  },
  "dia | Huevos grandes L de gallinas criadas en suelo Dia 12 unidades": {
   "match": null,
   "why": "brand"
  },
  "dia | Huevos medianos M Dia 24 unidades": {
-  "brands": null,
-  "code": "8437013138413",
-  "match": "12 Huevos medianos M",
-  "quantity": null,
-  "score": 1.1
+  "match": null,
+  "why": "brand"
  },
  "dia | Huevos medianos M de gallinas criadas en suelo Dia 12 unidades": {
   "match": null,
@@ -1815,11 +1603,11 @@
  },
  "dia | Macarrones Dia Al Diante 1 Kg": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "dia | Macarrones Dia Al Diante 500 g": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "dia | Pan de molde blanco El Molino de Dia 820 g": {
   "match": null,
@@ -1871,11 +1659,13 @@
   "why": "brand"
  },
  "dia | Yogur natural Danone 4 x 120 g": {
-  "brands": null,
-  "code": "8480012041840",
-  "match": "Yogur natural",
+  "brands": [
+   "Danone"
+  ],
+  "code": "5060360505039",
+  "match": "Danone Natural yogurt",
   "quantity": null,
-  "score": 0.77
+  "score": 1.0
  },
  "dia | Yogur natural Dia Láctea 6 x 125 g": {
   "code": "0840017243409",
@@ -1883,20 +1673,15 @@
   "why": "no front photo"
  },
  "lidl | Aceite de oliva virgen extra Olisone 75 cl": {
-  "brands": [
-   "El Corte Inglés"
-  ],
-  "code": "8433329060141",
-  "match": "Aceite de oliva virgen extra",
-  "quantity": "1 litro",
-  "score": 0.9
+  "match": null,
+  "why": "brand"
  },
  "lidl | Arroz largo Campo Largo 1 kg": {
   "brands": [
    "Campo Largo"
   ],
-  "code": "20526573",
-  "match": "Arroz vaporizado",
+  "code": "20335441",
+  "match": "Arroz bomba",
   "quantity": null,
   "score": 1.1
  },
@@ -1923,13 +1708,8 @@
   "score": 1.05
  },
  "lidl | Champú provitamina Cien 400 ml": {
-  "brands": [
-   "Cien"
-  ],
-  "code": "4056489152750",
-  "match": "Champú reparación intensa",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "words"
  },
  "lidl | Espinacas Chef Select 300 g": {
   "match": null,
@@ -1945,17 +1725,12 @@
   "score": 1.1
  },
  "lidl | Garbanzos cocidos Campo Largo 400 g": {
-  "brands": [
-   "Campo Largo"
-  ],
-  "code": "4056489800088",
-  "match": "Garbanzos",
-  "quantity": null,
-  "score": 0.85
+  "match": null,
+  "why": "words"
  },
  "lidl | Gel de baño leche y miel Cien 750 ml": {
   "match": null,
-  "why": "size 750.0 vs 250.0"
+  "why": "words"
  },
  "lidl | Kéfir natural Milbona 500 g": {
   "brands": null,
@@ -1966,16 +1741,11 @@
  },
  "lidl | MILBONA Griego natural 1 kg": {
   "match": null,
-  "why": "size 1000.0 vs 375.0"
+  "why": "no words"
  },
  "lidl | Macarrón nº 6 Combino 1 kg": {
-  "brands": [
-   "Combino"
-  ],
-  "code": "4056489043706",
-  "match": "Macarrón n°3",
-  "quantity": null,
-  "score": 1.1
+  "match": null,
+  "why": "words"
  },
  "mercadona | Aceite de girasol refinado 0,2º Hacendado Botella 1 L": {
   "brands": [
@@ -1985,7 +1755,7 @@
   "code": "8480000040404",
   "match": "Aceite refinado de girasol",
   "quantity": "1 l",
-  "score": 1.3
+  "score": 1.05
  },
  "mercadona | Aceite de oliva suave Hacendado Botella 1 L": {
   "match": null,
@@ -2016,20 +1786,15 @@
   "code": "8413334015169",
   "match": "Agua mineral natural",
   "quantity": "1,5 l",
-  "score": 1.1
+  "score": 1.3
  },
  "mercadona | Alubia cocida blanca Hacendado Tarro 0.295 kg": {
   "match": null,
   "why": "brand"
  },
  "mercadona | Alubia cocida blanca Hacendado Tarro 0.57 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000260192",
-  "match": "Alubia blanca",
-  "quantity": "570g",
-  "score": 0.97
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Arroz largo Hacendado Paquete 1 kg": {
   "match": null,
@@ -2051,7 +1816,7 @@
   "code": "8480000180346",
   "match": "Atun en aceite de girasol",
   "quantity": null,
-  "score": 0.85
+  "score": 0.7
  },
  "mercadona | Atún claro en aceite de girasol Hacendado 6 latas X 0.056 kg": {
   "brands": [
@@ -2060,38 +1825,23 @@
   "code": "8480000180346",
   "match": "Atun en aceite de girasol",
   "quantity": null,
-  "score": 0.85
+  "score": 0.7
  },
  "mercadona | Atún claro en aceite de oliva Hacendado 6 latas X 0.06 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000180025",
-  "match": "Atún claro en aceite de oliva",
-  "quantity": "6 latas de 80 gramos",
-  "score": 1.1
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Avena molida Hacendado Paquete 0.5 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "14804734",
-  "match": "Barritas de avena con chocolate negro y naranja",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Azúcar blanco Hacendado Paquete 1 kg": {
   "match": null,
   "why": "brand"
  },
  "mercadona | Baguette masa madre 0.25 kg": {
-  "brands": [
-   "La finestra sul cielo"
-  ],
-  "code": "8436535010771",
-  "match": "Masa madre con levadura",
-  "quantity": "250 g",
-  "score": 0.97
+  "match": null,
+  "why": "words"
  },
  "mercadona | Bebida de almendras Hacendado 6 bricks X 1 L": {
   "match": null,
@@ -2107,13 +1857,8 @@
   "score": 1.3
  },
  "mercadona | Bebida de avena Hacendado 0% azúcar Brick 1 L": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000156488",
-  "match": "Bebida de Almendras Enriquecida con Calcio y Vitaminas",
-  "quantity": "1L",
-  "score": 0.63
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Bebida de soja sin azúcares añadidos Hacendado Brick 1 L": {
   "brands": [
@@ -2126,25 +1871,15 @@
  },
  "mercadona | Cacao soluble ColaCao original Bote 0.76 kg": {
   "match": null,
-  "why": "size 760.0 vs 383.0"
+  "why": "no words"
  },
  "mercadona | Cacao soluble Hacendado Bote 0.5 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000228499",
-  "match": "Cacao soluble 0% azúcares",
-  "quantity": "450 g",
-  "score": 0.97
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Cacao soluble instantáneo Hacendado Bote 0.5 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000228499",
-  "match": "Cacao soluble 0% azúcares",
-  "quantity": "450 g",
-  "score": 0.8
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Café molido natural Hacendado Paquete 0.25 kg": {
   "brands": [
@@ -2153,7 +1888,7 @@
   "code": "8480000110343",
   "match": "Cafe molido natural",
   "quantity": "250 g",
-  "score": 1.3
+  "score": 1.05
  },
  "mercadona | Café molido natural Hacendado Paquete 0.5 kg": {
   "brands": [
@@ -2162,16 +1897,11 @@
   "code": "8480000117090",
   "match": "Café molido natural",
   "quantity": "500 g",
-  "score": 1.3
+  "score": 1.05
  },
  "mercadona | Café molido natural Marcilla gran aroma Caja 0.25 kg": {
-  "brands": [
-   "Marcilla"
-  ],
-  "code": "8410091170049",
-  "match": "Gran aroma natural",
-  "quantity": "250 g",
-  "score": 0.97
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Caldo de pollo Hacendado Brick 1 L": {
   "brands": [
@@ -2193,7 +1923,7 @@
   "code": "2302837003246",
   "match": "Preparado de carne picada vacuno y cerdo",
   "quantity": "500 g",
-  "score": 1.3
+  "score": 1.1
  },
  "mercadona | Carne picada de vacuno y cerdo Bandeja 1 kg": {
   "brands": [
@@ -2223,7 +1953,7 @@
   "code": "2600836002865",
   "match": "Contramuslos de pollo sin piel",
   "quantity": null,
-  "score": 1.1
+  "score": 0.85
  },
  "mercadona | Copos de avena Hacendado Paquete 0.5 kg": {
   "match": null,
@@ -2234,54 +1964,41 @@
   "why": "brand"
  },
  "mercadona | Dentífrico Anticaries Deliplus Tubo 100 ml": {
-  "brands": [
-   "Deliplus"
-  ],
-  "code": "8480000739698",
-  "match": "Anticaries con flúor",
-  "quantity": "100 ml",
-  "score": 0.63
+  "match": null,
+  "why": "words"
  },
  "mercadona | Filete de salmón Bandeja 0.35 kg": {
   "brands": null,
   "code": "2216590005181",
   "match": "Filete Salmón",
   "quantity": null,
-  "score": 1.1
+  "score": 0.77
  },
  "mercadona | Filetes pechuga de pollo Bandeja 0.65 kg": {
   "brands": [
    "mercadona"
   ],
-  "code": "2303400005261",
-  "match": "Filetes pechuga pollo",
+  "code": "2303400005605",
+  "match": "Filete pechuga pollo",
   "quantity": null,
-  "score": 1.1
+  "score": 0.85
  },
  "mercadona | Filetes pechuga de pollo corte fino Bandeja 0.5 kg": {
-  "brands": null,
-  "code": "2500207004118",
-  "match": "Filetes de pechuga de pollo corte fino",
-  "quantity": null,
-  "score": 1.1
+  "brands": [
+   "Pavo"
+  ],
+  "code": "2304524005199",
+  "match": "Filete de pechuga corte fino",
+  "quantity": "570 g",
+  "score": 0.97
  },
  "mercadona | Galletas María Hacendado Paquete 0.8 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000141897",
-  "match": "Galleta maría integral",
-  "quantity": "800g",
-  "score": 0.8
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Galletas María dorada Hacendado Paquete 0.8 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000141323",
-  "match": "Galletas maría doradas",
-  "quantity": "800 g",
-  "score": 0.97
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Garbanzo cocido Hacendado Tarro 0.295 kg": {
   "match": null,
@@ -2300,13 +2017,8 @@
   "why": "brand"
  },
  "mercadona | Harina de trigo Aragonesa Paquete 1 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000291004",
-  "match": "Harina de trigo",
-  "quantity": "1kg",
-  "score": 0.97
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Hogaza sin gluten Paquete 0.3 kg": {
   "brands": [
@@ -2315,7 +2027,7 @@
   "code": "232232120000100275002758",
   "match": "Hogaza sin Gluten",
   "quantity": "300g",
-  "score": 1.3
+  "score": 0.97
  },
  "mercadona | Huevos grandes L Paquete 12 ud": {
   "brands": null,
@@ -2345,52 +2057,32 @@
   "code": "2302778003237",
   "match": "Jamoncitos  Pollo",
   "quantity": null,
-  "score": 1.1
+  "score": 0.77
  },
  "mercadona | Jamón cocido extra Hacendado finas lonchas Paquete 0.2 kg": {
   "brands": [
    "Hacendado"
   ],
-  "code": "8480000592484",
-  "match": "Jamón cocido extra finas lonchas",
-  "quantity": "200g  16/09/22",
-  "score": 1.3
+  "code": "8480000566195",
+  "match": "Jamón pavo finas lonchas",
+  "quantity": "225 g",
+  "score": 0.9
  },
  "mercadona | Jamón cocido natural Hacendado lonchas Paquete 0.2 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000592569",
-  "match": "Jamón cocido natural",
-  "quantity": "200 g",
-  "score": 1.3
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Jamón serrano Incarlopsa lonchas Paquete 0.24 kg": {
-  "brands": [
-   "Incarlopsa"
-  ],
-  "code": "8421384081461",
-  "match": "Jamón Serrano Incarlopsa",
-  "quantity": null,
-  "score": 1.1
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Jamón serrano Incarlopsa lonchas extrafinas Paquete 0.12 kg": {
-  "brands": [
-   "La Tabla"
-  ],
-  "code": "24016780",
-  "match": "Jamon Serrano Reserva. Lonchas extrafinas",
-  "quantity": "120g",
-  "score": 1.05
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Jamón serrano cortado a máquina Paquete 0.16 kg": {
-  "brands": [
-   "Montito"
-  ],
-  "code": "8427170579945",
-  "match": "Jamon serrano",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "words"
  },
  "mercadona | Kéfir natural sabor suave Bote 0.5 kg": {
   "brands": [
@@ -2399,7 +2091,7 @@
   "code": "8436547770137",
   "match": "Kéfir natural sabor suave",
   "quantity": "500 g",
-  "score": 1.1
+  "score": 0.97
  },
  "mercadona | Lavavajillas Ultra Original Fairy líquido Botella 900 ml": {
   "brands": [
@@ -2408,25 +2100,15 @@
   "code": "4015400591337",
   "match": "Lavavajillas Ultra",
   "quantity": null,
-  "score": 0.7
+  "score": 0.77
  },
  "mercadona | Lavavajillas Ultra concentrado Bosque Verde Botella 1.3 L": {
-  "brands": [
-   "Bosque Verde"
-  ],
-  "code": "8480000420626",
-  "match": "Lavavajillas",
-  "quantity": "1,3L",
-  "score": 0.63
+  "match": null,
+  "why": "words"
  },
  "mercadona | Lavavajillas a mano Bosque Verde Botella 1.3 L": {
-  "brands": [
-   "Bosque Verde"
-  ],
-  "code": "8480000420626",
-  "match": "Lavavajillas",
-  "quantity": "1,3L",
-  "score": 0.8
+  "match": null,
+  "why": "words"
  },
  "mercadona | Leche desnatada Hacendado Brick 1 L": {
   "brands": [
@@ -2447,12 +2129,12 @@
  },
  "mercadona | Leche entera Llet Nostra Brick 1 L": {
   "brands": [
-   "Llet Nostra"
+   "llet nostra"
   ],
-  "code": "8437004314055",
-  "match": "Leche desnatada",
-  "quantity": "1000 ml",
-  "score": 1.05
+  "code": "8437004314604",
+  "match": "Llet nostra sencera",
+  "quantity": null,
+  "score": 1.1
  },
  "mercadona | Leche semidesnatada Hacendado Brick 1 L": {
   "brands": [
@@ -2465,16 +2147,16 @@
  },
  "mercadona | Leche semidesnatada Llet Nostra Brick 1 L": {
   "brands": [
-   "Llet Nostra"
+   "llet nostra"
   ],
-  "code": "8437004314055",
-  "match": "Leche desnatada",
-  "quantity": "1000 ml",
-  "score": 1.05
+  "code": "8437004314048",
+  "match": "Llet Uht Semidesnatada",
+  "quantity": null,
+  "score": 1.1
  },
  "mercadona | Lejía normal Bosque Verde Botella 2 L": {
   "match": null,
-  "why": "size 2000.0 vs 110.0"
+  "why": "words"
  },
  "mercadona | Lenteja cocida pardina Hacendado Tarro 0.295 kg": {
   "match": null,
@@ -2490,20 +2172,16 @@
  },
  "mercadona | Macarrón Hacendado Paquete 0.5 kg": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "mercadona | Macarrón Hacendado Paquete 1 kg": {
-  "match": null,
-  "why": "brand"
+  "code": "8084000062505",
+  "match": "Macarrones",
+  "why": "no front photo"
  },
  "mercadona | Mantequilla con sal Hacendado Pastilla 0.25 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000207166",
-  "match": "Mantequilla sin sal",
-  "quantity": "250 g",
-  "score": 0.97
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Mantequilla sin sal añadida Hacendado Pastilla 0.25 kg": {
   "brands": [
@@ -2512,7 +2190,7 @@
   "code": "8402001017735",
   "match": "Mantequilla sin sal añadida",
   "quantity": null,
-  "score": 0.85
+  "score": 0.7
  },
  "mercadona | Mantequilla sin sal añadida Hacendado Tarrina 0.25 kg": {
   "brands": [
@@ -2521,25 +2199,15 @@
   "code": "8402001017735",
   "match": "Mantequilla sin sal añadida",
   "quantity": null,
-  "score": 0.85
+  "score": 0.7
  },
  "mercadona | Mermelada de fresa Hacendado Tarro 0.4 kg": {
-  "brands": [
-   "Hacendado (Mercadona)"
-  ],
-  "code": "0404000006466",
-  "match": "Mermelada fresa 0% azúcares añadidos",
-  "quantity": null,
-  "score": 1.0
+  "match": null,
+  "why": "no words"
  },
  "mercadona | Miel de flores Hacendado Bote 0.5 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000154309",
-  "match": "Miel de flores",
-  "quantity": "500 g",
-  "score": 0.97
+  "match": null,
+  "why": "words"
  },
  "mercadona | Miel de flores Hacendado Tarro 1 kg": {
   "brands": [
@@ -2566,7 +2234,7 @@
   "code": "8480000101990",
   "match": "Nata ligera para cocinar",
   "quantity": "600 ml",
-  "score": 0.9
+  "score": 1.05
  },
  "mercadona | Nata ligera para cocinar Hacendado Brick 500 ml": {
   "brands": [
@@ -2596,7 +2264,7 @@
   "code": "8480000867094",
   "match": "Pan blanco sin corteza",
   "quantity": "16",
-  "score": 0.85
+  "score": 0.7
  },
  "mercadona | Pan de molde integral Hacendado Paquete 0.46 kg": {
   "match": null,
@@ -2613,23 +2281,23 @@
  },
  "mercadona | Pañales bebé talla 4 de 9-14 kg Dodot Paquete 58 ud": {
   "match": null,
-  "why": "no hits"
+  "why": "words"
  },
  "mercadona | Pechuga de pavo finas lonchas Hacendado Paquete 0.2 kg": {
   "brands": [
    "Hacendado"
   ],
-  "code": "8411030014721",
-  "match": "Pechuga de pavo",
-  "quantity": null,
-  "score": 0.77
+  "code": "8480000566195",
+  "match": "Jamón pavo finas lonchas",
+  "quantity": "225 g",
+  "score": 0.9
  },
  "mercadona | Pechugas de pollo enteras Bandeja 0.5 kg": {
   "brands": null,
   "code": "2304252004518",
   "match": "Pechugas pollo enteras",
   "quantity": null,
-  "score": 1.1
+  "score": 0.85
  },
  "mercadona | Porciones de merluza Bandeja 0.385 kg": {
   "brands": [
@@ -2638,25 +2306,15 @@
   "code": "8410092123761",
   "match": "Porciones de merluza",
   "quantity": null,
-  "score": 1.1
+  "score": 0.77
  },
  "mercadona | Queso Emmental Hacendado lonchas Paquete 0.2 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8460499532390",
-  "match": "Queso rayado Emmental",
-  "quantity": null,
-  "score": 1.1
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Queso Gouda Hacendado lonchas Paquete 0.3 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000511997",
-  "match": "Queso fundido light en lonchas",
-  "quantity": null,
-  "score": 0.6
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Queso fresco Burgos natural Hacendado 2 tarrinas X 0.25 kg": {
   "match": null,
@@ -2667,13 +2325,8 @@
   "why": "brand"
  },
  "mercadona | Queso rallado emmental gratinar Hacendado Paquete 0.2 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8402001025778",
-  "match": "Queso emmental gratinar",
-  "quantity": null,
-  "score": 0.85
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Queso rallado especial fundir Hacendado Paquete 0.4 kg": {
   "brands": [
@@ -2682,48 +2335,37 @@
   "code": "8480000511836",
   "match": "Queso rallado especial fundir",
   "quantity": null,
-  "score": 1.1
+  "score": 0.9
  },
  "mercadona | Queso rallado mozzarella Hacendado pizza-Roma Paquete 0.2 kg": {
-  "code": "8489114390092",
-  "match": "Mozzarella pizza-roma",
-  "why": "no front photo"
+  "match": null,
+  "why": "variant ['mozzarella', 'rallado'] / []"
  },
  "mercadona | Queso semicurado Entrepinares lonchas Paquete 0.21 kg": {
   "brands": [
    "Entrepinares"
   ],
-  "code": "2350294002708",
-  "match": "Queso semicurado (entrepinares)",
-  "quantity": null,
-  "score": 1.1
+  "code": "2350148001918",
+  "match": "Queso semicurado lonchas",
+  "quantity": "200 g",
+  "score": 1.05
  },
  "mercadona | Refresco Coca-Cola 12 latas X 330 ml": {
-  "brands": [
-   "Blurs"
-  ],
-  "code": "8480010171228",
-  "match": "Refresco de cola",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "words"
  },
  "mercadona | Refresco Coca-Cola Botella 2 L": {
   "brands": [
    "Coca-Cola"
   ],
-  "code": "7591127803658",
-  "match": "Refresco Coca Cola Sin Azúcar 2L",
+  "code": "7591127123626",
+  "match": "Refresco Coca Cola Scom 2L",
   "quantity": "2L",
   "score": 1.2
  },
  "mercadona | Refresco Coca-Cola Lata 330 ml": {
-  "brands": [
-   "Coke Zero"
-  ],
-  "code": "9300675057899",
-  "match": "Coca Cola",
-  "quantity": "330ml",
-  "score": 0.87
+  "match": null,
+  "why": "words"
  },
  "mercadona | Sal yodada fina Hacendado Paquete 1 kg": {
   "brands": [
@@ -2736,62 +2378,44 @@
  },
  "mercadona | Spaghetti Hacendado Paquete 0.5 kg": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "mercadona | Spaghetti Hacendado Paquete 1 kg": {
   "match": null,
-  "why": "brand"
+  "why": "words"
  },
  "mercadona | Tomate triturado Hacendado Bote 0.4 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000160447",
-  "match": "tomate triturado",
-  "quantity": "400g escurridos",
-  "score": 0.97
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Tomate triturado Hacendado Bote 0.8 kg": {
   "match": null,
   "why": "brand"
  },
  "mercadona | Yogur griego natural Hacendado 6 ud. X 0.125 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000311296",
-  "match": "Yogur griego stracciatella",
-  "quantity": null,
-  "score": 0.77
- },
- "mercadona | Yogur griego natural Hacendado Bote 1 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000311296",
-  "match": "Yogur griego stracciatella",
-  "quantity": null,
-  "score": 0.6
- },
- "mercadona | Yogur natural Danone 8 ud. X 0.12 kg": {
-  "brands": [
-   "La Ermita"
-  ],
-  "code": "8436019988077",
-  "match": "Yogur natural",
-  "quantity": "1000g",
-  "score": 0.97
- },
- "mercadona | Yogur natural Hacendado 6 ud. X 0.125 kg": {
   "match": null,
   "why": "brand"
  },
- "mercadona | Yogur natural La Fageda 4 ud. X 0.125 kg": {
-  "brands": null,
-  "code": "8480012041840",
-  "match": "Yogur natural",
+ "mercadona | Yogur griego natural Hacendado Bote 1 kg": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Yogur natural Danone 8 ud. X 0.12 kg": {
+  "brands": [
+   "Danone"
+  ],
+  "code": "5060360505039",
+  "match": "Danone Natural yogurt",
   "quantity": null,
-  "score": 0.77
+  "score": 0.67
+ },
+ "mercadona | Yogur natural Hacendado 6 ud. X 0.125 kg": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Yogur natural La Fageda 4 ud. X 0.125 kg": {
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Zumo pura naranja Hacendado Brick 1 L": {
   "brands": [
