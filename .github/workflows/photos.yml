@@ -9,8 +9,8 @@ on:
       source:
         description: "Font de les fotos"
         type: choice
-        options: [off, commons]
-        default: off
+        options: ["off", "commons"]
+        default: "off"
       branch:
         description: "Branca on es desen les fotos"
         required: true
