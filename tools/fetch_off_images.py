@@ -8,7 +8,8 @@ a hit only when it is clearly the same pack: same brand (own brands like Hacenda
 most of the name's words, and the same size (±15 %) when both sizes are known. Then it saves the front photo
 (web/img/off/<barcode>.jpg, 400×400, and a 160×160 thumbnail) and writes into the data:
     offerings[].ean, offerings[].img = {f, t, s}      the photo of that very pack
-    products[].img                                   the photo of one of its packs (Commons photos stay for loose produce)
+    products[].img                                   the photo of one of its packs; without one, nothing (the app shows the
+                                                     category icon), except loose fruit and veg, which keep a generic photo
 data/off-matches.json keeps every decision (shelf name → Open Food Facts name, brand, size, score) to check by hand.
 
 Open Food Facts is a shared, volunteer-run service: this tool identifies itself and waits between calls.
@@ -73,7 +74,23 @@ JOIN = [("sin ", "sin"), ("sense ", "sin"), ("0 ", "sin"), ("4 quesos", "cuatroq
 VARIANT = {"entera", "semidesnatada", "desnatada", "sinlactosa", "integral", "light", "sinsal", "consal", "singluten", "sincorteza",
            "sinazucar", "sinazucares", "zero", "rallado", "lonchas", "emmental", "mozzarella", "gouda", "cheddar", "cuatroquesos", "griego",
            "fresa", "chocolate", "vainilla", "limon", "stracciatella", "rustico", "virgen", "suave", "refinado", "girasol", "canola",
-           "vaporizado", "redondo", "largo", "higienico", "cocina", "hummus", "fundido", "ketchup", "mayonesa", "barritas"}
+           "vaporizado", "redondo", "largo", "higienico", "cocina", "hummus", "fundido", "ketchup", "mayonesa", "barritas", "pavo",
+           "espinacas", "bomba", "marinadas", "tiras", "propoleo"}
+# matches checked by hand and found wrong (shelf name as in data/off-matches.json): never use them
+REJECT = {
+    "mercadona | Jamón cocido extra Hacendado finas lonchas Paquete 0.2 kg", "lidl | Arroz largo Campo Largo 1 kg",
+    "carrefour | Garbanzos cocidos categoría extra Classic Carrefour 400 g.", "dia | Jamoncitos de pollo Selección de Dia 1 Kg aprox.",
+    "bonpreu | REINA APICOLA Mel de mil flors 1 kg", "bonpreu | REINA APICOLA Mel de mil flors 500 g",
+    # right product, unusable photo (placeholder, label strip, shipping box, bakery bag)
+    "mercadona | Bebida de almendras Hacendado Brick 1 L",
+    "lidl | Kéfir natural Milbona 500 g",
+    "bonpreu | Barra de pa d'espiga",
+    "bonpreu | Barra de pa",
+    "bonpreu | Barra de pa bretona",
+    "ametller | Flocs blat de moro sense sucres Ametller Origen 400g",
+    "carrefour | Kiwi Zespri 1 kg aprox",
+    "mercadona | Papel hogar compacto absorbente Bosque Verde Paquete 3 ud",
+}
 
 
 def norm(s):
@@ -231,6 +248,10 @@ def main():
             continue
         if P[o["p"]]["cat"] == "fruita" and (LOOSE.search(o["name"]) or not brand_of(o["name"])):
             continue  # loose fruit and veg: no barcode, no Open Food Facts page
+        if o["c"] + " | " + o["name"] in REJECT:
+            o.pop("img", None)
+            o.pop("ean", None)
+            continue
         tried += 1
         want = brand_of(o["name"])
         q = " ".join(w for w in norm(o["name"]).split() if not re.match(r"^\d", w) and w not in STOP)
@@ -270,10 +291,10 @@ def main():
         if packs:
             o = packs[0]
             p["img"] = dict(o["img"], a="Open Food Facts", l="CC BY-SA 3.0", n=o["name"], c=o["c"])
-        elif (p.get("img") or {}).get("n"):
-            p["img"] = p.get("img0")
-            if not p["img"]:
-                p.pop("img")
+        elif p["cat"] == "fruita" and p.get("img0"):
+            p["img"] = p["img0"]  # loose fruit and veg: no pack to show, a generic photo of the fruit
+        else:
+            p.pop("img", None)  # no real pack found: the app shows the category icon, never a random photo
     used = {pathlib.Path(o["img"]["f"]).stem for o in d["offerings"] if o.get("img")}
     for f in OUT.glob("*.jpg"):
         if f.stem.replace("-s", "") not in used:

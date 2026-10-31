@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Product photos for Preuet, from Wikimedia Commons (free licences only, with author and licence kept).
+"""Generic photos for loose fruit and veg, from Wikimedia Commons (free licences only, with author and licence kept).
+Packaged products show the photo of the real pack from Open Food Facts instead: tools/fetch_off_images.py.
 
     python3 tools/fetch_images.py candidates [--only ID,ID] [--out DIR]
         Searches Commons for every product (QUERIES below) and saves up to 6 candidates per product:
@@ -277,8 +278,8 @@ def cmd_fetch(a):
     byid = {p["id"]: p for p in d["products"]}
     for pid in ids:
         pick = PICKS.get(pid, 0 if cands.get(pid) else None)
-        if pick is None or pick == "-":
-            continue
+        if pick is None or pick == "-" or byid[pid]["cat"] != "fruita":
+            continue  # packaged products use the photo of the real pack (tools/fetch_off_images.py) or none
         if not a.again and byid[pid].get("img") and (OUT / f"{pid}.jpg").exists():
             continue  # already done: rerunning carries on where it stopped
         try:
@@ -289,7 +290,7 @@ def cmd_fetch(a):
         im = Image.open(io.BytesIO(get(thumb_url(cand["thumb"]), binary=True))).convert("RGB")
         ImageOps.fit(im, (640, 480), centering=(0.5, 0.5)).save(OUT / f"{pid}.jpg", quality=78, optimize=True, progressive=True)
         ImageOps.fit(im, (160, 160), centering=(0.5, 0.5)).save(OUT / f"{pid}-s.jpg", quality=76, optimize=True)
-        byid[pid]["img"] = {"f": f"img/products/{pid}.jpg", "t": f"img/products/{pid}-s.jpg", "a": cand["author"], "l": cand["licence"], "s": cand["page"]}
+        byid[pid]["img"] = byid[pid]["img0"] = {"f": f"img/products/{pid}.jpg", "t": f"img/products/{pid}-s.jpg", "a": cand["author"], "l": cand["licence"], "s": cand["page"]}
         print(f"{pid:22s} {cand['licence']:14s} {cand['author'][:40]}", flush=True)
         save(d)
 

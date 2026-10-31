@@ -74,13 +74,8 @@
   "why": "words"
  },
  "ametller | Flocs blat de moro sense sucres Ametller Origen 400g": {
-  "brands": [
-   "Ametller Origen"
-  ],
-  "code": "8436583952900",
-  "match": "Flocs de blat de moro",
-  "quantity": null,
-  "score": 0.85
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "ametller | Flocs de civada Essencials 500g": {
   "match": null,
@@ -682,29 +677,16 @@
   "why": "brand"
  },
  "bonpreu | Barra de pa": {
-  "brands": [
-   "Consum"
-  ],
-  "code": "8414807534859",
-  "match": "Barra pa familiar",
-  "quantity": null,
-  "score": 1.1
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "bonpreu | Barra de pa bretona": {
-  "brands": [
-   "Bonpreu"
-  ],
-  "code": "8422410253869",
-  "match": "Barra de pa",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "bonpreu | Barra de pa d'espiga": {
-  "brands": null,
-  "code": "2604099000682",
-  "match": "Barra de pan espiga",
-  "quantity": null,
-  "score": 1.1
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "bonpreu | CADÍ Formatge ratllat semigras": {
   "brands": [
@@ -914,22 +896,12 @@
   "why": "variant ['mayonesa'] / []"
  },
  "bonpreu | REINA APICOLA Mel de mil flors 1 kg": {
-  "brands": [
-   "Reina Apicola"
-  ],
-  "code": "8437010244780",
-  "match": "Miel mil flores con propóleo",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "rejected by hand"
  },
  "bonpreu | REINA APICOLA Mel de mil flors 500 g": {
-  "brands": [
-   "Reina Apicola"
-  ],
-  "code": "8437010244780",
-  "match": "Miel mil flores con propóleo",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "rejected by hand"
  },
  "bonpreu | SAL COSTA Sal amb iode i fluor 1 kg": {
   "match": null,
@@ -1110,13 +1082,8 @@
   "why": "brand"
  },
  "carrefour | Garbanzos cocidos categoría extra Classic Carrefour 400 g.": {
-  "brands": [
-   "Carrefour"
-  ],
-  "code": "8431876310658",
-  "match": "Garbanzos cocidos con espinacas",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "rejected by hand"
  },
  "carrefour | Harina de trigo Classic Carrefour 1 kg.": {
   "match": null,
@@ -1153,11 +1120,8 @@
   "why": "brand"
  },
  "carrefour | Kiwi Zespri 1 kg aprox": {
-  "brands": null,
-  "code": "2959489002754",
-  "match": "Kiwi Zespri",
-  "quantity": null,
-  "score": 1.1
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "carrefour | Kéfir natural Carrefour Sensation 500 g.": {
   "match": null,
@@ -1542,13 +1506,8 @@
   "why": "brand"
  },
  "dia | Jamoncitos de pollo Selección de Dia 1 Kg aprox.": {
-  "brands": [
-   "dia"
-  ],
-  "code": "8480017246189",
-  "match": "selección de dia Pollo tiras marinadas",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "rejected by hand"
  },
  "dia | Leche desnatada Dia Láctea 1 L": {
   "match": null,
@@ -1677,13 +1636,8 @@
   "why": "brand"
  },
  "lidl | Arroz largo Campo Largo 1 kg": {
-  "brands": [
-   "Campo Largo"
-  ],
-  "code": "20335441",
-  "match": "Arroz bomba",
-  "quantity": null,
-  "score": 1.1
+  "match": null,
+  "why": "rejected by hand"
  },
  "lidl | BELLAROM Café natural molido 500 g": {
   "match": null,
@@ -1733,11 +1687,8 @@
   "why": "words"
  },
  "lidl | Kéfir natural Milbona 500 g": {
-  "brands": null,
-  "code": "4056489882367",
-  "match": "Kéfir natural - Milbona",
-  "quantity": null,
-  "score": 1.0
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "lidl | MILBONA Griego natural 1 kg": {
   "match": null,
@@ -1848,13 +1799,8 @@
   "why": "brand"
  },
  "mercadona | Bebida de almendras Hacendado Brick 1 L": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000156488",
-  "match": "Bebida de Almendras Enriquecida con Calcio y Vitaminas",
-  "quantity": "1L",
-  "score": 1.3
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "mercadona | Bebida de avena Hacendado 0% azúcar Brick 1 L": {
   "match": null,
@@ -2060,13 +2006,8 @@
   "score": 0.77
  },
  "mercadona | Jamón cocido extra Hacendado finas lonchas Paquete 0.2 kg": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000566195",
-  "match": "Jamón pavo finas lonchas",
-  "quantity": "225 g",
-  "score": 0.9
+  "match": null,
+  "why": "rejected by hand"
  },
  "mercadona | Jamón cocido natural Hacendado lonchas Paquete 0.2 kg": {
   "match": null,
@@ -2271,13 +2212,8 @@
   "why": "brand"
  },
  "mercadona | Papel hogar compacto absorbente Bosque Verde Paquete 3 ud": {
-  "brands": [
-   "Bosque Verde"
-  ],
-  "code": "8480000496195",
-  "match": "Papel compacto absorbente",
-  "quantity": "3 unid",
-  "score": 0.85
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "mercadona | Pañales bebé talla 4 de 9-14 kg Dodot Paquete 58 ud": {
   "match": null,
