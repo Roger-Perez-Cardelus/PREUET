@@ -132,7 +132,7 @@ PICKS = {
     "pastanagues": "File:Carrots at Ljubljana Central Market.JPG",
     "carbasso": "File:Calabacín, Múnich, Alemania, 2013-03-30, DD 01.JPG",
     "pebrot-vermell": "File:Red bell pepper.jpg",
-    "broquil": "File:Broccoli and cross section edit.jpg",
+    "broquil": "File:Brassica oleracea italica, Sault Ste Marie 1.JPG",
     "espinacs": "File:Spinach leaves.jpg",
     "cogombre": "File:Ryerson Market cucumbers on sale.jpg",
     "alberginia": "File:Eggplant 3.jpg",
@@ -227,7 +227,7 @@ def by_title(title):
     meta = ii.get("extmetadata") or {}
     lic = plain((meta.get("LicenseShortName") or {}).get("value"))
     if not OK_LICENCE.match(lic):
-        raise SystemExit(f"{title}: licence {lic!r} is not allowed")
+        raise KeyError(f"{title}: licence {lic!r} is not allowed")
     return {"title": p["title"], "thumb": ii["thumburl"], "page": ii["descriptionurl"], "licence": lic,
             "author": plain((meta.get("Artist") or {}).get("value"))[:80] or "Wikimedia Commons"}
 
@@ -283,8 +283,8 @@ def cmd_fetch(a):
             continue  # already done: rerunning carries on where it stopped
         try:
             cand = by_title(pick) if isinstance(pick, str) else cands[pid][pick]
-        except (KeyError, IndexError):
-            print(f"{pid:22s} not found on Commons: {pick}", flush=True)
+        except (KeyError, IndexError) as e:
+            print(f"{pid:22s} skipped: {e}", flush=True)
             continue
         im = Image.open(io.BytesIO(get(thumb_url(cand["thumb"]), binary=True))).convert("RGB")
         ImageOps.fit(im, (640, 480), centering=(0.5, 0.5)).save(OUT / f"{pid}.jpg", quality=78, optimize=True, progressive=True)
