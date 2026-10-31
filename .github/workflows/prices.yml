@@ -1,0 +1,49 @@
+# Reads real shelf prices for new products from the supermarkets' online shops (tools/fetch_prices.py) and commits them
+# to the branch you choose, to be checked by hand before they reach main. Run it from the Actions tab.
+name: Preus de productes nous
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "probe: només comprova les fonts · fetch: llegeix preus"
+        type: choice
+        options: ["probe", "fetch"]
+        default: "probe"
+      branch:
+        description: "Branca on es desen els preus"
+        required: true
+        default: main
+
+permissions:
+  contents: write
+
+jobs:
+  prices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fonts
+        if: inputs.mode == 'probe'
+        run: python3 tools/fetch_prices.py probe
+      - name: Llegeix preus
+        if: inputs.mode == 'fetch'
+        run: python3 tools/fetch_prices.py fetch
+      - name: Desa-ho a la branca
+        if: inputs.mode == 'fetch'
+        env:
+          BRANCH: ${{ inputs.branch }}
+        run: |
+          python3 tools/update_data.py check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then echo "Res de nou"; exit 0; fi
+          git commit -m "Preus de productes nous"
+          git push origin "HEAD:$BRANCH"
