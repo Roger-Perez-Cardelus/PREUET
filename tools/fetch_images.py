@@ -68,9 +68,9 @@ QUERIES = {
 # Chosen photo per product (exact Commons title), picked by eye from the candidates; a number picks from --cands instead.
 PICKS = {
     "llet-sencera": "File:Tetra-Milk-Carton---Betsukai-Milk---2024-04-27 08.jpg",
-    "llet-semi": "File:Several Cartons.jpg",
+    "llet-semi": "File:Dg milk containers.jpg",
     "llet-sense-lactosa": "File:Plastic bottle of milk.jpg",
-    "llet-nostra": "File:Glass milk bottle cardboard cap and opener.jpg",
+    "llet-nostra": "File:Milk bottle and two doughnuts.jpg",
     "asturiana-semi": "File:22-07-2017 Carton of UHT Milk of Matinal brand.JPG",
     "beguda-soja": "File:Soymilk can and glass 2.jpg",
     "beguda-civada": "File:Oat milk glass.jpg",
@@ -93,7 +93,7 @@ PICKS = {
     "cafe-molt": "File:Coffee powdered.jpg",
     "cacau-soluble": "File:Cocoa-powder-1883108.jpg",
     "melmelada": "File:Strawberry jam on a dish.JPG",
-    "mel": "File:Honey jar (411317929).jpg",
+    "mel": "File:Three French monofloral honey jars.jpg",
     "crema-cacau": "File:Crema di cioccolato.jpg",
     "arros-rodo": "File:Short-grain rice (japonica).jpg",
     "arros-llarg": "File:Long grain rice.jpg",
@@ -110,21 +110,21 @@ PICKS = {
     "sucre": "File:Sugar 2xmacro.jpg",
     "farina": "File:All-Purpose Flour (4107895947).jpg",
     "maionesa": "File:Mayonnaise (1).jpg",
-    "ketchup": "File:Ketchup.jpg",
+    "ketchup": "File:French Fries with Ketchup 01.jpg",
     "brou-pollastre": "File:Broth.jpg",
     "pit-pollastre": "File:Chicken breasts and wing quarters.jpg",
     "cuixes-pollastre": "File:Raw chicken thighs.jpg",
     "carn-picada": "File:Hackfleisch-1.jpg",
-    "pernil-dolc": "File:Sliced cooked ham.jpg",
+    "pernil-dolc": "File:Ham (4).jpg",
     "pit-gall-dindi": "File:Cooked turkey breast - November 2023 - Sarah Stierch.jpg",
     "pernil-serra": "File:Jamón serrano (by Awersowy).jpg",
     "salmo": "File:Raw salmon fillets.jpg",
-    "lluc": "File:Hake fish.jpg",
+    "lluc": "File:38) Hake.jpg",
     "platan-canaries": "File:Plátanos de Canarias.JPG",
     "banana": "File:Bananas on black background 02.jpg",
     "taronges": "File:Oranges - whole-halved-segment.jpg",
     "mandarines": "File:Mandarins - whole and halved.jpg",
-    "peres": "File:Conference pear 2017 C2.jpg",
+    "peres": "File:Four pears.jpg",
     "llimones": "File:Lemon - whole and split.jpg",
     "kiwi": "File:Kiwi (Actinidia chinensis) 1 Luc Viatour.jpg",
     "alvocat": "File:Avocado Hass - single and halved.jpg",
@@ -132,9 +132,9 @@ PICKS = {
     "pastanagues": "File:Carrots at Ljubljana Central Market.JPG",
     "carbasso": "File:Calabacín, Múnich, Alemania, 2013-03-30, DD 01.JPG",
     "pebrot-vermell": "File:Red bell pepper.jpg",
-    "broquil": "File:Brassica oleracea italica, Sault Ste Marie 1.JPG",
+    "broquil": "File:Broccoli and cross section edit.jpg",
     "espinacs": "File:Spinach leaves.jpg",
-    "cogombre": "File:Cucumis sativus 0001.JPG",
+    "cogombre": "File:Ryerson Market cucumbers on sale.jpg",
     "alberginia": "File:Eggplant 3.jpg",
     "aigua": "File:Water bottle in room.jpg",
     "suc-taronja": "File:Orange juice 1 edit1.jpg",
@@ -147,8 +147,8 @@ PICKS = {
     "gel-dutxa": "File:Shower gel bottles.jpg",
     "xampu": "File:Green shampoo bottle.jpg",
     "pasta-dents": "File:Toothpasteonbrush.jpg",
-    "bolquers-t4": "File:Diapers (5137580773).jpg",
-    "pa-sense-gluten": "File:Non gluten bread.jpg",
+    "bolquers-t4": "File:Disposable Diapers at Kroger.jpg",
+    "pa-sense-gluten": "File:Francesco Favorito e il suo Pane Gluten free.jpg",
     "fageda-natural": "File:Llaeth y Llan, Village Dairy yogurt.jpg",
     "nata-cuinar": "File:Whipping Cream.jpg",
     "pa-motlle-sc": "File:White sandwich bread.jpg",
@@ -281,7 +281,11 @@ def cmd_fetch(a):
             continue
         if not a.again and byid[pid].get("img") and (OUT / f"{pid}.jpg").exists():
             continue  # already done: rerunning carries on where it stopped
-        cand = by_title(pick) if isinstance(pick, str) else cands[pid][pick]
+        try:
+            cand = by_title(pick) if isinstance(pick, str) else cands[pid][pick]
+        except (KeyError, IndexError):
+            print(f"{pid:22s} not found on Commons: {pick}", flush=True)
+            continue
         im = Image.open(io.BytesIO(get(thumb_url(cand["thumb"]), binary=True))).convert("RGB")
         ImageOps.fit(im, (640, 480), centering=(0.5, 0.5)).save(OUT / f"{pid}.jpg", quality=78, optimize=True, progressive=True)
         ImageOps.fit(im, (160, 160), centering=(0.5, 0.5)).save(OUT / f"{pid}-s.jpg", quality=76, optimize=True)
