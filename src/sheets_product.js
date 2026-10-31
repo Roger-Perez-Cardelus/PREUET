@@ -148,7 +148,7 @@ function OfferRow({ r, p, best }) {
     ${x.src ? html`<a href=${x.src} target="_blank" rel="noopener noreferrer">${t("source")} ↗</a>` : null}</span>`;
   return html`<div class=${"offer-row" + (best ? " best" : "")}>
     <div class="stack-s" style="min-width:0;gap:4px"><span class="row" style="gap:8px"><${ChainBadge} cid=${r.c.id} />${best ? html`<span class="chip good">${t("cheapest_here")}</span>` : null}${stale ? html`<span class="chip warn">!</span>` : null}</span>
-      <span class="small" style="overflow-wrap:anywhere">${o.name}</span></div>
+      <span class="row" style="gap:8px;align-items:center"><${PackThumb} o=${o} /><span class="small" style="overflow-wrap:anywhere">${o.name}</span></span></div>
     <span class="stack-s" style="align-items:flex-end;gap:2px"><${PriceTag} v=${r.l.cost} sub=${eurU(o.up, p.unit)} plain=${!best} /></span>
     <span class="pkg">${r.l.loose ? fmtQty(p.ref, p.unit) + " × " + eurU(o.up, p.unit) : t("pack_of", { s: fmtQty(o.size, p.unit), p: eur(o.price) })}${o.promo && !/^origen/i.test(o.promo) ? html` · <span class="chip plum">${o.promo}</span>` : null}</span>
     ${meta(o)}

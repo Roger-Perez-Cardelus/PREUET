@@ -232,6 +232,8 @@ function ScanSheet() {
   const [typed, setTyped] = useState("");
   const canCam = typeof window !== "undefined" && "BarcodeDetector" in window && navigator.mediaDevices;
   const look = async ean => {
+    const known = X.D.offerings.find(o => o.ean === ean); // a pack Preuet already follows: no need to ask anyone
+    if (known) { setSt({ phase: "done", ean, info: { name: known.name, brand: "", qty: "" }, res: [X.P.get(known.p)] }); return; }
     setSt({ phase: "look", ean, info: null, res: [] });
     try {
       const info = await productByEan(ean);

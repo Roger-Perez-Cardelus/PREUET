@@ -1,10 +1,16 @@
-# Downloads the product photos chosen in tools/fetch_images.py (PICKS) from Wikimedia Commons and commits them,
-# with their author and licence in data/preuet-data.json, to the branch you choose. Run it from the Actions tab.
+# Downloads product photos and commits them, with their source and licence in data/preuet-data.json, to the branch you
+# choose. Run it from the Actions tab. Source "off": photos of the real packs each supermarket sells, from Open Food Facts
+# (tools/fetch_off_images.py). Source "commons": generic photos chosen in tools/fetch_images.py (loose fruit, veg, meat).
 name: Fotos de producte
 
 on:
   workflow_dispatch:
     inputs:
+      source:
+        description: "Font de les fotos"
+        type: choice
+        options: [off, commons]
+        default: off
       branch:
         description: "Branca on es desen les fotos"
         required: true
@@ -28,7 +34,7 @@ concurrency:
 jobs:
   fetch:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,7 +43,18 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install "pillow>=11,<13"
+      - name: Fotos dels paquets reals (Open Food Facts)
+        if: inputs.source == 'off'
+        env:
+          ONLY: ${{ inputs.only }}
+          AGAIN: ${{ inputs.again }}
+        run: |
+          args=""
+          if [ -n "$ONLY" ]; then args="$args --only $ONLY"; fi
+          if [ "$AGAIN" = "true" ]; then args="$args --again"; fi
+          python3 tools/fetch_off_images.py $args
       - name: Baixa les fotos de Wikimedia Commons
+        if: inputs.source == 'commons'
         env:
           PREUET_IMG_PAUSE: "4"
           ONLY: ${{ inputs.only }}
@@ -55,7 +72,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add web/img data/preuet-data.json
+          git add web/img data/preuet-data.json data/off-matches.json 2>/dev/null || git add web/img data/preuet-data.json
           if git diff --cached --quiet; then echo "Cap foto nova"; exit 0; fi
-          git commit -m "Fotos de producte de Wikimedia Commons"
+          git commit -m "Fotos de producte (${{ inputs.source }})"
           git push origin "HEAD:$BRANCH"
