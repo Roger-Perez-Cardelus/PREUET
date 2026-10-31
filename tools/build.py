@@ -15,6 +15,7 @@ Sources
     tools/page_body.html        artifact page head (title, fonts from Google Fonts, CSS slot, #app)
     tools/cdn.txt               artifact: Preact + htm from jsDelivr
     web/                        web-only files: config.js, manifest, service worker, self-hosted fonts, vendor libs, icons
+    web/img/products/           product photos (both versions; see tools/fetch_images.py)
 """
 import base64
 import hashlib
@@ -72,6 +73,10 @@ def build_artifact(txt, data):
     (out / "index.html").write_text(html, encoding="utf-8")
     (out / "data" / "preuet-data.json").write_text(txt, encoding="utf-8")
     copy_history(out)
+    imgs = ROOT / "web" / "img"
+    if imgs.exists():
+        shutil.rmtree(out / "img", ignore_errors=True)
+        shutil.copytree(imgs, out / "img")
     return out / "index.html", html
 
 

@@ -37,6 +37,7 @@ function AboutSheet() {
       <p class="small muted">${t("about_version", { v: "V1", d: fmtDL(X.D.meta.updated) })} · ${X.D.meta.n_prices} preus · ${X.D.meta.n_products} productes</p>
       <p class="small">${t("ai_note")}</p>
       <p class="small">${t("disclaimer")}</p>
+      <section class="stack-s"><h3>${t("privacy_t")}</h3>${t("privacy_body").split("\n").map((x, i) => html`<p class="small" key=${i}>${x}</p>`)}</section>
       <dl class="kv"><dt>${t("storage_mode")}</dt><dd>${t("mode_" + Store.mode)}</dd></dl>
     </div><//>`;
 }

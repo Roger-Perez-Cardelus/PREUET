@@ -102,7 +102,7 @@ python3 tools/build.py                        # dist/artifact i dist/web
 
 ## 5. Publicar
 
-1. **Artifact**: llegeix-lo primer (`Artifact read` de l'URL) i publica `dist/artifact/index.html` al mateix `url`, amb `files` = `{"data/preuet-data.json": "dist/artifact/data/preuet-data.json"}`. No passis `capabilities` (es conserven) ni toquis els fitxers de `source/` (es conserven sols).
+1. **Artifact**: llegeix-lo primer (`Artifact read` de l'URL) i publica `dist/artifact/index.html` al mateix `url`, amb `files` = `{"data/preuet-data.json": "dist/artifact/data/preuet-data.json", "data/history.json": "dist/artifact/data/history.json"}` (les fotos de `dist/artifact/img/products/` només cal pujar-les quan canviïn). No passis `capabilities` (es conserven) ni toquis els fitxers de `source/` (es conserven sols).
 2. **GitHub** (si hi ha repositori): commit de `data/preuet-data.json` i `data/history.json` amb el missatge `Preus i ofertes del AAAA-MM-DD` i push a `main`. GitHub Pages es torna a publicar sol.
 
 ## 6. Informe
