@@ -2,8 +2,17 @@
 """Read real shelf prices for new Preuet products from the supermarkets' own online shops (run from GitHub Actions).
 
     python3 tools/fetch_prices.py probe            which shop endpoints answer from here, with a sample
+    python3 tools/fetch_prices.py collect          saves what the shops list (Mercadona's whole catalogue, Consum's search
+                                                   for each new product) to tmp-raw/, to build and check offerings by hand
+    python3 tools/fetch_prices.py build            turns tmp-raw/ into products and offerings in data/preuet-data.json
+                                                   (tools/new_products.py: which shelf items count as each product)
+
+Only Mercadona (tienda.mercadona.es, its shop's public JSON) and Consum (tienda.consum.es) answer from GitHub's runners;
+Dia and Carrefour refuse automated reads (403). The tool waits between calls.
 """
+import gzip
 import json
+import pathlib
 import sys
 import time
 import urllib.parse
@@ -33,6 +42,55 @@ def fetch(url):
         return 0, "", str(e).encode()
 
 
+RAW = pathlib.Path(__file__).resolve().parent.parent / "tmp-raw"
+
+
+def get_json(url, pause=1.0):
+    time.sleep(pause)
+    st, ct, body = fetch(url)
+    if st != 200:
+        print("  !", st, url)
+        return None
+    try:
+        return json.loads(body)
+    except ValueError:
+        return None
+
+
+def cmd_collect():
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+    from new_products import PRODUCTS
+    RAW.mkdir(exist_ok=True)
+    merc = []
+    top = get_json("https://tienda.mercadona.es/api/categories/?lang=es&wh=bcn1") or {"results": []}
+    for group in top["results"]:
+        for c in group.get("categories", []):
+            d = get_json(f"https://tienda.mercadona.es/api/categories/{c['id']}/?lang=es&wh=bcn1")
+            for sub in (d or {}).get("categories", []):
+                for p in sub.get("products", []):
+                    merc.append({"id": p.get("id"), "name": p.get("display_name"), "packaging": p.get("packaging"), "url": p.get("share_url"),
+                                 "cat": group["name"] + " / " + c["name"] + " / " + sub.get("name", ""), "pi": p.get("price_instructions")})
+            print(f"mercadona {c['name']}: {len(merc)}", flush=True)
+    (RAW / "mercadona.json.gz").write_bytes(gzip.compress(json.dumps(merc, ensure_ascii=False).encode()))
+    consum = {}
+    for p in PRODUCTS:
+        items = []
+        for off in (0, 40):
+            d = get_json("https://tienda.consum.es/api/rest/V1.0/catalog/product?" + urllib.parse.urlencode({"limit": 40, "offset": off, "q": p["q"]}))
+            items += (d or {}).get("products", [])
+            if not d or not d.get("hasMore"):
+                break
+        consum[p["id"]] = items
+        print(f"consum {p['id']}: {len(items)}", flush=True)
+    (RAW / "consum.json.gz").write_bytes(gzip.compress(json.dumps(consum, ensure_ascii=False).encode()))
+    # more shops to try next time
+    for name, url in {"bonpreu-ocado": "https://www.compraonline.bonpreuesclat.cat/api/webproductpagews/v5/product-pages/search?includeAdditionalPageInfo=true&maxPageSize=3&q=llet",
+                      "bonpreu-v6": "https://www.compraonline.bonpreuesclat.cat/api/v6/products/search?term=llet&limit=3",
+                      "ametller": "https://www.ametllerorigen.com/ca/catalogsearch/result/?q=llet"}.items():
+        st, ct, body = fetch(url)
+        print(f"== {name}: {st} {ct} {len(body)}: {body[:300]!r}")
+
+
 def cmd_probe():
     for name, url in PROBES.items():
         st, ct, body = fetch(url)
@@ -42,4 +100,4 @@ def cmd_probe():
 
 
 if __name__ == "__main__":
-    {"probe": cmd_probe}[sys.argv[1]]()
+    {"probe": cmd_probe, "collect": cmd_collect}[sys.argv[1]]()

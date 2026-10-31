@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "probe: només comprova les fonts · fetch: llegeix preus"
+        description: "probe: comprova les fonts · collect: desa el que llisten les botigues a tmp-raw/ per revisar-ho"
         type: choice
-        options: ["probe", "fetch"]
+        options: ["probe", "collect"]
         default: "probe"
       branch:
         description: "Branca on es desen els preus"
@@ -32,18 +32,17 @@ jobs:
       - name: Fonts
         if: inputs.mode == 'probe'
         run: python3 tools/fetch_prices.py probe
-      - name: Llegeix preus
-        if: inputs.mode == 'fetch'
-        run: python3 tools/fetch_prices.py fetch
+      - name: Llegeix el que llisten les botigues
+        if: inputs.mode == 'collect'
+        run: python3 tools/fetch_prices.py collect
       - name: Desa-ho a la branca
-        if: inputs.mode == 'fetch'
+        if: inputs.mode == 'collect'
         env:
           BRANCH: ${{ inputs.branch }}
         run: |
-          python3 tools/update_data.py check
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/
+          git add -f tmp-raw/
           if git diff --cached --quiet; then echo "Res de nou"; exit 0; fi
-          git commit -m "Preus de productes nous"
+          git commit -m "Llistats de botigues per revisar (tmp-raw)"
           git push origin "HEAD:$BRANCH"
