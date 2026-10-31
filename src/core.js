@@ -3,7 +3,6 @@
 const { html, render, h, createContext, useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback, useContext, useReducer, useErrorBoundary } = htmPreact;
 
 const DAY = 86400000;
-const WEIGHED = new Set(["fruita", "carn"]);
 const PANTRY = new Set(["sal", "oli-oliva-ve", "oli-oliva-suau", "oli-gira-sol", "sucre", "farina", "mel"]);
 const DIET_TAGS = ["sg", "sl", "vg", "vt"];
 const ALLERGENS = ["gluten", "crustacis", "ous", "peix", "cacauets", "soja", "llet", "fruitsecs", "api", "mostassa", "sesam", "sulfits", "tramussos", "molluscs"];
@@ -94,11 +93,13 @@ function offerOK(o, p, opt) {
   }
   return true;
 }
-function tillCost(l, p) { return WEIGHED.has(p.cat) || !l.packs ? l.cost : l.packs * l.o.price; }
+/* Fruit and veg sold loose (granel, or "1 kg aprox" by weight) is paid by weight; everything else, pieces included, is paid per pack. */
+function isLoose(o, p) { return !!o && !!p && p.cat === "fruita" && (/granel/i.test(o.name || "") || (/aprox/i.test(o.name || "") && Math.abs(o.size - 1) < 1e-9)); }
 function packText(l, p) {
-  if (WEIGHED.has(p.cat) || !l.packs) return fmtQty(l.q, p.unit) + " × " + eurU(l.o.up, p.unit);
-  if (l.packs * l.o.size > l.q * 1.01) return t("pack_bigger", { s: fmtQty(l.o.size, p.unit) }) + " · " + eur(l.o.price) + " (" + eurU(l.o.up, p.unit) + ")";
-  return l.packs + " × " + eur(l.o.price);
+  if (l.loose) return fmtQty(l.q, p.unit) + " × " + eurU(l.o.up, p.unit);
+  const txt = l.parts.map(x => x.n + " × " + eur(x.o.price) + (l.parts.length > 1 ? " (" + fmtQty(x.o.size, p.unit) + ")" : "")).join(" + ");
+  if (l.big || l.got > l.q * 1.01) return t("pack_bigger", { s: l.parts.map(x => fmtQty(x.o.size, p.unit)).join(" + ") }) + " · " + txt + (l.parts.length > 1 ? "" : " (" + eurU(l.o.up, p.unit) + ")");
+  return txt;
 }
 function eligible(pid, cid, opt) {
   const p = X.P.get(pid);
@@ -106,25 +107,45 @@ function eligible(pid, cid, opt) {
   if (!list.length && opt.comm) { const c = opt.comm.get(pid + "|" + cid); if (c) list.push(c); }
   return list;
 }
-/* Cost of a basket line = quantity × unit price of the cheapest sensible pack.
-   Packs more than 3× the quantity needed are ignored (a 5 L bottle is not "1 L"), unless they are all the chain sells;
-   then the smallest pack's unit price is used and the line is flagged, because you would pay the whole pack. */
+/* Cost of a basket line = what you pay at the till: whole packs (packs × pack price), or quantity × price per kilo for loose produce.
+   Among the chain's options it takes the one that costs least at the till; on a tie, the one that gives more product.
+   `use` is the value of the quantity you actually need (quantity × unit price), shown when the pack is bigger than needed. */
 function itemAt(pid, n, cid, opt) {
   const p = X.P.get(pid);
   if (!p) return null;
   const q = n * p.ref;
   const list = eligible(pid, cid, opt);
   if (!list.length) return null;
-  const weighed = WEIGHED.has(p.cat);
-  let pool = weighed ? list : list.filter(o => o.size <= q * 3 + 1e-9);
-  const big = !weighed && !pool.length;
-  if (big) { const m = Math.min(...list.map(o => o.size)); pool = list.filter(o => o.size <= m + 1e-9); }
   let best = null;
-  for (const o of pool) {
-    const cost = q * o.up;
-    if (!best || cost < best.cost - 1e-9) best = { cost, o, q, packs: weighed ? null : Math.max(1, Math.ceil(q / o.size - 1e-9)), big };
+  const consider = (cost, parts, loose) => {
+    const got = loose ? q : sum(parts.map(x => x.n * x.o.size));
+    if (!best || cost < best.cost - 1e-9 || (Math.abs(cost - best.cost) <= 1e-9 && got > best.got)) best = { cost, parts, loose, got };
+  };
+  for (const o of list) {
+    if (isLoose(o, p)) { consider(q * o.up, [{ o, n: 1 }], true); continue; }
+    const k = Math.max(1, Math.ceil(q / o.size - 1e-9));
+    consider(k * o.price, [{ o, n: k }], false);
+    // a mix of two formats: as many of this one as fit, the rest in the other (e.g. a 6-pack and one bottle)
+    const whole = Math.floor(q / o.size + 1e-9), rest = q - whole * o.size;
+    if (whole < 1 || rest < 1e-9) continue;
+    for (const o2 of list) {
+      if (o2 === o || isLoose(o2, p)) continue;
+      const k2 = Math.max(1, Math.ceil(rest / o2.size - 1e-9));
+      consider(whole * o.price + k2 * o2.price, [{ o, n: whole }, { o: o2, n: k2 }], false);
+    }
   }
-  return best;
+  const main = best.parts.slice().sort((a, b) => b.n * b.o.size - a.n * a.o.size)[0].o;
+  const packs = best.loose ? null : sum(best.parts.map(x => x.n));
+  return { cost: best.cost, use: q * main.up, o: main, q, packs, parts: best.parts, loose: best.loose, got: best.got, big: !best.loose && best.got > q * 2 + 1e-9 };
+}
+/* Unit price for the price index: the cheapest price per kilo or litre among sensible packs (at most 3× the quantity). */
+function unitAt(pid, cid, opt) {
+  const p = X.P.get(pid);
+  const list = eligible(pid, cid, opt);
+  if (!p || !list.length) return null;
+  let pool = list.filter(o => isLoose(o, p) || o.size <= p.ref * 3 + 1e-9);
+  if (!pool.length) { const m = Math.min(...list.map(o => o.size)); pool = list.filter(o => o.size <= m + 1e-9); }
+  return Math.min(...pool.map(o => o.up));
 }
 function propCost(pid, q, cid, opt) { // recipe: pay only what you use
   let best = null;
@@ -139,8 +160,8 @@ function globalIndex(opt) {
   for (const p of X.D.products) {
     const costs = [];
     for (const c of X.D.chains) {
-      const l = itemAt(p.id, 1, c.id, opt);
-      if (l) costs.push([c.id, l.cost / l.q]);
+      const up = unitAt(p.id, c.id, opt);
+      if (up != null) costs.push([c.id, up]);
     }
     if (costs.length < 2) continue;
     const m = Math.min(...costs.map(x => x[1]));
