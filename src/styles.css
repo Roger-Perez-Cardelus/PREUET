@@ -362,3 +362,46 @@ body.testing .sheet-foot { padding-bottom: calc(var(--tb-h, 56px) + 20px + env(s
 .loading { min-height: 70vh; display: grid; place-items: center; text-align: center; color: var(--ink-2); }
 .loading b { font-family: var(--f-display); font-size: var(--t-xl); color: var(--ink); display: block; }
 
+
+/* ---------- UX pass (November 2026) ---------- */
+.loading .skel-wrap { width: min(320px, 80vw); display: grid; gap: 10px; justify-items: center; }
+.skel { display: block; width: 100%; height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--sunk) 0 40%, var(--line) 50%, var(--sunk) 60% 100%); background-size: 300% 100%; animation: shimmer 1.2s linear infinite; }
+.skel.short { width: 60%; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+.stale-line { display: flex; align-items: center; gap: 6px; font-size: var(--t-xs); color: var(--warn); margin: 0; }
+
+.sum-bar { position: sticky; top: 64px; z-index: 10; display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-m); padding: 10px 12px; box-shadow: var(--shadow); color: var(--ink); }
+.sum-bar:hover { border-color: var(--plum); }
+
+.act-main { display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px; }
+.act-main .btn { padding-inline: 10px; }
+.act-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 6px; }
+.act-row button { display: grid; justify-items: center; gap: 4px; padding: 10px 4px; min-height: 64px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink-2); font-size: var(--t-xs); font-weight: 600; }
+.act-row button:hover { border-color: var(--plum); color: var(--plum); }
+
+.offer-grid { display: grid; gap: 10px; }
+.offer-card { display: flex; align-items: flex-start; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r-m); padding: 12px; }
+.offer-ic { width: 56px; height: 56px; flex: none; border-radius: 14px; display: grid; place-items: center; background: var(--plum-soft); color: var(--plum); }
+.offer-title { display: block; text-align: left; background: none; border: 0; padding: 0; font: inherit; font-weight: 700; line-height: 1.25; color: var(--ink); }
+button.offer-title:hover { color: var(--plum); text-decoration: underline; }
+
+.tpl-pics { display: flex; margin-bottom: 2px; }
+.tpl-pics img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #fff; border: 2px solid var(--card); margin-left: -8px; box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+.tpl-pics img:first-child { margin-left: 0; }
+
+.badge { animation: pop .35s ease-out; }
+@keyframes pop { 0% { transform: scale(.4); } 70% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.li, .tpl, .cat-btn, .offer-card, .btn, .filter { transition: border-color .15s, background-color .15s, transform .1s; }
+.btn:active, .tpl:active, .cat-btn:active, .act-row button:active { transform: scale(.97); }
+
+/* wider screens: use the room instead of one narrow column */
+@media (min-width: 900px) {
+  .wrap { max-width: 980px; }
+  .grid-cats { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .hscroll { grid-auto-columns: minmax(220px, calc((100% - 30px) / 4)); }
+  .offer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sheet .wrap { max-width: 760px; }
+  .sum-bar { top: 70px; }
+}

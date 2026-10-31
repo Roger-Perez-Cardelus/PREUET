@@ -9,10 +9,14 @@ function set(patch) { Object.assign(S, typeof patch === "function" ? patch(S) : 
 let toastTimer = null;
 function toast(msg) { clearTimeout(toastTimer); set({ toast: msg }); toastTimer = setTimeout(() => set({ toast: null }), 2800); }
 let saveTimer = null;
+function applyTheme(th) { // "auto" follows the phone; "light" / "dark" override it
+  try { if (th === "light" || th === "dark") document.documentElement.setAttribute("data-theme", th); else document.documentElement.removeAttribute("data-theme"); } catch (e) { /* ignore */ }
+}
 function updUser(patch) {
   const p = typeof patch === "function" ? patch(S.user) : patch;
   S.user = Object.assign({}, S.user, p, { updated: Date.now() });
   if (S.user.lang !== LANG) { LANG = S.user.lang; document.documentElement.lang = LANG; }
+  if (p && "theme" in p) applyTheme(S.user.theme);
   set({});
   clearTimeout(saveTimer);
   if (!Store.sandbox) saveTimer = setTimeout(() => Store.saveUser(S.user), 1200);

@@ -140,6 +140,7 @@ function ProfileSheet() {
       <${TownField} />
       <div class="field"><span class="lab">${t("my_chains")}</span><p class="xs muted">${t("my_chains_sub")}</p><${ChainPicker} /></div>
       <div class="field"><span class="lab">${t("lang_label")}</span><${Seg} label=${t("lang_label")} value=${u.lang} onChange=${v => updUser({ lang: v })} options=${[{ v: "ca", l: "Català" }, { v: "es", l: "Castellano" }]} /></div>
+      <div class="field"><span class="lab">${t("theme_label")}</span><${Seg} label=${t("theme_label")} value=${u.theme || "auto"} onChange=${v => updUser({ theme: v })} options=${[{ v: "auto", l: t("theme_auto") }, { v: "light", l: t("theme_light") }, { v: "dark", l: t("theme_dark") }]} /></div>
       ${Store.mode !== "claude" ? html`<div class="field"><label for="pf-nick">${t("nickname")}</label><input id="pf-nick" type="text" maxlength="30" value=${u.nick} placeholder=${t("nickname_ph")} onInput=${e => updUser({ nick: e.currentTarget.value })} /><span class="xs muted">${t("nickname_note")}</span></div>` : null}
       <${BackupBlock} />
       <p class="small muted">${Store.mode === "claude" && Store.me.id ? t("data_where_claude") : Store.mode === "supabase" ? t("data_where_supa") : t("data_where_local")}</p>
@@ -167,7 +168,7 @@ function TownSheet() {
 }
 
 /* ---------- backup code: move your basket, periodic purchases and preferences to another phone or browser ---------- */
-const BACKUP_KEYS = ["lang", "seg", "diets", "avoid", "town", "chains", "brand", "fresh", "estimate", "w", "basket", "schedules", "nick", "watch", "purchases", "loc", "maxKm"];
+const BACKUP_KEYS = ["lang", "seg", "diets", "avoid", "town", "chains", "brand", "fresh", "estimate", "w", "basket", "schedules", "nick", "watch", "purchases", "loc", "maxKm", "theme"];
 function backupCode(u) {
   const o = {};
   for (const k of BACKUP_KEYS) if (u[k] !== undefined) o[k] = u[k];

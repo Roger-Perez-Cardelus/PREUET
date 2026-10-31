@@ -70,7 +70,7 @@ await step("06-product-bottom", async () => {
 await step("07-offers", async () => {
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: /^Ofertes|^Ofertas/ }).click();
-  await page.locator("article.card").first().waitFor();
+  await page.locator("article.offer-card").first().waitFor();
 });
 await step("08-recipes", async () => {
   await page.getByRole("button", { name: /^Receptes|^Recetas/ }).click();

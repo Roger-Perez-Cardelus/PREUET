@@ -66,10 +66,11 @@ function Logo() {
 
 /* ---------- small pieces ---------- */
 const SHORT = { mercadona: "Me", lidl: "Li", aldi: "Al", carrefour: "Ca", dia: "Di", bonpreu: "Bp", ametller: "Am", consum: "Co", bonarea: "bÀ", caprabo: "Cp", condis: "Cd", sorli: "So", spar: "Sp", suma: "Su" };
-function ChainBadge({ cid, noName, strong }) {
+const SHORT_NAME = { ametller: "Ametller", carrefour: "Carrefour", mercadona: "Mercadona" };
+function ChainBadge({ cid, noName, strong, short }) {
   const c = X.C.get(cid);
   if (!c) return null;
-  return html`<span class="cb"><i style=${{ background: chipColor(c.color), color: textOn(chipColor(c.color)) }} aria-hidden="true">${SHORT[cid] || c.name.slice(0, 2)}</i>${noName ? null : html`<span style=${strong ? "font-weight:800" : ""}>${c.name}</span>`}</span>`;
+  return html`<span class="cb"><i style=${{ background: chipColor(c.color), color: textOn(chipColor(c.color)) }} aria-hidden="true">${SHORT[cid] || c.name.slice(0, 2)}</i>${noName ? null : html`<span style=${strong ? "font-weight:800" : ""}>${short && SHORT_NAME[cid] ? SHORT_NAME[cid] : c.name}</span>`}</span>`;
 }
 function PriceTag({ v, sub, lg, plain, title }) {
   return html`<span class=${"ptag" + (lg ? " lg" : "") + (plain ? " plain" : "")} title=${title || null}><span class="p">${eur(v)}</span>${sub ? html`<span class="u">${sub}</span>` : null}</span>`;

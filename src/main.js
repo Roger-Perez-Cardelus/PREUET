@@ -79,7 +79,10 @@ async function boot() {
   const h = (location.hash || "").slice(1);
   if (TABS.some(x => x[0] === h)) S.tab = h;
   S.ready = true;
-  render(html`<${App} />`, document.getElementById("app"));
+  applyTheme(S.user.theme);
+  const root = document.getElementById("app");
+  root.textContent = ""; // the static "loading" placeholder: Preact would otherwise leave it at the bottom of every page
+  render(html`<${App} />`, root);
   if (inline) fetchNewerData();
   const cfg = window.PREUET_CONFIG || null;
   let ok = false;

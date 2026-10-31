@@ -15,7 +15,7 @@ function TabBar() {
   const n = S.user.basket.length;
   return html`<nav class="tabbar" aria-label="Preuet"><div class="wrap">
     ${TABS.map(([id, ic]) => html`<button type="button" key=${id} class="tab" aria-current=${S.tab === id ? "page" : null} onClick=${() => go(id)}>
-      <${Icon} n=${ic} s=${24} />${t("tab_" + id)}${id === "cistella" && n ? html`<span class="badge" aria-label=${t("n_products", { n })}>${n}</span>` : null}
+      <${Icon} n=${ic} s=${24} />${t("tab_" + id)}${id === "cistella" && n ? html`<span class="badge" key=${"b" + n} aria-label=${t("n_products", { n })}>${n}</span>` : null}
     </button>`)}
   </div></nav>`;
 }
@@ -75,9 +75,24 @@ function Home() {
       <${CommunityTeaser} />`}
   </div>`;
 }
-function StaleBanner() {
+function StaleBanner({ compact }) {
   const d = daysBetween(X.D.meta.updated, isoToday());
-  return d > STALE_DAYS ? html`<div class="callout warn row" role="status"><${Icon} n="alert" /><span class="grow">${t("stale_banner", { n: d, date: fmtDL(X.D.meta.updated) })}</span></div>` : null;
+  if (d <= STALE_DAYS) return null;
+  if (compact) return html`<p class="stale-line" role="status"><${Icon} n="clock" s=${15} />${t("stale_short", { date: fmtD(X.D.meta.updated), n: d })}</p>`;
+  return html`<div class="callout warn row" role="status"><${Icon} n="alert" /><span class="grow">${t("stale_banner", { n: d, date: fmtDL(X.D.meta.updated) })}</span></div>`;
+}
+/* the answer first: where the basket is cheapest, always in view while you edit it */
+function BasketSummary({ cmp }) {
+  const b = cmp && cmp.best;
+  if (!b) return null;
+  const worst = cmp.ranked.length > 1 ? cmp.ranked[cmp.ranked.length - 1] : null;
+  const save = worst ? cmp.key(worst) - cmp.key(b) : 0;
+  const jump = () => { const el = document.getElementById("results"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  return html`<button type="button" class="sum-bar" onClick=${jump} aria-label=${t("home_best") + ": " + X.C.get(b.cid).name + " " + eur(cmp.key(b))}>
+    <span class="grow stack-s" style="gap:2px;min-width:0"><span class="eyebrow">${t("home_best")}</span>
+      <span class="row" style="gap:8px"><${ChainBadge} cid=${b.cid} strong=${true} />${save > 0.05 ? html`<span class="chip good">−${eur(save)}</span>` : null}</span></span>
+    <${PriceTag} v=${cmp.key(b)} /><${Icon} n="chevD" s=${18} />
+  </button>`;
 }
 function DueSchedules() {
   const due = S.user.schedules.map(s => ({ s, d: dueOf(s) })).filter(x => x.d.due);
@@ -105,7 +120,9 @@ function Templates() {
       const items = tp.items.map(([p, n]) => ({ p, n }));
       const cmp = memo("tpl:" + tp.id, [S.user.chains, S.user.brand, S.user.fresh, S.user.estimate, S.community], () => compareBasket(items, chains, opt));
       const b = cmp.best;
+      const pics = items.map(x => X.P.get(x.p)).filter(p => p && p.img && p.img.t).slice(0, 4);
       return html`<button type="button" class="tpl" key=${tp.id} onClick=${() => loadTemplate(tp.id)}>
+        ${pics.length >= 3 ? html`<span class="tpl-pics" aria-hidden="true">${pics.map(p => html`<img key=${p.id} src=${p.img.t} alt="" loading="lazy" width="48" height="48" />`)}</span>` : null}
         <span class="chip plum seg">${t("seg_" + tp.seg)}</span>
         <b>${tl(tp)}</b>
         <span class="small muted">${t("n_products", { n: items.length })}</span>
@@ -156,6 +173,7 @@ function Basket() {
   const cmp = basketCompare();
   const chains = activeChains();
   return html`<div class="stack-l">
+    <${BasketSummary} cmp=${cmp} />
     <section>
       <div class="section-h"><h2 class="grow">${t("basket_title")} <span class="muted small">· ${t("n_products", { n: u.basket.length })}</span></h2>
         <button type="button" class="btn small primary" onClick=${() => openSheet({ type: "picker" })}><${Icon} n="plus" s=${18} />${t("add")}</button></div>
@@ -174,7 +192,7 @@ function Basket() {
         ? html`<div class="grow"><${ConfirmInline} text=${t("confirm_clear", { n: u.basket.length })} yes=${t("confirm_clear_yes")} onYes=${() => { updUser({ basket: [] }); setConfirm(false); }} onNo=${() => setConfirm(false)} /></div>`
         : html`<button type="button" class="link-btn" style="color:var(--ink-2)" onClick=${() => setConfirm(true)}>${t("clear_basket")}</button>`}</div>
     </section>
-    <${StaleBanner} />
+    <${StaleBanner} compact=${true} />
     <${CompareOptions} />
     ${chains.length ? html`<${CompareResults} cmp=${cmp} />` : html`<div class="callout warn">${t("chains_none")}</div>`}
     <${QPCard} cmp=${cmp} />
@@ -218,7 +236,7 @@ function CompareResults({ cmp }) {
   const sel = cmp.rows.find(r => r.cid === selId);
   const worst = cmp.ranked.length > 1 ? cmp.ranked[cmp.ranked.length - 1] : null;
   const save = worst ? cmp.key(worst) - cmp.key(best) : 0;
-  return html`<section class="stack" ref=${ref}>
+  return html`<section class="stack" ref=${ref} id="results" style="scroll-margin-top:72px">
     <div class="section-h"><h2 class="grow">${t("where_cheapest")}</h2></div>
     <div class="card raised stack">
       <span class="eyebrow">${t("best_single")}</span>
@@ -237,13 +255,15 @@ function CompareResults({ cmp }) {
     </div>
     <${PairCard} cmp=${cmp} />
     ${sel ? html`<${Receipt} row=${sel} cmp=${cmp} />` : null}
-    <div class="row wrap-ok">
-      ${sel ? html`<button type="button" class="btn primary small" onClick=${() => openSheet({ type: "shoplist", cid: sel.cid })}><${Icon} n="check" s=${18} />${t("shop_open", { chain: X.C.get(sel.cid).name })}</button>
-      <button type="button" class="btn ghost small" onClick=${() => openSheet({ type: "purchase", cid: sel.cid })}><${Icon} n="receipt" s=${18} />${t("buy_done")}</button>` : null}
-      <button type="button" class="btn ghost small" onClick=${() => shareBasket(u.basket)}><${Icon} n="share" s=${18} />${t("share_basket")}</button>
-      <button type="button" class="btn ghost small" onClick=${() => copyText(basketText(sel, u.basket))}><${Icon} n="copy" s=${18} />${t("list_copy")}</button>
-      ${canDownload() ? html`<button type="button" class="btn ghost small" onClick=${() => download("llista-preuet-" + isoToday() + ".txt", basketText(sel, u.basket))}><${Icon} n="download" s=${18} />${t("list_download")}</button>` : null}
-      <button type="button" class="btn ghost small" onClick=${() => openSheet({ type: "schedNew" })}><${Icon} n="calendar" s=${18} />${t("make_periodic")}</button>
+    ${sel ? html`<div class="act-main">
+      <button type="button" class="btn primary" onClick=${() => openSheet({ type: "shoplist", cid: sel.cid })}><${Icon} n="check" s=${18} />${t("shop_open", { chain: X.C.get(sel.cid).name })}</button>
+      <button type="button" class="btn ghost" onClick=${() => openSheet({ type: "purchase", cid: sel.cid })}><${Icon} n="receipt" s=${18} />${t("buy_done")}</button>
+    </div>` : null}
+    <div class="act-row" role="group" aria-label=${t("more_actions")}>
+      <button type="button" onClick=${() => shareBasket(u.basket)}><${Icon} n="share" s=${20} /><span>${t("share_basket")}</span></button>
+      <button type="button" onClick=${() => copyText(basketText(sel, u.basket))}><${Icon} n="copy" s=${20} /><span>${t("act_copy")}</span></button>
+      ${canDownload() ? html`<button type="button" onClick=${() => download("llista-preuet-" + isoToday() + ".txt", basketText(sel, u.basket))}><${Icon} n="download" s=${20} /><span>${t("act_download")}</span></button>` : null}
+      <button type="button" onClick=${() => openSheet({ type: "schedNew" })}><${Icon} n="calendar" s=${20} /><span>${t("act_periodic")}</span></button>
     </div>
   </section>`;
 }
@@ -262,7 +282,7 @@ function BasketBars({ cmp, selId }) {
         return html`<button type="button" key=${r.cid} class=${"bar" + (isBest ? " best" : "")} aria-pressed=${String(r.cid === selId)} aria-label=${tipText}
           onClick=${() => { updUser({ selChain: r.cid }); emit("basket:chain", { cid: r.cid }); }}
           onMouseEnter=${e => setTip({ text: tipText, y: e.currentTarget.offsetTop })} onMouseLeave=${() => setTip(null)} onFocus=${e => setTip({ text: tipText, y: e.currentTarget.offsetTop })} onBlur=${() => setTip(null)}>
-          <span class="lab"><${ChainBadge} cid=${r.cid} /></span>
+          <span class="lab"><${ChainBadge} cid=${r.cid} short=${true} /></span>
           <span class="track" style="display:flex;gap:2px">
             <span class="fill" style=${{ width: real + "%", borderRadius: est > 0 ? "0" : "0 4px 4px 0" }}></span>
             ${est > 0 ? html`<span class="fill est" style=${{ width: est + "%", opacity: 1, background: "repeating-linear-gradient(135deg, var(--ink-3) 0 2px, transparent 2px 5px)", borderRadius: "0 4px 4px 0" }}></span>` : null}
@@ -353,20 +373,32 @@ function Offers() {
   const today = isoToday();
   const [mode, setMode] = useState("now");
   const [ch, setCh] = useState(null);
+  const [q, setQ] = useState("");
+  const [mine, setMine] = useState(false);
+  const [shown, setShown] = useState(30);
+  const inBasket = new Set(S.user.basket.map(x => x.p).concat(S.user.watch || []));
   const all = X.D.offers.map(o => Object.assign({ _s: offerStatus(o, today) }, o)).filter(o => o._s !== "ended");
   const nNow = all.filter(o => o._s === "now").length, nNext = all.filter(o => o._s === "next").length;
   const chainsHere = [...new Set(all.filter(o => o._s === mode).map(o => o.c))];
-  let list = all.filter(o => o._s === mode && (!ch || o.c === ch));
+  const words = norm(q).split(" ").filter(Boolean);
+  let list = all.filter(o => o._s === mode && (!ch || o.c === ch) && (!mine || (o.p && inBasket.has(o.p)))
+    && words.every(w => norm(o.title + " " + (o.p && X.P.has(o.p) ? tl(X.P.get(o.p)) : "")).includes(w)));
   const disc = o => (o.was && o.price ? 1 - o.price / o.was : 0);
   list.sort((a, b) => mode === "next" ? (a.frm < b.frm ? -1 : a.frm > b.frm ? 1 : disc(b) - disc(a)) : disc(b) - disc(a) || (a.c < b.c ? -1 : 1));
+  const reset = () => setShown(30);
   return html`<div class="stack-l">
     <div><h2 style="font-size:var(--t-xl)">${t("offers_title")}</h2><p class="small muted">${t("offers_sub", { date: fmtDL(X.D.meta.updated) })}</p></div>
-    <${Seg} label=${t("offers_title")} value=${mode} onChange=${v => { setMode(v); setCh(null); }} options=${[{ v: "now", l: t("offers_now") + " · " + nNow }, { v: "next", l: t("offers_next") + " · " + nNext }]} />
+    <${Seg} label=${t("offers_title")} value=${mode} onChange=${v => { setMode(v); setCh(null); reset(); }} options=${[{ v: "now", l: t("offers_now") + " · " + nNow }, { v: "next", l: t("offers_next") + " · " + nNext }]} />
+    <div class="search" role="search" style="margin-top:0"><${Icon} n="search" /><input type="search" value=${q} placeholder=${t("offers_search")} aria-label=${t("offers_search")} onInput=${e => { setQ(e.currentTarget.value); reset(); }} /></div>
     <div class="filters">
-      <button type="button" class="filter" aria-pressed=${String(!ch)} onClick=${() => setCh(null)}>${t("all_f")}</button>
-      ${chainsHere.map(c => html`<button type="button" key=${c} class="filter" aria-pressed=${String(ch === c)} onClick=${() => setCh(c)}>${X.C.get(c).name}</button>`)}
+      <button type="button" class="filter" aria-pressed=${String(mine)} onClick=${() => { setMine(!mine); reset(); }}><${Icon} n="basket" s=${15} /> ${t("offers_mine")}</button>
+      <button type="button" class="filter" aria-pressed=${String(!ch)} onClick=${() => { setCh(null); reset(); }}>${t("all_f")}</button>
+      ${chainsHere.map(c => html`<button type="button" key=${c} class="filter" aria-pressed=${String(ch === c)} onClick=${() => { setCh(c); reset(); }}>${X.C.get(c).name}</button>`)}
     </div>
-    ${list.length ? html`<div class="stack">${list.map((o, i) => html`<${OfferCard} key=${o.c + i + o.title} o=${o} />`)}</div>` : html`<${Empty} title=${t("no_offers")} />`}
+    <p class="xs muted" aria-live="polite">${t("offers_count", { n: list.length })}</p>
+    ${list.length ? html`<div class="offer-grid">${list.slice(0, shown).map((o, i) => html`<${OfferCard} key=${o.c + i + o.title} o=${o} />`)}</div>
+      ${list.length > shown ? html`<button type="button" class="btn ghost" onClick=${() => setShown(shown + 30)}>${t("show_more_n", { n: Math.min(30, list.length - shown) })}</button>` : null}`
+      : html`<${Empty} title=${mine ? t("offers_mine_none") : t("no_offers")} />`}
     <p class="xs faint">${t("offers_note_merc")}</p>
   </div>`;
 }
@@ -374,16 +406,17 @@ function OfferCard({ o }) {
   const d = o.was && o.price ? Math.round((1 - o.price / o.was) * 100) : null;
   const dates = o.to ? (o.frm && o.frm > isoToday() ? t("from_to", { a: fmtD(o.frm), b: fmtD(o.to) }) : t("until", { d: fmtD(o.to) })) : (o.frm > isoToday() ? t("starts", { d: fmtD(o.frm) }) : null);
   const p = o.p ? X.P.get(o.p) : null;
-  return html`<article class="card stack-s">
-    <div class="row"><${ChainBadge} cid=${o.c} /><span class="grow"></span>${dates ? html`<span class="chip outline"><${Icon} n="clock" s=${13} />${dates}</span>` : null}</div>
-    <div class="row" style="align-items:flex-start"><div class="grow stack-s" style="min-width:0">
-      <b style="line-height:1.25">${o.title}</b>
-      <div class="chips">${o.mech ? html`<span class="chip plum">${o.mech}</span>` : null}${d && d > 0 ? html`<span class="chip good">−${d} %</span>` : null}</div>
-    </div>${o.price != null ? html`<span class="stack-s" style="align-items:flex-end"><${PriceTag} v=${o.price} />${o.was ? html`<span class="was">${eur(o.was)}</span>` : null}</span>` : html`<span class="chip">${t("promo_card")}</span>`}</div>
-    <div class="row wrap-ok">
-      ${p ? html`<button type="button" class="btn small ghost" onClick=${() => openSheet({ type: "product", id: p.id })}>${t("see_product")}</button>` : null}
-      ${o.src ? html`<a class="btn small ghost" href=${o.src} target="_blank" rel="noopener noreferrer">${t("see_source")} <${Icon} n="ext" s=${14} /></a>` : null}
+  const open = p ? () => openSheet({ type: "product", id: p.id }) : null;
+  const inB = p && qtyOf(p.id) > 0;
+  return html`<article class="offer-card">
+    ${p ? html`<${ProductThumb} p=${p} size=${56} />` : html`<span class="offer-ic" aria-hidden="true"><${Icon} n="tag" s=${24} /></span>`}
+    <div class="grow stack-s" style="min-width:0;gap:4px">
+      <div class="row" style="gap:6px;flex-wrap:wrap"><${ChainBadge} cid=${o.c} />${dates ? html`<span class="xs muted"><${Icon} n="clock" s=${12} /> ${dates}</span>` : null}</div>
+      ${open ? html`<button type="button" class="offer-title" onClick=${open}>${o.title}</button>` : html`<b class="offer-title">${o.title}</b>`}
+      <div class="chips">${d && d > 0 ? html`<span class="chip good">−${d} %</span>` : null}${o.mech ? html`<span class="chip plum">${o.mech}</span>` : null}${inB ? html`<span class="chip">${t("in_your_basket")}</span>` : null}</div>
+      ${o.src ? html`<a class="xs" href=${o.src} target="_blank" rel="noopener noreferrer">${t("see_source")} ↗</a>` : null}
     </div>
+    ${o.price != null ? html`<span class="stack-s" style="align-items:flex-end;gap:2px"><${PriceTag} v=${o.price} />${o.was ? html`<span class="was">${eur(o.was)}</span>` : null}</span>` : html`<span class="chip">${t("promo_card")}</span>`}
   </article>`;
 }
 
