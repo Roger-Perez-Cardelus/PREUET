@@ -39,7 +39,7 @@ const STR = {
   suggest_product: ["Proposa aquest producte", "Propón este producto"],
   suggest_sent: ["Gràcies! Ho tindrem en compte.", "¡Gracias! Lo tendremos en cuenta."],
   from_price: ["des de {p}", "desde {p}"], at_chains: ["a {n} cadena|a {n} cadenes", "en {n} cadena|en {n} cadenas"],
-  stale_banner: ["Els preus són de fa {n} dies. Els actualitzem cada setmana.", "Los precios son de hace {n} días. Los actualizamos cada semana."],
+  stale_banner: ["Els preus són del {date} (fa {n} dies) i encara no s'han actualitzat aquesta setmana. Comprova'ls a la botiga.", "Los precios son del {date} (hace {n} días) y aún no se han actualizado esta semana. Compruébalos en la tienda."],
   results_for: ["Resultats per «{q}»", "Resultados para «{q}»"],
   home_how: ["Com funciona", "Cómo funciona"],
   how_1: ["Fes la cistella amb el que compres", "Haz la cesta con lo que compras"],

@@ -74,7 +74,7 @@ function Home() {
 }
 function StaleBanner() {
   const d = daysBetween(X.D.meta.updated, isoToday());
-  return d > 10 ? html`<div class="callout warn" role="status">${t("stale_banner", { n: d })}</div>` : null;
+  return d > STALE_DAYS ? html`<div class="callout warn row" role="status"><${Icon} n="alert" /><span class="grow">${t("stale_banner", { n: d, date: fmtDL(X.D.meta.updated) })}</span></div>` : null;
 }
 function DueSchedules() {
   const due = S.user.schedules.map(s => ({ s, d: dueOf(s) })).filter(x => x.d.due);
@@ -170,6 +170,7 @@ function Basket() {
         ? html`<div class="grow"><${ConfirmInline} text=${t("confirm_clear", { n: u.basket.length })} yes=${t("confirm_clear_yes")} onYes=${() => { updUser({ basket: [] }); setConfirm(false); }} onNo=${() => setConfirm(false)} /></div>`
         : html`<button type="button" class="link-btn" style="color:var(--ink-2)" onClick=${() => setConfirm(true)}>${t("clear_basket")}</button>`}</div>
     </section>
+    <${StaleBanner} />
     <${CompareOptions} />
     ${chains.length ? html`<${CompareResults} cmp=${cmp} />` : html`<div class="callout warn">${t("chains_none")}</div>`}
     <${QPCard} cmp=${cmp} />

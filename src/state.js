@@ -76,11 +76,38 @@ function memo(key, deps, fn) {
 }
 function defaultChains() { return X.D.chains.filter(c => ["complet", "parcial", "antic"].includes(c.status)).map(c => c.id); }
 function activeChains() { const a = S.user.chains; return a && a.length ? a : defaultChains(); }
-function commPrices() {
-  return memo("cp", [S.community, LANG], () => {
-    const m = new Map();
+/* Community prices: one person's report is used only when it is plausible (within −60 %…+60 % of the median official price
+   for that product) or when a second report for the same product and chain agrees with it (±10 %). */
+function officialRef(pid) {
+  return memo("ref:" + pid, [X], () => {
+    const ups = (X.byP.get(pid) || []).filter(o => daysBetween(o.date, X.D.meta.updated) <= FRESH_DAYS).map(o => o.up).sort((a, b) => a - b);
+    return ups.length ? ups[Math.floor(ups.length / 2)] : null;
+  });
+}
+function commPriceCheck() {
+  return memo("cpc", [S.community, X], () => {
+    const status = new Map(), groups = new Map();
     const cut = Date.now() - FRESH_DAYS * DAY;
     for (const c of S.community) if (c.t === "price" && c.ts > cut) {
+      const k = c.p + "|" + c.c;
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(c);
+    }
+    for (const list of groups.values()) for (const c of list) {
+      const up = c.price / c.size, ref = officialRef(c.p);
+      const plausible = ref != null && up >= ref * 0.4 && up <= ref * 1.6;
+      const confirmed = list.some(o => o !== c && o.uid !== c.uid && Math.abs(o.price / o.size - up) <= up * 0.1);
+      status.set(c.id, plausible || confirmed ? "ok" : "doubt");
+    }
+    return status;
+  });
+}
+function commPrices() {
+  return memo("cp", [S.community, LANG, X], () => {
+    const m = new Map();
+    const ok = commPriceCheck();
+    const cut = Date.now() - FRESH_DAYS * DAY;
+    for (const c of S.community) if (c.t === "price" && c.ts > cut && ok.get(c.id) === "ok") {
       const k = c.p + "|" + c.c;
       const prev = m.get(k);
       if (!prev || prev._ts < c.ts) {

@@ -28,7 +28,7 @@ export function loadApp({ data = DATA, today } = {}) {
   }
   vm.createContext(ctx);
   vm.runInContext(code + "\n;globalThis.__app = { get X() { return X; }, get S() { return S; }, Store, indexData, cleanUser, defaultUser, " +
-    "itemAt, compareBasket, globalIndex, minPrice, recipeBest, recipeAt, packText, commPrices, isLoose, t, STR, LANGS, " +
+    "itemAt, compareBasket, commPriceCheck, officialRef, globalIndex, minPrice, recipeBest, recipeAt, packText, commPrices, isLoose, t, STR, LANGS, " +
     "set: (k, v) => { S[k] = v; }, setLang: l => { LANG = l; } };", ctx, { filename: "app.js" });
   const app = ctx.__app;
   app.indexData(JSON.parse(JSON.stringify(data)));

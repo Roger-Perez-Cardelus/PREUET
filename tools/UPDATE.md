@@ -58,6 +58,8 @@ python3 tools/update_data.py apply-prices captures.json --dry-run   # revisa l'i
 python3 tools/update_data.py apply-prices captures.json
 ```
 
+`apply-prices` també afegeix els preus del dia a `data/history.json` (l'evolució que es veu a la fitxa de producte). Si cal refer-ho: `python3 tools/update_data.py history`.
+
 L'informe diu, per cadena, quants preus han canviat, quants són iguals i quants tenen més de 30 dies. Els canvis de preu unitari de més del 50 % es retenen: torna a mirar la pàgina i, només si el preu nou és correcte (per exemple, ha canviat el format del paquet amb el mateix nom), torna a executar amb `--accept-big`. Els productes nous que no segueix Preuet s'ignoren.
 
 ## 3. Ofertes de la setmana (`offers.json`)
@@ -96,12 +98,12 @@ python3 tools/update_data.py check --fix      # recalcula comptes, ordre d'opcio
 python3 tools/build.py                        # dist/artifact i dist/web
 ```
 
-`check` ha d'acabar sense problemes. Si una cadena amb estat «complet» o «parcial» no té cap preu dels últims 30 dies, l'eina ho avisa: canvia-li l'estat a `antic` a `chains` o torna a llegir-ne les pàgines.
+`check` ha d'acabar sense problemes. Si les dades tenen més de 8 dies, `check` ho avisa (i l'acció de GitHub ho mostra com a avís), però no falla. Si una cadena amb estat «complet» o «parcial» no té cap preu dels últims 30 dies, l'eina ho avisa: canvia-li l'estat a `antic` a `chains` o torna a llegir-ne les pàgines.
 
 ## 5. Publicar
 
 1. **Artifact**: llegeix-lo primer (`Artifact read` de l'URL) i publica `dist/artifact/index.html` al mateix `url`, amb `files` = `{"data/preuet-data.json": "dist/artifact/data/preuet-data.json"}`. No passis `capabilities` (es conserven) ni toquis els fitxers de `source/` (es conserven sols).
-2. **GitHub** (si hi ha repositori): commit de `data/preuet-data.json` amb el missatge `Preus i ofertes del AAAA-MM-DD` i push a `main`. GitHub Pages es torna a publicar sol.
+2. **GitHub** (si hi ha repositori): commit de `data/preuet-data.json` i `data/history.json` amb el missatge `Preus i ofertes del AAAA-MM-DD` i push a `main`. GitHub Pages es torna a publicar sol.
 
 ## 6. Informe
 

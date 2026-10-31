@@ -46,7 +46,7 @@ function FeedItem({ c, hideTarget }) {
   const [busy, setBusy] = useState(false);
   let body;
   if (c.t === "stock") body = html`<span class=${"chip " + (c.s === "si" ? "good" : c.s === "poc" ? "warn" : "bad")}>${t("stock_" + c.s)}</span> ${X.C.get(c.c).name}`;
-  else if (c.t === "price") body = html`<b class="num">${eur(c.price)}</b> · ${fmtQty(c.size, X.P.get(c.p).unit)} · ${X.C.get(c.c).name}`;
+  else if (c.t === "price") body = html`<b class="num">${eur(c.price)}</b> · ${fmtQty(c.size, X.P.get(c.p).unit)} · ${X.C.get(c.c).name}${commPriceCheck().get(c.id) === "doubt" ? html` <span class="chip warn" title=${t("price_doubt_note")}>${t("price_doubt")}</span>` : null}`;
   else if (c.t === "rating") body = html`<${Stars} value=${c.stars} label=${t("stars_n", { n: c.stars })} />`;
   else if (c.t === "origin") body = html`${t("c_origin", { o: c.txt })}${c.c ? " · " + X.C.get(c.c).name : ""}`;
   else body = html`<span style="white-space:pre-wrap;overflow-wrap:anywhere">${c.txt}</span>`;
@@ -116,6 +116,7 @@ function ProductSheet({ id }) {
         ${none.length ? html`<p class="xs faint">${t("no_price_here", { chain: none.map(c => c.name).join(", ") })}</p>` : null}
         <${PriceReport} p=${p} />
       </section>
+      <${PriceHistory} p=${p} />
       <section class="card stack" ref=${nutRef}>
         <div class="row"><h3 class="grow">${t("nutrition")}</h3><span class="xs muted">${t("per100", { b: p.nut && p.nut.basis === "ml" ? "ml" : "g" })}</span></div>
         <${NutritionTable} p=${p} />
@@ -233,7 +234,9 @@ function PriceReport({ p }) {
         <form class="stack" onSubmit=${async e => {
           e.preventDefault();
           if (!(pv > 0 && pv < 500 && sv > 0 && sv < 100)) { toast(t("price_invalid")); return; }
-          if (await contribute({ t: "price", p: p.id, c: cid, price: Math.round(pv * 100) / 100, size: sv }, t("price_sent"))) setPrice("");
+          const ref = officialRef(p.id), up = pv / sv;
+          const odd = ref != null && (up < ref * 0.4 || up > ref * 1.6);
+          if (await contribute({ t: "price", p: p.id, c: cid, price: Math.round(pv * 100) / 100, size: sv }, odd ? t("price_doubt_note") : t("price_sent"))) setPrice("");
         }}>
           <div class="field"><label for=${"pr-c-" + p.id}>${t("stock_chain")}</label><select id=${"pr-c-" + p.id} value=${cid} onChange=${e => setCid(e.currentTarget.value)}>${X.D.chains.map(c => html`<option value=${c.id} key=${c.id}>${c.name}</option>`)}</select></div>
           <div class="row"><div class="field grow"><label for=${"pr-p-" + p.id}>${t("price_eur")}</label><input id=${"pr-p-" + p.id} type="text" inputmode="decimal" value=${price} onInput=${e => setPrice(e.currentTarget.value)} placeholder="1,25" /></div>

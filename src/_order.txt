@@ -1,10 +1,12 @@
 00_wrap_open.js
 i18n.js
+i18n_extra.js
 core.js
 store.js
 state.js
 components.js
 screens_main.js
 screens_sheets.js
+history.js
 testmode.js
 main.js

@@ -68,7 +68,15 @@ def build_artifact(txt, data):
     html = "\n".join([body, data_tag(txt), read("tools/cdn.txt"), "<script>", app_js(), "</script>", ""])
     (out / "index.html").write_text(html, encoding="utf-8")
     (out / "data" / "preuet-data.json").write_text(txt, encoding="utf-8")
+    copy_history(out)
     return out / "index.html", html
+
+
+def copy_history(out):
+    src = ROOT / "data" / "history.json"
+    if src.exists():
+        json.loads(src.read_text(encoding="utf-8"))
+        shutil.copyfile(src, out / "data" / "history.json")
 
 
 def build_web(txt, data):
@@ -78,6 +86,7 @@ def build_web(txt, data):
     shutil.copytree(ROOT / "web", out)
     (out / "data").mkdir(parents=True, exist_ok=True)
     (out / "data" / "preuet-data.json").write_text(txt, encoding="utf-8")
+    copy_history(out)
     body = read("tools/page_body.html")
     app_div = re.search(r'^<div id="app">.*$', body, re.M).group(0)
     noscript = re.search(r"^<noscript>.*$", body, re.M).group(0)

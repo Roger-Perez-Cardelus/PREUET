@@ -80,3 +80,19 @@ test("the price index stays in a sane range", () => {
   const app = loadApp({ today: "2026-10-28" });
   for (const [cid, g] of app.X.gidx) assert.ok(g.idx >= 100 && g.idx < 200, cid + " " + g.idx);
 });
+
+test("community prices: plausible ones are used, odd ones wait for a second report", () => {
+  const app = loadApp({ today: "2026-10-28" });
+  const X = app.X;
+  const pid = "llet-sencera";
+  const ref = X.byP.get(pid).map(o => o.up).sort((a, b) => a - b);
+  const mid = ref[Math.floor(ref.length / 2)];
+  const now = Date.now();
+  const item = (id, uid, price) => ({ t: "price", id, uid, ts: now - 1000, p: pid, c: "condis", price, size: 1, town: "" });
+  app.set("community", [item("a", "u1", Math.round(mid * 100) / 100)]);
+  assert.ok(app.commPrices().has(pid + "|condis"));
+  app.set("community", [item("b", "u1", mid * 5)]);
+  assert.ok(!app.commPrices().has(pid + "|condis"));
+  app.set("community", [item("b", "u1", mid * 5), item("c", "u2", mid * 5 * 1.05)]);
+  assert.ok(app.commPrices().has(pid + "|condis"));
+});

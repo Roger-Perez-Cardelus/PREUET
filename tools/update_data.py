@@ -19,6 +19,10 @@
 
     python3 tools/update_data.py check [--fix] [--date YYYY-MM-DD]
         Validates the file. With --fix it also recomputes counts, ranks, the source list and the data date.
+        Warns (does not fail) when the data is more than 8 days old.
+
+    python3 tools/update_data.py history [--date YYYY-MM-DD]
+        Adds this week's prices to data/history.json (apply-prices does it too). Safe to run twice.
 
 Everything writes data/preuet-data.json in place (keep it under version control) and prints a short report.
 """
@@ -27,6 +31,7 @@ import collections
 import datetime as dt
 import difflib
 import json
+import os
 import pathlib
 import re
 import sys
@@ -34,7 +39,9 @@ import unicodedata
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "preuet-data.json"
+HISTORY = ROOT / "data" / "history.json"
 FRESH_DAYS = 30
+STALE_DAYS = 8
 BIG_CHANGE = 0.5
 CHAIN_IDS = None
 
@@ -214,6 +221,44 @@ def cmd_apply_prices(args):
     else:
         save(d)
         print(f"written {DATA.relative_to(ROOT)}")
+        n = record_history(d, day)
+        print(f"history: {n} prices for {day} in {HISTORY.relative_to(ROOT)}")
+
+
+# ---------------------------------------------------------------- history
+def snapshot(d, day, window=1):
+    """Cheapest unit price per product and chain among the prices read on `day` (prices not re-read keep their old date)."""
+    best = {}
+    for o in d["offerings"]:
+        if o.get("st") == "comunitat" or not (0 <= days(o["date"], day) < window):
+            continue
+        k = o["p"] + "|" + o["c"]
+        if k not in best or o["up"] < best[k]:
+            best[k] = o["up"]
+    return best
+
+
+def record_history(d, day, path=None):
+    path = path or HISTORY
+    h = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"v": 1, "dates": [], "s": {}}
+    snap = snapshot(d, day)
+    if not snap:
+        return 0
+    if day not in h["dates"]:
+        h["dates"] = sorted(h["dates"] + [day])
+    for k, up in snap.items():
+        rows = [r for r in h["s"].get(k, []) if r[0] != day]
+        rows.append([day, round(up, 4)])
+        h["s"][k] = sorted(rows)
+    path.write_text(json.dumps(h, ensure_ascii=False, separators=(",", ":"), sort_keys=True), encoding="utf-8")
+    return len(snap)
+
+
+def cmd_history(args):
+    d = load()
+    day = args.date or d["meta"]["updated"]
+    n = record_history(d, day)
+    print(f"history: {n} prices for {day} in {HISTORY.relative_to(ROOT)}")
 
 
 # ---------------------------------------------------------------- offers
@@ -350,6 +395,12 @@ def cmd_check(args):
         if newest and days(newest, day) > FRESH_DAYS and c["status"] not in ("antic", "sense", "ofertes"):
             flag = "  <- newest price is old: set status 'antic' or re-read its pages"
         print(f"  {c['id']:10s} {c['status']:8s} {c['n_products']:3d} products · newest {newest or '—'}{flag}")
+    age = days(d["meta"]["updated"], day)
+    if age > STALE_DAYS:
+        msg = f"the data is {age} days old (updated {d['meta']['updated']}): run the weekly update (tools/UPDATE.md)"
+        print("warning:", msg)
+        if os.environ.get("GITHUB_ACTIONS"):
+            print(f"::warning title=Dades velles::Les dades són de fa {age} dies ({d['meta']['updated']}). Cal fer l'actualització setmanal.")
     if probs:
         print(f"{len(probs)} problem(s):")
         for p in probs[:60]:
@@ -367,8 +418,9 @@ def main():
     p = sub.add_parser("apply-prices"); p.add_argument("captures"); p.add_argument("--date"); p.add_argument("--accept-big", action="store_true"); p.add_argument("--dry-run", action="store_true")
     o = sub.add_parser("apply-offers"); o.add_argument("offers"); o.add_argument("--date"); o.add_argument("--dry-run", action="store_true")
     c = sub.add_parser("check"); c.add_argument("--fix", action="store_true"); c.add_argument("--date")
+    hs = sub.add_parser("history"); hs.add_argument("--date")
     a = ap.parse_args()
-    {"worklist": cmd_worklist, "apply-prices": cmd_apply_prices, "apply-offers": cmd_apply_offers, "check": cmd_check}[a.cmd](a)
+    {"worklist": cmd_worklist, "apply-prices": cmd_apply_prices, "apply-offers": cmd_apply_offers, "check": cmd_check, "history": cmd_history}[a.cmd](a)
 
 
 if __name__ == "__main__":
