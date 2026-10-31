@@ -91,6 +91,157 @@ def cmd_collect():
         print(f"== {name}: {st} {ct} {len(body)}: {body[:300]!r}")
 
 
+# ---------------------------------------------------------------- build
+import re  # noqa: E402
+import statistics  # noqa: E402
+import unicodedata  # noqa: E402
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+DATA = ROOT / "data" / "preuet-data.json"
+OWN_BRANDS = re.compile(r"\b(hacendado|bosque verde|deliplus|compy|consum|mascoteros|steinburg|adlerbrau)\b")
+COUNT = re.compile(r"(\d+)\s*(?:x\s*)?(?:u|ud|uds|unidades|unid|bolsitas|bolsas|pastillas|capsulas|tabletas|toallitas|lavados|dosis)\b")
+
+
+def norm(s):
+    s = unicodedata.normalize("NFD", str(s or "").lower())
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    return " " + re.sub(r"\s+", " ", re.sub(r"[^a-z0-9,. ]", " ", s)).strip() + " "
+
+
+def matches(p, text):
+    t = norm(text)
+    for group in p["must"]:
+        if not any(re.search(r"\b" + re.escape(norm(w).strip()), t) for w in group):
+            return False
+    return not any(norm(w).strip() in t for w in p.get("avoid", []))
+
+
+def mercadona_items(raw, p, day):
+    out = []
+    for it in raw:
+        pi = it.get("pi") or {}
+        text = (it.get("name") or "") + " " + (it.get("packaging") or "")
+        if not matches(p, text):
+            continue
+        try:
+            price = float(pi.get("unit_price"))
+            bulk = float(pi.get("bulk_price") or 0)
+        except (TypeError, ValueError):
+            continue
+        ref = str(pi.get("reference_format") or "").lower().strip()
+        if p["unit"] in ("kg", "l"):
+            per = {"kg": ("kg", 1), "l": ("l", 1), "100 ml": ("l", 0.1), "100 g": ("kg", 0.1)}.get(ref)
+            if not per or per[0] != p["unit"] or not bulk:
+                continue
+            size = round(price / bulk * per[1], 3)
+        elif p["unit"] == "rentat":
+            if ref != "lv" or not str(pi.get("total_units") or "").isdigit():
+                continue
+            size = int(pi["total_units"])  # washes per bottle
+        elif p["unit"] == "ud" and p["ref"] == 1:
+            size = 1
+        else:  # counted things: units, bags, tablets
+            m = COUNT.search(norm(text))
+            if m:
+                size = int(m.group(1))
+            elif str(pi.get("total_units") or "").isdigit():
+                size = int(pi["total_units"])
+            elif str(pi.get("size_format")) == "ud" and pi.get("unit_size"):
+                size = int(float(pi["unit_size"]))
+            else:
+                continue
+        out.append({"c": "mercadona", "name": (it["name"] + " " + (it.get("packaging") or "")).strip(), "price": round(price, 2), "size": size,
+                    "src": it.get("url"), "own": bool(OWN_BRANDS.search(norm(text)))})
+    return out
+
+
+def consum_items(raw, p, day):
+    out = []
+    for it in raw.get(p["id"], []):
+        pd = it.get("productData") or {}
+        text = (pd.get("description") or pd.get("name") or "")
+        brand = (pd.get("brand") or {}).get("name") or ""
+        if not matches(p, text + " " + brand):
+            continue
+        prices = (it.get("priceData") or {}).get("prices") or []
+        reg = next((x for x in prices if x.get("id") == "PRICE"), prices[0] if prices else None)
+        if not reg:
+            continue
+        price, unit_price = reg["value"].get("centAmount"), reg["value"].get("centUnitAmount")
+        upt = norm((it.get("priceData") or {}).get("unitPriceUnitType")).strip()
+        if p["unit"] in ("kg", "l"):
+            per = {"1 kg": ("kg", 1), "1 l": ("l", 1), "100 ml": ("l", 0.1), "100 g": ("kg", 0.1), "100 gr": ("kg", 0.1)}.get(upt)
+            if not unit_price or not per or per[0] != p["unit"]:
+                continue
+            size = round(price / unit_price * per[1], 3)
+        elif p["unit"] == "rentat":
+            m = re.search(r"(\d+)\s*lv", norm(text))
+            if not m:
+                continue
+            size = int(m.group(1))
+        elif p["unit"] == "ud" and p["ref"] == 1:
+            size = 1
+        else:
+            m = COUNT.search(norm(text)) or re.search(r"(\d+)\s*u\b", norm(text))
+            if not m:
+                continue
+            size = int(m.group(1))
+        offer = next((x for x in prices if x.get("id") != "PRICE"), None)
+        promo = ("Oferta: " + str(offer["value"].get("centAmount")).replace(".", ",") + " €")[:60] if offer else ""
+        out.append({"c": "consum", "name": (brand + " " + text).strip() if brand and brand.upper() not in text.upper() else text, "price": round(price, 2),
+                    "size": size, "src": pd.get("url"), "own": brand.upper() == "CONSUM", "promo": promo, "ean": it.get("ean")})
+    return out
+
+
+def cmd_build():
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+    from new_products import PRODUCTS
+    day = sys.argv[2] if len(sys.argv) > 2 else time.strftime("%Y-%m-%d")
+    merc = json.loads(gzip.decompress((RAW / "mercadona.json.gz").read_bytes()))
+    cons = json.loads(gzip.decompress((RAW / "consum.json.gz").read_bytes()))
+    d = json.loads(DATA.read_text(encoding="utf-8"))
+    have = {p["id"] for p in d["products"]}
+    report = []
+    for p in PRODUCTS:
+        found = [x for x in mercadona_items(merc, p, day) + consum_items(cons, p, day) if p["size"][0] <= x["size"] <= p["size"][1] and x["price"] > 0]
+        for x in found:
+            x["up"] = round(x["price"] / x["size"], 4)
+        if found:  # drop unit prices far from the rest (a wrong size read from the name)
+            med = statistics.median(x["up"] for x in found)
+            found = [x for x in found if med / 3 <= x["up"] <= med * 3]
+        keep = []
+        for c in ("mercadona", "consum"):
+            mine = sorted((x for x in found if x["c"] == c), key=lambda x: x["up"])
+            seen, uniq = set(), []
+            for x in mine:  # the same pack in another scent or colour: once is enough
+                if (x["price"], x["size"]) not in seen:
+                    seen.add((x["price"], x["size"]))
+                    uniq.append(x)
+            own = [x for x in uniq if x["own"]][:2]
+            other = [x for x in uniq if not x["own"]][:2]
+            keep += own + other
+        report.append((p["id"], keep))
+        if not keep:
+            continue
+        prod = {k: p[k] for k in ("id", "ca", "es", "cat", "unit", "ref", "ref_ca", "ref_es")}
+        prod.update(kind="equivalent", tags=p.get("tags", []), allergens=p.get("allergens", []), traces=p.get("traces", []), nut=p.get("nut"))
+        d["products"] = [x for x in d["products"] if x["id"] != p["id"]] + [prod]
+        d["offerings"] = [o for o in d["offerings"] if o["p"] != p["id"]]
+        fresh = p["cat"] == "fruita"
+        for x in keep:
+            o = {"p": p["id"], "c": x["c"], "name": x["name"][:120], "price": x["price"], "size": x["size"], "up": x["up"], "promo": x.get("promo", ""),
+                 "src": x["src"], "date": day, "st": "web", "desde": False, "bk": "fresc" if fresh and not x["own"] else ("mb" if x["own"] else "fab"), "rank": 0}
+            if x.get("ean"):
+                o["ean"] = x["ean"]
+            d["offerings"].append(o)
+    sys.path.insert(0, str(ROOT / "tools"))
+    import update_data
+    update_data.fix(d, d["meta"]["updated"])
+    update_data.save(d)
+    for pid, keep in report:
+        print(f"{pid:22s} {'NEW' if pid not in have else '   '} " + (" | ".join(f"{x['c'][:4]} {x['name'][:42]} {x['price']}€/{x['size']}" for x in keep) or "— nothing found"))
+
+
 def cmd_probe():
     for name, url in PROBES.items():
         st, ct, body = fetch(url)
@@ -100,4 +251,4 @@ def cmd_probe():
 
 
 if __name__ == "__main__":
-    {"probe": cmd_probe, "collect": cmd_collect}[sys.argv[1]]()
+    {"probe": cmd_probe, "collect": cmd_collect, "build": cmd_build}[sys.argv[1]]()

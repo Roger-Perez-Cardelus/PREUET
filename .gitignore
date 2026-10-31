@@ -6,3 +6,4 @@ __pycache__/
 captures.json
 offers.json
 worklist.json
+tmp-raw/
