@@ -2119,13 +2119,8 @@
   "why": "brand"
  },
  "mercadona | Aceitunas verdes rellenas de anchoa Hacendado": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8402001000867",
-  "match": "Aceitunas rellenas anchoa",
-  "quantity": null,
-  "score": 0.75
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "mercadona | Agua mineral Font Agudes Garrafa 8 L": {
   "brands": [
@@ -2992,13 +2987,8 @@
   "why": "words"
  },
  "mercadona | Refresco Fanta naranja Botella": {
-  "brands": [
-   "Chek"
-  ],
-  "code": "0021140636362",
-  "match": "Refresco naranja",
-  "quantity": null,
-  "score": 0.67
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "mercadona | Sal yodada fina Hacendado Paquete 1 kg": {
   "brands": [
@@ -3087,13 +3077,8 @@
   "why": "brand"
  },
  "mercadona | Vinagre de vino tinto Hacendado Botella": {
-  "brands": [
-   "Hacendado"
-  ],
-  "code": "8480000667564",
-  "match": "Vino tinto",
-  "quantity": null,
-  "score": 0.77
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "mercadona | Vino tinto Merlot Mar de Uvas Botella": {
   "brands": null,

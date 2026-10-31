@@ -90,6 +90,9 @@ REJECT = {
     "ametller | Flocs blat de moro sense sucres Ametller Origen 400g",
     "carrefour | Kiwi Zespri 1 kg aprox",
     "mercadona | Papel hogar compacto absorbente Bosque Verde Paquete 3 ud",
+    "mercadona | Aceitunas verdes rellenas de anchoa Hacendado",
+    "mercadona | Vinagre de vino tinto Hacendado Botella",
+    "mercadona | Refresco Fanta naranja Botella",
 }
 
 
