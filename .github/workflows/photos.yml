@@ -1,0 +1,61 @@
+# Downloads the product photos chosen in tools/fetch_images.py (PICKS) from Wikimedia Commons and commits them,
+# with their author and licence in data/preuet-data.json, to the branch you choose. Run it from the Actions tab.
+name: Fotos de producte
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branca on es desen les fotos"
+        required: true
+        default: main
+      only:
+        description: "Només aquests productes (ids separats per comes; buit = tots els que no en tenen)"
+        required: false
+        default: ""
+      again:
+        description: "Torna a baixar també els que ja tenen foto"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: photos
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "pillow>=11,<13"
+      - name: Baixa les fotos de Wikimedia Commons
+        env:
+          PREUET_IMG_PAUSE: "4"
+          ONLY: ${{ inputs.only }}
+          AGAIN: ${{ inputs.again }}
+        run: |
+          args=""
+          if [ -n "$ONLY" ]; then args="$args --only $ONLY"; fi
+          if [ "$AGAIN" = "true" ]; then args="$args --again"; fi
+          python3 tools/fetch_images.py fetch $args
+      - name: Comprova les dades
+        run: python3 tools/update_data.py check
+      - name: Desa-les a la branca
+        env:
+          BRANCH: ${{ inputs.branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/img data/preuet-data.json
+          if git diff --cached --quiet; then echo "Cap foto nova"; exit 0; fi
+          git commit -m "Fotos de producte de Wikimedia Commons"
+          git push origin "HEAD:$BRANCH"

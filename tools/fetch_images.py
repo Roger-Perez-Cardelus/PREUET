@@ -5,18 +5,21 @@
         Searches Commons for every product (QUERIES below) and saves up to 6 candidates per product:
         DIR/candidates.json and a contact sheet DIR/sheet-NN.jpg to choose from by eye.
 
-    python3 tools/fetch_images.py fetch [--only ID,ID] [--cands DIR/candidates.json]
+    python3 tools/fetch_images.py fetch [--only ID,ID] [--cands DIR/candidates.json] [--again]
         Downloads the chosen photo of each product (PICKS below: the candidate number, or a "File:..." title),
         crops it to 4:3 (640×480) and a 160×160 thumbnail into web/img/products/, and writes the author, the
         licence and the source page into data/preuet-data.json (products[].img).
 
 Only CC0, public domain, CC BY and CC BY-SA photos are used. The app shows the credit under each photo.
+Wikimedia rate-limits shared IPs hard (429, Retry-After up to 10 min): the "Fotos de producte" GitHub action runs the
+fetch step from a GitHub runner instead (Actions → Fotos de producte → Run workflow).
 Commons asks for a descriptive User-Agent and few requests: this tool waits between calls and honours Retry-After.
 """
 import argparse
 import html
 import io
 import json
+import os
 import pathlib
 import re
 import sys
@@ -35,42 +38,138 @@ OK_LICENCE = re.compile(r"^(CC0|Public domain|PD|CC BY(-SA)? \d(\.\d)?( \w+)?)$"
 
 # Commons search terms (English finds more photos). Generic on purpose: a Preuet product is a class of equivalent products.
 QUERIES = {
-    "llet-sencera": "milk carton", "llet-semi": "milk carton", "llet-desnatada": "glass of milk", "llet-sense-lactosa": "milk bottle",
+    "llet-sencera": "milk carton", "llet-semi": "milk carton", "llet-desnatada": "milk in a glass", "llet-sense-lactosa": "milk bottle",
     "llet-nostra": "milk bottle glass", "asturiana-semi": "milk brick carton", "beguda-soja": "soy milk", "beguda-civada": "oat milk",
-    "beguda-ametlla": "almond milk", "iogurt-natural": "plain yogurt", "fageda-natural": "yogurt glass jar", "iogurt-grec": "greek yogurt",
-    "kefir": "kefir", "ous-m": "eggs carton", "ous-l": "brown eggs", "mantega": "butter block", "nata-cuinar": "cooking cream",
+    "beguda-ametlla": "almond milk", "iogurt-natural": "plain yogurt", "fageda-natural": "yogurt pots", "iogurt-grec": "greek yogurt",
+    "kefir": "kefir", "ous-m": "eggs carton", "ous-l": "brown eggs", "mantega": "butter block", "nata-cuinar": "whipping cream",
     "formatge-llesques": "sliced cheese", "formatge-ratllat": "grated cheese", "formatge-fresc": "queso de Burgos",
-    "pa-motlle": "sliced white bread", "pa-motlle-sc": "white bread slices crustless", "pa-motlle-integral": "wholemeal bread slices",
+    "pa-motlle": "sliced white bread", "pa-motlle-sc": "white sandwich bread", "pa-motlle-integral": "wholemeal bread slices",
     "barra-pa": "baguette", "flocs-civada": "rolled oats", "corn-flakes": "cornflakes bowl", "galetes-maria": "galletas maría",
     "cafe-molt": "ground coffee", "cacau-soluble": "cocoa powder", "melmelada": "strawberry jam", "mel": "honey jar",
     "crema-cacau": "chocolate hazelnut spread", "arros-rodo": "short grain rice", "arros-llarg": "long grain rice",
-    "macarrons": "macaroni pasta", "espaguetis": "spaghetti uncooked", "cigrons-cuits": "chickpeas", "llenties-cuites": "cooked lentils",
-    "mongetes-cuites": "white beans", "llenties-seques": "brown lentils", "tomaquet-triturat": "crushed tomatoes",
+    "macarrons": "macaroni pasta", "espaguetis": "dry spaghetti", "cigrons-cuits": "chickpeas", "llenties-cuites": "cooked lentils",
+    "mongetes-cuites": "cannellini beans", "llenties-seques": "brown lentils", "tomaquet-triturat": "canned tomatoes",
     "tomaquet-fregit": "tomato sauce", "tonyina": "canned tuna", "oli-oliva-ve": "extra virgin olive oil bottle",
     "oli-oliva-suau": "olive oil bottle", "oli-gira-sol": "sunflower oil bottle", "sal": "table salt", "sucre": "white sugar",
     "farina": "wheat flour", "maionesa": "mayonnaise", "ketchup": "ketchup", "brou-pollastre": "chicken broth",
-    "pit-pollastre": "chicken breast fillets raw", "cuixes-pollastre": "chicken legs raw", "carn-picada": "minced meat raw",
-    "llom-porc": "pork loin slices raw", "pernil-dolc": "sliced cooked ham", "pit-gall-dindi": "sliced turkey breast",
+    "pit-pollastre": "chicken breast", "cuixes-pollastre": "chicken legs raw", "carn-picada": "minced meat raw",
+    "llom-porc": "raw pork chops", "pernil-dolc": "sliced cooked ham", "pit-gall-dindi": "sliced turkey breast",
     "pernil-serra": "jamón serrano", "salmo": "salmon fillet raw", "lluc": "hake fish", "platan-canaries": "plátano de Canarias",
-    "banana": "bananas", "pomes": "golden delicious apples", "taronges": "oranges fruit", "mandarines": "mandarin oranges",
+    "banana": "bananas", "pomes": "Golden Delicious", "taronges": "oranges fruit", "mandarines": "mandarin oranges",
     "peres": "conference pears", "llimones": "lemons", "kiwi": "kiwifruit", "alvocat": "avocado", "tomaquets": "tomatoes",
-    "patates": "potatoes", "pastanagues": "carrots", "carbasso": "zucchini", "pebrot-vermell": "red bell pepper",
+    "patates": "potato tubers", "pastanagues": "carrots", "carbasso": "zucchini", "pebrot-vermell": "red bell pepper",
     "broquil": "broccoli", "espinacs": "spinach leaves", "cogombre": "cucumber", "alberginia": "eggplant", "aigua": "bottled water",
     "suc-taronja": "orange juice glass", "coca-cola": "cola drink glass", "detergent-roba": "laundry detergent liquid",
     "rentaplats-ma": "dishwashing liquid", "lleixiu": "bleach bottle", "paper-wc": "toilet paper rolls", "paper-cuina": "kitchen paper towel roll",
     "gel-dutxa": "shower gel", "xampu": "shampoo bottle", "pasta-dents": "toothpaste", "bolquers-t4": "disposable diapers",
-    "pa-sense-gluten": "gluten-free bread", "pasta-sense-gluten": "gluten-free pasta",
+    "pa-sense-gluten": "gluten-free bread", "pasta-sense-gluten": "fusilli pasta",
 }
 
-# Chosen photo per product, after looking at the contact sheets: the candidate number (0-5) or an exact "File:..." title.
-PICKS = {}
+# Chosen photo per product (exact Commons title), picked by eye from the candidates; a number picks from --cands instead.
+PICKS = {
+    "llet-sencera": "File:Tetra-Milk-Carton---Betsukai-Milk---2024-04-27 08.jpg",
+    "llet-semi": "File:Several Cartons.jpg",
+    "llet-sense-lactosa": "File:Plastic bottle of milk.jpg",
+    "llet-nostra": "File:Glass milk bottle cardboard cap and opener.jpg",
+    "asturiana-semi": "File:22-07-2017 Carton of UHT Milk of Matinal brand.JPG",
+    "beguda-soja": "File:Soymilk can and glass 2.jpg",
+    "beguda-civada": "File:Oat milk glass.jpg",
+    "beguda-ametlla": "File:Raw almond milk 2.jpg",
+    "iogurt-natural": "File:Plain Yogurt.jpg",
+    "iogurt-grec": "File:Strained yogurt (20250302).jpg",
+    "kefir": "File:Kefir in a glass.JPG",
+    "ous-m": "File:Egg cartons with chicken eggs 03.jpg",
+    "ous-l": "File:Brown Eggs from Taiwan (1).jpg",
+    "mantega": "File:Butter block.JPG",
+    "formatge-llesques": "File:White cheddar cheese sliced CNE.jpg",
+    "formatge-ratllat": "File:Grated cheese Annie Mole.jpg",
+    "formatge-fresc": "File:Queso De Burgos 002.JPG",
+    "pa-motlle": "File:Sliced sandwich breads 2021-8-28.jpg",
+    "pa-motlle-integral": "File:Multigrain bread.JPG",
+    "barra-pa": "File:Baguettes - stonesoup.jpg",
+    "flocs-civada": "File:Rolled oats 2.jpg",
+    "corn-flakes": "File:Corn flakes in a bowl.jpg",
+    "galetes-maria": "File:Galleta María.jpg",
+    "cafe-molt": "File:Coffee powdered.jpg",
+    "cacau-soluble": "File:Cocoa-powder-1883108.jpg",
+    "melmelada": "File:Strawberry jam on a dish.JPG",
+    "mel": "File:Honey jar (411317929).jpg",
+    "crema-cacau": "File:Crema di cioccolato.jpg",
+    "arros-rodo": "File:Short-grain rice (japonica).jpg",
+    "arros-llarg": "File:Long grain rice.jpg",
+    "macarrons": "File:Macaronis.jpeg",
+    "cigrons-cuits": "File:Ordinary chickpeas in a ceramic bowl.jpg",
+    "llenties-cuites": "File:Liat Portal for Foodie Disorder - Cooked Lentils with Caramelized Onions.jpg",
+    "llenties-seques": "File:Lentils (Brown, Pardina, Beluga).jpg",
+    "tomaquet-fregit": "File:Fresh Tomato Sauce (Unsplash).jpg",
+    "tonyina": "File:Lata de atún-Albo.jpg",
+    "oli-oliva-ve": "File:Extra Virgin Olive Oil.jpg",
+    "oli-oliva-suau": "File:Bottle of olive oil.jpg",
+    "oli-gira-sol": "File:Bottle 1 liter Sunflower refined oil.jpg",
+    "sal": "File:Table salt with salt shaker V1.jpg",
+    "sucre": "File:Sugar 2xmacro.jpg",
+    "farina": "File:All-Purpose Flour (4107895947).jpg",
+    "maionesa": "File:Mayonnaise (1).jpg",
+    "ketchup": "File:Ketchup.jpg",
+    "brou-pollastre": "File:Broth.jpg",
+    "pit-pollastre": "File:Chicken breasts and wing quarters.jpg",
+    "cuixes-pollastre": "File:Raw chicken thighs.jpg",
+    "carn-picada": "File:Hackfleisch-1.jpg",
+    "pernil-dolc": "File:Sliced cooked ham.jpg",
+    "pit-gall-dindi": "File:Cooked turkey breast - November 2023 - Sarah Stierch.jpg",
+    "pernil-serra": "File:Jamón serrano (by Awersowy).jpg",
+    "salmo": "File:Raw salmon fillets.jpg",
+    "lluc": "File:Hake fish.jpg",
+    "platan-canaries": "File:Plátanos de Canarias.JPG",
+    "banana": "File:Bananas on black background 02.jpg",
+    "taronges": "File:Oranges - whole-halved-segment.jpg",
+    "mandarines": "File:Mandarins - whole and halved.jpg",
+    "peres": "File:Conference pear 2017 C2.jpg",
+    "llimones": "File:Lemon - whole and split.jpg",
+    "kiwi": "File:Kiwi (Actinidia chinensis) 1 Luc Viatour.jpg",
+    "alvocat": "File:Avocado Hass - single and halved.jpg",
+    "tomaquets": "File:Tomato je.jpg",
+    "pastanagues": "File:Carrots at Ljubljana Central Market.JPG",
+    "carbasso": "File:Calabacín, Múnich, Alemania, 2013-03-30, DD 01.JPG",
+    "pebrot-vermell": "File:Red bell pepper.jpg",
+    "broquil": "File:Brassica oleracea italica, Sault Ste Marie 1.JPG",
+    "espinacs": "File:Spinach leaves.jpg",
+    "cogombre": "File:Cucumis sativus 0001.JPG",
+    "alberginia": "File:Eggplant 3.jpg",
+    "aigua": "File:Water bottle in room.jpg",
+    "suc-taronja": "File:Orange juice 1 edit1.jpg",
+    "coca-cola": "File:Cola glass (4343698290).jpg",
+    "detergent-roba": "File:Liquid detergent.JPG",
+    "rentaplats-ma": "File:Tesco and Sainsburys own dishwashing liquid.jpg",
+    "lleixiu": "File:HK Kao Bleaches 2.JPG",
+    "paper-wc": "File:Toilet paper roll.jpg",
+    "paper-cuina": "File:Roll of paper towels standing on toilet-paper holder.jpg",
+    "gel-dutxa": "File:Shower gel bottles.jpg",
+    "xampu": "File:Green shampoo bottle.jpg",
+    "pasta-dents": "File:Toothpasteonbrush.jpg",
+    "bolquers-t4": "File:Diapers (5137580773).jpg",
+    "pa-sense-gluten": "File:Non gluten bread.jpg",
+    "fageda-natural": "File:Llaeth y Llan, Village Dairy yogurt.jpg",
+    "nata-cuinar": "File:Whipping Cream.jpg",
+    "pa-motlle-sc": "File:White sandwich bread.jpg",
+    "espaguetis": "File:Spaghetti measure.jpg",
+    "mongetes-cuites": "File:White kidney beans🫘.jpg",
+    "tomaquet-triturat": "File:Canned tomatoes.jpg",
+    "llom-porc": "File:Close-up of raw pork chops on a wooden cutting board with fresh herbs ready for cooking.jpg",
+    "pomes": "File:Golden Delicious apples.jpg",
+    "patates": "File:Potato tubers in pail.jpg",
+    "pasta-sense-gluten": "File:Fusilli and Penne Pasta.jpg",
+    "llet-desnatada": "File:Milk-bottle.jpg",
+}
 
 _last = [0.0]
+PAUSE = float(os.environ.get("PREUET_IMG_PAUSE", "15"))  # seconds between photo downloads
 
 
-def get(url, binary=False, tries=6):
+def get(url, binary=False, tries=20):
     for i in range(tries):
-        wait = 1.2 - (time.time() - _last[0])
+        # the API takes a call every ~1 s; upload.wikimedia.org (the photos) wants far fewer from a bot
+        wait = (PAUSE if "upload.wikimedia.org" in url else 1.2) - (time.time() - _last[0])
         if wait > 0:
             time.sleep(wait)
         _last[0] = time.time()
@@ -87,6 +186,12 @@ def get(url, binary=False, tries=6):
         except urllib.error.URLError:
             time.sleep(5 * (i + 1))
     raise SystemExit(f"giving up on {url}")
+
+
+def thumb_url(u):
+    """Commons now hands out thumbnails on thumb.wikimedia.org; the same file is also served on upload.wikimedia.org."""
+    u = (u or "").split("?")[0]
+    return u.replace("https://thumb.wikimedia.org/", "https://upload.wikimedia.org/")
 
 
 def plain(s):
@@ -154,7 +259,7 @@ def cmd_candidates(a):
             dr.text((4, r * 130 + 55), pid, fill="black")
             for c, cand in enumerate(cands[pid][:6]):
                 try:
-                    im = Image.open(io.BytesIO(get(cand["thumb"], binary=True))).convert("RGB")
+                    im = Image.open(io.BytesIO(get(thumb_url(cand["thumb"]), binary=True))).convert("RGB")
                     im = ImageOps.fit(im, (160, 120))
                     sheet.paste(im, (170 + c * 170, r * 130))
                     dr.rectangle([170 + c * 170, r * 130, 170 + c * 170 + 18, r * 130 + 14], fill="black")
@@ -174,12 +279,18 @@ def cmd_fetch(a):
         pick = PICKS.get(pid, 0 if cands.get(pid) else None)
         if pick is None or pick == "-":
             continue
+        if not a.again and byid[pid].get("img") and (OUT / f"{pid}.jpg").exists():
+            continue  # already done: rerunning carries on where it stopped
         cand = by_title(pick) if isinstance(pick, str) else cands[pid][pick]
-        im = Image.open(io.BytesIO(get(cand["thumb"], binary=True))).convert("RGB")
+        im = Image.open(io.BytesIO(get(thumb_url(cand["thumb"]), binary=True))).convert("RGB")
         ImageOps.fit(im, (640, 480), centering=(0.5, 0.5)).save(OUT / f"{pid}.jpg", quality=78, optimize=True, progressive=True)
         ImageOps.fit(im, (160, 160), centering=(0.5, 0.5)).save(OUT / f"{pid}-s.jpg", quality=76, optimize=True)
         byid[pid]["img"] = {"f": f"img/products/{pid}.jpg", "t": f"img/products/{pid}-s.jpg", "a": cand["author"], "l": cand["licence"], "s": cand["page"]}
         print(f"{pid:22s} {cand['licence']:14s} {cand['author'][:40]}", flush=True)
+        save(d)
+
+
+def save(d):
     txt = json.dumps(d, ensure_ascii=False, separators=(",", ":"))
     if "</" in txt:
         raise SystemExit("refusing to write: data contains '</'")
@@ -191,6 +302,7 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("candidates"); c.add_argument("--only", type=lambda s: set(s.split(","))); c.add_argument("--out", default="img-candidates")
     f = sub.add_parser("fetch"); f.add_argument("--only", type=lambda s: set(s.split(","))); f.add_argument("--cands")
+    f.add_argument("--again", action="store_true", help="download again products that already have a photo")
     a = ap.parse_args()
     {"candidates": cmd_candidates, "fetch": cmd_fetch}[a.cmd](a)
 
