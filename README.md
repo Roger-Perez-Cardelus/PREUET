@@ -34,6 +34,8 @@ src/                 codi de l'app (Preact + htm, sense pas de compilació) i es
   _order.txt         ordre en què s'ajunten els mòduls
 data/
   preuet-data.json   preus, ofertes, productes, receptes, cistelles i fonts
+  history.json       preu setmanal per kg o litre de cada producte i cadena (evolució de preus)
+tests/               tests amb node --test i prova de fum amb Playwright
 tools/
   build.py           construeix dist/artifact i dist/web
   update_data.py     actualització setmanal: aplica preus i ofertes nous i valida les dades
@@ -52,6 +54,15 @@ cd dist/web && python3 -m http.server 8000
 ```
 
 Obre http://localhost:8000. Sense Supabase, l'app funciona en mode local: tot es desa al navegador.
+
+## Proves
+
+```bash
+node --test tests/*.test.mjs                  # model de costos, traduccions, còpia de dades, sintaxi
+python3 tools/build.py web && node tests/smoke.mjs   # recorre l'app amb Playwright (AXE=1: també accessibilitat)
+```
+
+L'acció de GitHub les executa totes abans de publicar: si alguna falla, la web no es torna a publicar.
 
 ## Publicar-la a GitHub Pages
 
