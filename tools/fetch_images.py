@@ -119,7 +119,7 @@ PICKS = {
     "pit-gall-dindi": "File:Cooked turkey breast - November 2023 - Sarah Stierch.jpg",
     "pernil-serra": "File:Jamón serrano (by Awersowy).jpg",
     "salmo": "File:Raw salmon fillets.jpg",
-    "lluc": "File:38) Hake.jpg",
+    "lluc": "-",  # no suitable free photo found: the app shows the category icon
     "platan-canaries": "File:Plátanos de Canarias.JPG",
     "banana": "File:Bananas on black background 02.jpg",
     "taronges": "File:Oranges - whole-halved-segment.jpg",
@@ -148,7 +148,7 @@ PICKS = {
     "xampu": "File:Green shampoo bottle.jpg",
     "pasta-dents": "File:Toothpasteonbrush.jpg",
     "bolquers-t4": "File:Disposable Diapers at Kroger.jpg",
-    "pa-sense-gluten": "File:Francesco Favorito e il suo Pane Gluten free.jpg",
+    "pa-sense-gluten": "-",  # no suitable free photo found: the app shows the category icon
     "fageda-natural": "File:Llaeth y Llan, Village Dairy yogurt.jpg",
     "nata-cuinar": "File:Whipping Cream.jpg",
     "pa-motlle-sc": "File:White sandwich bread.jpg",
