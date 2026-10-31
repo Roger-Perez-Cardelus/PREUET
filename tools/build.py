@@ -8,8 +8,10 @@
 Sources
     src/_order.txt + src/*.js   app modules, concatenated in that order into one script
     src/styles.css              all styles
-    data/preuet-data.json       prices, offers, products, recipes, templates, sources (inlined so the app opens offline;
-                                the app also fetches data/preuet-data.json and swaps it in when it is newer)
+    data/preuet-data.json       prices, offers, products, recipes, templates, sources. The artifact inlines it (and swaps in
+                                data/preuet-data.json when that is newer); the web version fetches it once, and its
+                                service worker keeps a copy for offline use
+    data/history.json           weekly price history, fetched when a product sheet opens
     tools/page_body.html        artifact page head (title, fonts from Google Fonts, CSS slot, #app)
     tools/cdn.txt               artifact: Preact + htm from jsDelivr
     web/                        web-only files: config.js, manifest, service worker, self-hosted fonts, vendor libs, icons
@@ -108,6 +110,7 @@ def build_web(txt, data):
         '<link rel="icon" href="icons/favicon-48.png" sizes="48x48" type="image/png">',
         '<link rel="apple-touch-icon" href="icons/icon-180.png">',
         '<link rel="manifest" href="manifest.webmanifest">',
+        '<link rel="preload" href="data/preuet-data.json" as="fetch" crossorigin="anonymous">',
         '<link rel="stylesheet" href="fonts/fonts.css">',
         "<style>" + BASE_CSS + "</style>",
         "<style>\n" + read("src/styles.css") + "</style>",
@@ -116,7 +119,6 @@ def build_web(txt, data):
         "<body>",
         app_div,
         noscript,
-        data_tag(txt),
         '<script src="vendor/htm-preact-standalone-3.1.1.umd.js"></script>',
         "<script>",
         app_js(),

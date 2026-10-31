@@ -60,10 +60,19 @@ function loadScript(src) { // web build: supabase-js is fetched only when a Supa
   });
 }
 
+/* The artifact carries the data inline; the web version fetches data/preuet-data.json (the service worker keeps a copy offline). */
+async function readData() {
+  const el = document.getElementById("preuet-data");
+  if (el && el.textContent.trim()) return { D: JSON.parse(el.textContent), inline: true };
+  const r = await fetch("data/preuet-data.json");
+  if (!r.ok) throw new Error("data " + r.status);
+  return { D: await r.json(), inline: false };
+}
+
 async function boot() {
-  let D = null;
-  try { D = JSON.parse(document.getElementById("preuet-data").textContent); } catch (e) { console.error("data", e); }
-  if (!D) { document.getElementById("app").textContent = "Preuet: no s'han pogut carregar les dades."; return; }
+  let D = null, inline = false;
+  try { ({ D, inline } = await readData()); } catch (e) { console.error("data", e); }
+  if (!D) { document.getElementById("app").textContent = "Preuet: no s'han pogut carregar les dades. Torna-ho a provar amb connexió. / No se han podido cargar los datos."; return; }
   indexData(D);
   S.user = cleanUser(lsGet(LS_USER));
   LANG = S.user.lang; document.documentElement.lang = LANG;
@@ -71,7 +80,7 @@ async function boot() {
   if (TABS.some(x => x[0] === h)) S.tab = h;
   S.ready = true;
   render(html`<${App} />`, document.getElementById("app"));
-  fetchNewerData();
+  if (inline) fetchNewerData();
   const cfg = window.PREUET_CONFIG || null;
   let ok = false;
   if (cfg && cfg.supabaseUrl && cfg.supabaseAnonKey) {
