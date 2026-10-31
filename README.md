@@ -70,9 +70,26 @@ Obre http://localhost:8000. Sense Supabase, l'app funciona en mode local: tot es
 5. **Project Settings → API**: copia la *Project URL* i la clau pública (*anon* o *publishable*) a `web/config.js`, i fes push. Totes dues són públiques: les dades les protegeixen les polítiques de `schema.sql`.
 6. (Opcional) Per moderar aportacions, afegeix el teu usuari a `public.admins` (vegeu la capçalera de `schema.sql`).
 
+7. (Recomanat) **Database → Extensions**: activa **pg_cron** i torna a executar `schema.sql`. Cada nit s'esborren les aportacions de més de 120 dies i els usuaris anònims sense activitat en 180 dies, per no omplir el pla gratuït.
+
 Per comprovar-ho: a l'app, **Més → Sobre Preuet → Mode de dades** ha de dir «Servidor propi (Supabase)».
 
-Què protegeix `schema.sql`: l'autor i l'hora de cada aportació els posa el servidor, cada persona només pot esborrar les seves (l'administrador, qualsevol), hi ha un límit de 40 aportacions cada 10 minuts per persona, la cistella i les preferències només les veu el seu usuari, i les fitxes S01–S10 només es llegeixen i es desen amb el codi d'equip.
+**Si ja havies executat una versió anterior de `schema.sql`**, torna-la a executar sencera: és la versió 2 i no esborra dades. Fins que no ho facis, l'app continua funcionant amb el sistema antic.
+
+### CAPTCHA (recomanat si l'enllaç es fa públic)
+
+Qualsevol pot crear usuaris anònims, i cadascun té el seu límit de 40 aportacions. Per frenar els robots:
+
+1. A https://dash.cloudflare.com → **Turnstile → Add widget**, amb el domini `roger-perez-cardelus.github.io` i el mode *Managed*. Et dona una *Site Key* (pública) i una *Secret Key*.
+2. Supabase → **Authentication → Attack Protection** (o *Bot and Abuse Protection*): activa **Enable CAPTCHA protection**, tria *Turnstile* i enganxa-hi la *Secret Key*.
+3. Posa la *Site Key* a `turnstileSiteKey` de `web/config.js` i fes push.
+4. Revisa també **Authentication → Rate Limits**: el límit d'inicis de sessió anònims per hora i adreça IP (per defecte, 30).
+
+La gran majoria de persones no veuran res: Turnstile només demana un clic si té dubtes.
+
+Què protegeix `schema.sql`: l'autor i l'hora de cada aportació els posa el servidor i no es mostren a ningú (no es poden enllaçar les aportacions d'una mateixa persona), cada persona només pot esborrar les seves (l'administrador, qualsevol), una persona té una sola valoració per cosa valorada, hi ha un límit de 40 aportacions cada 10 minuts per persona, la cistella i les preferències només les veu el seu usuari, i les fitxes S01–S10 només es llegeixen i es desen amb el codi d'equip.
+
+La web també porta una política de seguretat de continguts (CSP): només s'hi executa el codi de la mateixa web, i només es connecta a Supabase, a Cloudflare Turnstile, a OpenStreetMap (botigues properes) i a Open Food Facts (escàner de codis de barres).
 
 ## Actualització setmanal
 

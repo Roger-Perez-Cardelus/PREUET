@@ -96,3 +96,14 @@ test("community prices: plausible ones are used, odd ones wait for a second repo
   app.set("community", [item("b", "u1", mid * 5), item("c", "u2", mid * 5 * 1.05)]);
   assert.ok(app.commPrices().has(pid + "|condis"));
 });
+
+test("backup code round-trips the basket and preferences", () => {
+  const app = loadApp({ today: "2026-10-28" });
+  const u = app.cleanUser({ basket: [{ p: "llet-sencera", n: 3 }], town: "Gavà", diets: ["sg"], nick: "Núria" });
+  const code = app.backupCode(u);
+  assert.match(code, /^PREUET1\.[A-Za-z0-9_-]+$/);
+  const back = app.readBackup("  " + code + "\n");
+  assert.equal(back.town, "Gavà"); assert.equal(back.nick, "Núria");
+  assert.deepEqual(JSON.parse(JSON.stringify(back.basket)), [{ p: "llet-sencera", n: 3 }]);
+  assert.equal(app.readBackup("PREUET1.!!!"), null);
+});

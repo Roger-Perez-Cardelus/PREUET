@@ -16,6 +16,7 @@ Sources
     tools/cdn.txt               artifact: Preact + htm from jsDelivr
     web/                        web-only files: config.js, manifest, service worker, self-hosted fonts, vendor libs, icons
 """
+import base64
 import hashlib
 import json
 import pathlib
@@ -81,6 +82,26 @@ def copy_history(out):
         shutil.copyfile(src, out / "data" / "history.json")
 
 
+def csp(scripts):
+    """Content-Security-Policy for the web build: only this site, Supabase, and the few services the app calls by itself.
+    Inline scripts are allowed by their hash, so nothing injected into the page can run."""
+    hashes = " ".join("'sha256-" + base64.b64encode(hashlib.sha256(s.encode("utf-8")).digest()).decode() + "'" for s in scripts)
+    return "; ".join([
+        "default-src 'self'",
+        f"script-src 'self' {hashes} https://challenges.cloudflare.com",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data: blob:",
+        "font-src 'self'",
+        "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://overpass-api.de https://world.openfoodfacts.org",
+        "frame-src https://challenges.cloudflare.com",
+        "worker-src 'self'",
+        "manifest-src 'self'",
+        "object-src 'none'",
+        "base-uri 'none'",
+        "form-action 'none'",
+    ])
+
+
 def build_web(txt, data):
     out = DIST / "web"
     if out.exists():
@@ -92,12 +113,15 @@ def build_web(txt, data):
     body = read("tools/page_body.html")
     app_div = re.search(r'^<div id="app">.*$', body, re.M).group(0)
     noscript = re.search(r"^<noscript>.*$", body, re.M).group(0)
+    app = app_js()
     head = [
         "<!doctype html>",
         '<html lang="ca">',
         "<head>",
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">',
+        f'<meta http-equiv="Content-Security-Policy" content="{csp([app, SW_REGISTER])}">',
+        '<meta name="referrer" content="strict-origin-when-cross-origin">',
         "<title>Preuet · La cistella més barata, a prop teu</title>",
         f'<meta name="description" content="{DESCRIPTION}">',
         '<meta name="theme-color" content="#F6F4F7" media="(prefers-color-scheme: light)">',
@@ -120,9 +144,7 @@ def build_web(txt, data):
         app_div,
         noscript,
         '<script src="vendor/htm-preact-standalone-3.1.1.umd.js"></script>',
-        "<script>",
-        app_js(),
-        "</script>",
+        "<script>" + app + "</script>",
         "<script>" + SW_REGISTER + "</script>",
         "</body>",
         "</html>",

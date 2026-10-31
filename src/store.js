@@ -57,7 +57,7 @@ function pruneMine(items) {
 
 const Store = {
   mode: "local", me: { id: null, name: "", avatar: "", isOwner: false, canWrite: null }, db: null, userCap: null, supa: null,
-  sandbox: false, sandboxItems: [], _mine: null, _q: Promise.resolve(), _commCb: null, _localComm: [],
+  sandbox: false, sandboxItems: [], v2: false, _myIds: new Set(), _mine: null, _q: Promise.resolve(), _commCb: null, _localComm: [],
   queue(fn) { const p = this._q.then(fn, fn); this._q = p.catch(() => {}); return p; },
 
   async initClaude() {
@@ -80,13 +80,16 @@ const Store = {
     let { data } = await sb.auth.getSession();
     let session = data && data.session;
     if (!session) {
-      const r = await sb.auth.signInAnonymously();
+      const captchaToken = cfg.turnstileSiteKey ? await turnstileToken(cfg.turnstileSiteKey) : undefined;
+      const r = await sb.auth.signInAnonymously(captchaToken ? { options: { captchaToken } } : undefined);
       if (r.error) throw r.error;
       session = r.data.session;
     }
     this.supa = sb;
     this.me = { id: session.user.id, name: "", avatar: "", isOwner: false, canWrite: true };
     try { const r = await sb.rpc("is_admin"); this.me.isOwner = !!(r && r.data); } catch (e) { /* not admin */ }
+    // schema v2 (supabase/schema.sql of November 2026) serves the feed through functions that hide who wrote what
+    try { const r = await sb.rpc("preuet_schema"); this.v2 = !r.error && Number(r.data) >= 2; } catch (e) { this.v2 = false; }
     this.mode = "supabase";
     return true;
   },
@@ -119,26 +122,45 @@ const Store = {
         emitAll(all);
       }, err => { console.warn("community feed", err && err.code); emitAll(last); });
     }
-    if (this.mode === "supabase") {
-      const sb = this.supa;
-      let last = [];
-      const load = async () => {
-        const since = new Date(Date.now() - 120 * DAY).toISOString();
-        // newest 3000 of the last 120 days, then oldest-first like the other stores
-        const r = await sb.from("contributions").select("id,user_id,type,payload,created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(3000);
-        if (r.error) { console.warn(r.error); return; }
-        last = r.data.slice().reverse().map(row => cleanItem(Object.assign({}, row.payload || {}, { t: row.type, id: row.id, uid: row.user_id, ts: Date.parse(row.created_at) }))).filter(Boolean);
-        emitAll(last);
-      };
-      this._emitSupa = () => emitAll(last);
-      load();
-      const ch = sb.channel("contrib").on("postgres_changes", { event: "*", schema: "public", table: "contributions" }, () => load()).subscribe();
-      const iv = setInterval(load, 60000);
-      return () => { try { sb.removeChannel(ch); } catch (e) { /* ignore */ } clearInterval(iv); };
-    }
+    if (this.mode === "supabase") return this._subscribeSupabase(emitAll);
     this._localComm = (lsGet(LS_COMM) || []).map(cleanItem).filter(Boolean);
     emitAll(this._localComm);
     return () => {};
+  },
+  /* Supabase feed: one full read (last 120 days, newest 3000), then each new or deleted item arrives on its own through
+     Realtime and is applied to the list; a full re-read every 5 minutes catches anything missed. */
+  _rowItem(row) {
+    const uid = row.user_id || (row.mine || this._myIds.has(row.id) ? this.me.id : "x:" + row.id);
+    return cleanItem(Object.assign({}, row.payload || {}, { t: row.type, id: row.id, uid, ts: Date.parse(row.created_at) }));
+  },
+  _subscribeSupabase(emitAll) {
+    const sb = this.supa;
+    let byId = new Map(), timer = null;
+    const emit = () => { clearTimeout(timer); timer = setTimeout(() => emitAll([...byId.values()].sort((a, b) => a.ts - b.ts)), 120); };
+    const put = row => { const it = this._rowItem(row); if (it) { if (it.t === "rating") for (const [k, x] of byId) if (x.t === "rating" && x.uid === it.uid && x.target === it.target && k !== it.id) byId.delete(k); byId.set(it.id, it); } };
+    const load = async () => {
+      const since = new Date(Date.now() - 120 * DAY).toISOString();
+      const r = this.v2
+        ? await sb.rpc("list_contributions", { p_since: since, p_limit: 3000 })
+        : await sb.from("contributions").select("id,user_id,type,payload,created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(3000);
+      if (r.error) { console.warn(r.error); return; }
+      byId = new Map();
+      r.data.slice().reverse().forEach(put);
+      emit();
+    };
+    this._supaPut = row => { put(row); emit(); };
+    this._supaDel = id => { if (byId.delete(id)) emit(); };
+    this._emitSupa = () => emitAll([...byId.values()].sort((a, b) => a.ts - b.ts));
+    load();
+    const ch = this.v2
+      ? sb.channel("preuet:contributions").on("broadcast", { event: "insert" }, m => this._supaPut(m.payload)).on("broadcast", { event: "delete" }, m => this._supaDel(m.payload && m.payload.id)).subscribe()
+      : sb.channel("contrib").on("postgres_changes", { event: "*", schema: "public", table: "contributions" }, ev => {
+          if (ev.eventType === "INSERT" && ev.new) this._supaPut(ev.new);
+          else if (ev.eventType === "DELETE" && ev.old) this._supaDel(ev.old.id);
+          else load();
+        }).subscribe();
+    const iv = setInterval(load, 5 * 60000);
+    return () => { try { sb.removeChannel(ch); } catch (e) { /* ignore */ } clearInterval(iv); };
   },
   refreshCommunity() {
     if (!this._commCb) return;
@@ -177,8 +199,15 @@ const Store = {
     }
     if (this.mode === "supabase") {
       const sb = this.supa;
-      if (item.t === "rating") await sb.from("contributions").delete().eq("user_id", this.me.id).eq("type", "rating").eq("payload->>target", item.target);
       const { t: type, id: _i, uid: _u, ts: _t, ...payload } = item;
+      if (this.v2) { // the server replaces an earlier rating of the same thing and hides the author from everyone else
+        const r = await sb.rpc("add_contribution", { p_type: type, p_payload: payload });
+        if (r.error) throw r.error;
+        const row = Array.isArray(r.data) ? r.data[0] : r.data;
+        if (row && row.id) { this._myIds.add(row.id); if (this._supaPut) this._supaPut({ id: row.id, type, payload, created_at: row.created_at, mine: true }); }
+        return item;
+      }
+      if (item.t === "rating") await sb.from("contributions").delete().eq("user_id", this.me.id).eq("type", "rating").eq("payload->>target", item.target);
       const r = await sb.from("contributions").insert({ type, payload });
       if (r.error) throw r.error;
       return item;
@@ -212,8 +241,9 @@ const Store = {
       return;
     }
     if (this.mode === "supabase") {
-      const r = await this.supa.from("contributions").delete().eq("id", id);
+      const r = this.v2 ? await this.supa.rpc("delete_contribution", { p_id: id }) : await this.supa.from("contributions").delete().eq("id", id);
       if (r.error) throw r.error;
+      if (this._supaDel) this._supaDel(id);
       return;
     }
     this._localComm = this._localComm.filter(x => x.id !== id);
@@ -250,7 +280,9 @@ const Store = {
     if (this.mode === "claude" && this.me.id) {
       await this.queue(() => this.db.doc("data/users/" + this.me.id + "/profile").set(body)).catch(e => console.warn("save user", e && e.code));
     } else if (this.mode === "supabase") {
-      await this.supa.from("user_state").upsert({ user_id: this.me.id, state: body, updated_at: new Date().toISOString() });
+      const r = await this.supa.from("user_state").upsert({ user_id: this.me.id, state: body, updated_at: new Date().toISOString() });
+      if (r.error) { console.warn("save user", r.error); if (!this._saveWarned) { this._saveWarned = true; toast(t("sync_failed")); } }
+      else this._saveWarned = false;
     }
   },
   async clearUser() {
@@ -307,6 +339,24 @@ const Store = {
     return "local";
   },
 };
+
+/* ---------- Cloudflare Turnstile: proves a person is behind a new anonymous Supabase user (optional, see README) ---------- */
+function turnstileToken(sitekey) {
+  return new Promise((resolve, reject) => {
+    const go = () => {
+      const box = document.createElement("div");
+      box.style.cssText = "position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:90";
+      document.body.appendChild(box);
+      const done = f => v => { box.remove(); f(v); };
+      window.turnstile.render(box, { sitekey, appearance: "interaction-only", callback: done(resolve), "error-callback": done(() => reject(new Error("captcha"))), "timeout-callback": done(() => reject(new Error("captcha timeout"))) });
+    };
+    if (window.turnstile) return go();
+    const s = document.createElement("script");
+    s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    s.async = true; s.onload = go; s.onerror = () => reject(new Error("captcha script"));
+    document.head.appendChild(s);
+  });
+}
 
 /* ---------- downloads & clipboard ---------- */
 let DL = null;

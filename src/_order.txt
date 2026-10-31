@@ -6,7 +6,10 @@ store.js
 state.js
 components.js
 screens_main.js
-screens_sheets.js
+sheets_product.js
+sheets_recipe.js
+sheets_more.js
+sheets_info.js
 history.js
 testmode.js
 main.js
