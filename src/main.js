@@ -30,6 +30,7 @@ function App() {
   const tab = S.tab;
   return html`
     <${Header} />
+    ${S.offline ? html`<div class="offline-bar" role="status"><${Icon} n="alert" s=${14} />${t("offline_bar")}</div>` : null}
     <main><div class="wrap">
       ${tab === "inici" ? html`<${Home} />` : tab === "cistella" ? html`<${Basket} />` : tab === "ofertes" ? html`<${Offers} />` : tab === "receptes" ? html`<${Recipes} />` : html`<${More} />`}
     </div></main>
@@ -38,7 +39,7 @@ function App() {
     ${S.user && !S.user.onboarded ? html`<${Onboarding} />` : null}
     ${S.test && S.test.phase === "tasks" ? html`<${TestBar} />` : null}
     <${CopyFallback} />
-    ${S.toast ? html`<div class="toast" role="status" aria-live="polite">${S.toast}</div>` : null}`;
+    ${S.toast ? html`<div class=${"toast" + (S.toastAction ? " has-action" : "")} role="status" aria-live="polite"><span>${S.toast}</span>${S.toastAction ? html`<button type="button" onClick=${() => { const a = S.toastAction; set({ toast: null, toastAction: null }); a.run(); }}>${S.toastAction.label}</button>` : null}</div>` : null}`;
 }
 
 async function fetchNewerData() {
@@ -102,11 +103,17 @@ async function boot() {
     }
   } catch (e) { console.warn("user", e); }
   set({});
-  if (!openSharedBasket()) announceWatched();
-  window.addEventListener("hashchange", () => { if (/^#c=/.test(location.hash)) openSharedBasket(); });
+  if (!openSharedBasket() && !openSharedProduct()) announceWatched();
+  window.addEventListener("hashchange", () => { if (/^#c=/.test(location.hash)) openSharedBasket(); else if (/^#p=/.test(location.hash)) openSharedProduct(); });
   try { Store.subscribeCommunity(list => set({ community: list || [] })); } catch (e) { console.warn("community", e); }
   try { Store.subscribeTests(o => set({ tests: o || {} })); } catch (e) { console.warn("tests", e); }
 }
+/* install prompt (Android/desktop Chrome) and connectivity */
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); INSTALL.ev = e; set({}); });
+window.addEventListener("appinstalled", () => { INSTALL.ev = null; INSTALL.done = true; set({}); });
+window.addEventListener("online", () => set({ offline: false }));
+window.addEventListener("offline", () => set({ offline: true }));
+S.offline = typeof navigator !== "undefined" && navigator.onLine === false;
 if (window.__preuetDebug) window.__preuet = { S, Store, X: () => X };
 boot();
 

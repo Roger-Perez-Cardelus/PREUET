@@ -338,3 +338,50 @@ function SavingsSheet() {
       : html`<${Empty} title=${t("sav_empty")} sub=${t("sav_empty_s")} />`}
     </div><//>`;
 }
+
+/* ---------- install the web app on the home screen ---------- */
+const INSTALL = { ev: null, done: false };
+function isStandalone() { try { return matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; } catch (e) { return false; } }
+function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent || ""); }
+function canOfferInstall() { return !window.claude && !isStandalone() && !INSTALL.done && (!!INSTALL.ev || isIOS()); }
+async function installApp() {
+  if (INSTALL.ev) { INSTALL.ev.prompt(); try { const r = await INSTALL.ev.userChoice; if (r && r.outcome === "accepted") INSTALL.done = true; } catch (e) { /* ignore */ } INSTALL.ev = null; set({}); return; }
+  openSheet({ type: "install" });
+}
+function InstallSheet() {
+  return html`<${Sheet} title=${t("install_t")} onClose=${closeSheet} id="install"><div class="stack">
+    <p>${t("install_ios_intro")}</p>
+    <ol class="stack-s" style="margin:0;padding-left:1.3em"><li>${t("install_ios_1")}</li><li>${t("install_ios_2")}</li><li>${t("install_ios_3")}</li></ol>
+    <p class="small muted">${t("install_why")}</p></div><//>`;
+}
+
+/* ---------- recent searches ---------- */
+const POPULAR = ["llet", "ous", "pa", "arròs", "tomàquet", "oli", "pollastre", "iogurt"];
+function rememberSearch(q) {
+  const v = String(q || "").trim().slice(0, 40);
+  if (v.length < 2 || !searchProducts(v).length) return;
+  const list = [v].concat((S.user.recent || []).filter(x => norm(x) !== norm(v))).slice(0, 6);
+  updUser({ recent: list });
+}
+function SearchChips() {
+  const recent = S.user.recent || [];
+  const list = recent.length ? recent : (LANG === "es" ? ["leche", "huevos", "pan", "arroz", "tomate", "aceite", "pollo", "yogur"] : POPULAR);
+  return html`<div class="search-chips"><span class="xs muted">${recent.length ? t("search_recent") : t("search_popular")}</span>
+    <div class="filters">${list.map(x => html`<button type="button" class="filter" key=${x} onClick=${() => set({ q: x })}>${x}</button>`)}
+      ${recent.length ? html`<button type="button" class="link-btn xs" onClick=${() => updUser({ recent: [] })}>${t("search_clear")}</button>` : null}</div></div>`;
+}
+
+async function shareProduct(p) {
+  const url = location.href.split("#")[0] + "#p=" + p.id;
+  const mp = minPrice(p.id, OPT_ALL());
+  const text = tl(p) + (mp ? " · " + t("from_price", { p: eur(mp.cost) }) + " (" + X.C.get(mp.c).name + ")" : "");
+  if (navigator.share) { try { await navigator.share({ title: "Preuet", text, url }); return; } catch (e) { if (e && e.name === "AbortError") return; } }
+  copyText(text + " " + url);
+}
+function openSharedProduct() {
+  const m = /^#p=([a-z0-9-]+)$/.exec(location.hash || "");
+  if (!m || !X.P.has(m[1])) return false;
+  try { history.replaceState(null, "", "#inici"); } catch (e) { /* ignore */ }
+  openSheet({ type: "product", id: m[1] });
+  return true;
+}

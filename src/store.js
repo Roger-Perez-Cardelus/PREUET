@@ -8,7 +8,7 @@ function lsDel(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */
 function defaultUser() {
   return { v: 1, updated: 0, lang: "ca", onboarded: false, seg: null, diets: [], avoid: [], town: "Castelldefels",
     chains: null, brand: "any", fresh: true, estimate: true, w: 0.6, basket: [], schedules: [], nick: "", selChain: null, recipeChain: null,
-    watch: [], purchases: [], loc: null, maxKm: null, ticked: {}, seenData: null, theme: "auto" };
+    watch: [], purchases: [], loc: null, maxKm: null, ticked: {}, seenData: null, theme: "auto", recent: [] };
 }
 function cleanUser(u) {
   const d = defaultUser();
@@ -31,6 +31,7 @@ function cleanUser(u) {
   o.ticked = o.ticked && typeof o.ticked === "object" && !Array.isArray(o.ticked) ? o.ticked : {};
   o.seenData = typeof o.seenData === "string" ? o.seenData : null;
   o.theme = ["light", "dark"].includes(o.theme) ? o.theme : "auto";
+  o.recent = Array.isArray(o.recent) ? o.recent.filter(x => typeof x === "string").map(x => x.slice(0, 40)).slice(0, 6) : [];
   return o;
 }
 

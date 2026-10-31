@@ -107,32 +107,34 @@ function ProductSheet({ id }) {
       <div class="ph stack-s">
         <span class="eyebrow">${tl(cat)} · ${p["ref_" + LANG]}</span>
         <h1>${tl(p)}</h1>
-        <div class="row wrap-ok"><${WatchButton} pid=${p.id} /></div>
+        <div class="row wrap-ok"><${WatchButton} pid=${p.id} /><button type="button" class="btn small ghost" onClick=${() => shareProduct(p)}><${Icon} n="share" s=${16} />${t("share_basket")}</button></div>
         <div class="chips">${(p.tags || []).map(tg => html`<span class=${"chip " + (DIET_TAGS.includes(tg) ? "good" : "plum")} key=${tg}>${t("tag_" + tg)}</span>`)}</div>
         ${avoid.length ? html`<div class="callout warn" role="alert">${t("allergen_warn", { a: avoid.map(a => t("al_" + a)).join(", ") })}</div>` : null}
         <p class="xs muted">${p.kind === "marca" ? t("brand_note") : t("equivalent_note")} ${t("ref_qty", { ref: p["ref_" + LANG] })}.</p>
       </div>
-      <section class="stack-s">
+      <nav class="jump" aria-label=${t("jump_label")}>${[["sec-prices", "prices_by_chain"], ["sec-nut", "nutrition"], ["sec-al", "allergens"], ["sec-origin", "origin"], ["sec-stock", "stock"], ["sec-op", "comments"]].map(([id, k]) =>
+        html`<button type="button" class="filter" key=${id} onClick=${e => { const el = e.currentTarget.closest(".sheet").querySelector("#" + id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }}>${t(k)}</button>`)}</nav>
+      <section class="stack-s" id="sec-prices">
         <div class="section-h"><h2 class="grow">${t("prices_by_chain")}</h2></div>
         ${rows.length ? html`<div class="list">${rows.map((r, i) => html`<${OfferRow} key=${r.c.id} r=${r} p=${p} best=${i === 0} />`)}</div>` : html`<${Empty} title=${t("no_prices")} />`}
         ${none.length ? html`<p class="xs faint">${t("no_price_here", { chain: none.map(c => c.name).join(", ") })}</p>` : null}
         <${PriceReport} p=${p} />
       </section>
       <${PriceHistory} p=${p} />
-      <section class="card stack" ref=${nutRef}>
+      <section class="card stack" ref=${nutRef} id="sec-nut">
         <div class="row"><h3 class="grow">${t("nutrition")}</h3><span class="xs muted">${t("per100", { b: p.nut && p.nut.basis === "ml" ? "ml" : "g" })}</span></div>
         <${NutritionTable} p=${p} />
         <p class="xs faint">${t("nut_note")}</p>
       </section>
-      <section class="card stack-s" ref=${alRef}>
+      <section class="card stack-s" ref=${alRef} id="sec-al">
         <h3>${t("allergens")}</h3>
         ${(p.allergens || []).length ? html`<div class="chips">${p.allergens.map(a => html`<span key=${a} class=${"chip " + (S.user.avoid.includes(a) ? "bad" : "warn")}><${Icon} n="shield" s=${13} />${t("al_" + a)}</span>`)}</div>` : html`<p class="small">${t("no_allergens")}</p>`}
         ${(p.traces || []).length ? html`<p class="small muted">${t("traces")}: ${p.traces.map(a => t("al_" + a)).join(", ")}</p>` : null}
         <p class="xs faint">${t("allergen_note")}</p>
       </section>
-      <${OriginBlock} p=${p} />
-      <${StockBlock} pid=${id} />
-      <${CommentsBlock} target=${"p:" + id} />
+      <div id="sec-origin"><${OriginBlock} p=${p} /></div>
+      <div id="sec-stock"><${StockBlock} pid=${id} /></div>
+      <div id="sec-op"><${CommentsBlock} target=${"p:" + id} /></div>
     </div>
   <//>`;
 }

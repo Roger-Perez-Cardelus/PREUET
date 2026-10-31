@@ -2,12 +2,17 @@
 /* ---------- app state (one store, one root subscriber) ---------- */
 const S = {
   ready: false, tab: "inici", sheets: [], user: null, community: [], profiles: {}, tests: {},
-  toast: null, test: null, q: "", copyFallback: null, mode: "local",
+  toast: null, toastAction: null, offline: false, test: null, q: "", copyFallback: null, mode: "local",
 };
 const RENDER = new Set();
 function set(patch) { Object.assign(S, typeof patch === "function" ? patch(S) : patch); RENDER.forEach(f => f()); }
 let toastTimer = null;
-function toast(msg) { clearTimeout(toastTimer); set({ toast: msg }); toastTimer = setTimeout(() => set({ toast: null }), 2800); }
+function toast(msg, action) { // action = { label, run }: an undo button, the toast then stays a little longer
+  clearTimeout(toastTimer);
+  set({ toast: msg, toastAction: action || null });
+  toastTimer = setTimeout(() => set({ toast: null, toastAction: null }), action ? 5000 : 2800);
+}
+function buzz() { try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) { /* ignore */ } }
 let saveTimer = null;
 function applyTheme(th) { // "auto" follows the phone; "light" / "dark" override it
   try { if (th === "light" || th === "dark") document.documentElement.setAttribute("data-theme", th); else document.documentElement.removeAttribute("data-theme"); } catch (e) { /* ignore */ }
@@ -36,6 +41,8 @@ function replaceSheet(s) { set({ sheets: S.sheets.slice(0, -1).concat([s]) }); }
 /* ---------- basket ---------- */
 function qtyOf(pid) { const it = S.user.basket.find(x => x.p === pid); return it ? it.n : 0; }
 function setQty(pid, n) {
+  const before = S.user.basket;
+  const had = before.some(x => x.p === pid);
   updUser(u => {
     const b = u.basket.slice();
     const i = b.findIndex(x => x.p === pid);
@@ -45,8 +52,9 @@ function setQty(pid, n) {
     return { basket: b };
   });
   emit("basket", { n: S.user.basket.length });
+  if (n <= 0 && had) { const p = X.P.get(pid); toast(t("removed_x", { name: p ? tl(p) : "" }), { label: t("undo"), run: () => updUser({ basket: before }) }); }
 }
-function addToBasket(pid, n) { setQty(pid, qtyOf(pid) + (n || 1)); }
+function addToBasket(pid, n) { setQty(pid, qtyOf(pid) + (n || 1)); buzz(); }
 function mergeItems(items, replace) {
   updUser(u => {
     const b = replace ? [] : u.basket.slice();

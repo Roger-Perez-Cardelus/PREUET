@@ -59,11 +59,13 @@ function Home() {
       <h1>${t("hero_a")}<em>${t("hero_em")}</em>${t("hero_b")}</h1>
       <p>${t("hero_sub", { n: nChainsWithData(), date: fmtDL(X.D.meta.updated) })}</p>
       <div class="search" role="search"><${Icon} n="search" />
-        <input type="search" value=${q} placeholder=${t("search_ph")} aria-label=${t("search_label")} onInput=${e => set({ q: e.currentTarget.value })} />
+        <input type="search" value=${q} placeholder=${t("search_ph")} aria-label=${t("search_label")} onInput=${e => set({ q: e.currentTarget.value })}
+          onKeyDown=${e => { if (e.key === "Enter") { rememberSearch(q); e.currentTarget.blur(); } }} onBlur=${() => rememberSearch(q)} />
         <button type="button" class="scan-btn" aria-label=${t("scan_title")} onClick=${() => openSheet({ type: "scan" })}><${Icon} n="barcode" s=${22} /></button>
       </div>
     </section>
     ${res ? html`<${SearchResults} res=${res} q=${q} />` : html`
+      <${SearchChips} />
       <${StaleBanner} />
       <${DueSchedules} />
       ${S.user.basket.length ? html`<${BasketTeaser} />` : null}
@@ -120,9 +122,8 @@ function Templates() {
       const items = tp.items.map(([p, n]) => ({ p, n }));
       const cmp = memo("tpl:" + tp.id, [S.user.chains, S.user.brand, S.user.fresh, S.user.estimate, S.community], () => compareBasket(items, chains, opt));
       const b = cmp.best;
-      const pics = items.map(x => X.P.get(x.p)).filter(p => p && p.img && p.img.t).slice(0, 4);
       return html`<button type="button" class="tpl" key=${tp.id} onClick=${() => loadTemplate(tp.id)}>
-        ${pics.length >= 3 ? html`<span class="tpl-pics" aria-hidden="true">${pics.map(p => html`<img key=${p.id} src=${p.img.t} alt="" loading="lazy" width="48" height="48" />`)}</span>` : null}
+        <${Collage} pids=${items.map(x => x.p)} />
         <span class="chip plum seg">${t("seg_" + tp.seg)}</span>
         <b>${tl(tp)}</b>
         <span class="small muted">${t("n_products", { n: items.length })}</span>
@@ -440,8 +441,8 @@ function Recipes() {
     ${rows.length ? html`<div class="list">${rows.map(({ r, b, diet }) => {
       const st = stockMap();
       const out = b && b.cid ? r.ing.filter(([pid]) => { const s = st.get(pid + "|" + b.cid); return s && s.s === "no"; }).length : 0;
-      return html`<button type="button" class="li" key=${r.id} onClick=${() => openSheet({ type: "recipe", id: r.id })}>
-        <span class="grow stack-s" style="min-width:0"><span class="t">${tl(r)}</span>
+      return html`<button type="button" class="li recipe-li" key=${r.id} onClick=${() => openSheet({ type: "recipe", id: r.id })}>
+        <span class="grow stack-s" style="min-width:0"><${Collage} pids=${r.ing.map(x => x[0])} max=${5} size=${30} /><span class="t">${tl(r)}</span>
           <span class="s">${t("minutes", { n: r.mins })} · ${t("servings", { n: r.serv })}${b ? " · " + (b.cid ? t("best_at", { chain: X.C.get(b.cid).name }) : t("mix_chains")) : ""}</span>
           <span class="chips">${diet.vg ? html`<span class="chip good">${t("tag_vg")}</span>` : diet.vt ? html`<span class="chip good">${t("tag_vt")}</span>` : null}${diet.sg ? html`<span class="chip">${t("tag_sg")}</span>` : null}
             ${b && b.miss ? html`<span class="chip warn">${t("recipe_missing", { n: b.miss })}</span>` : null}${out ? html`<span class="chip bad">${t("stock_no")}: ${out}</span>` : null}</span></span>
@@ -460,8 +461,11 @@ function More() {
     ["scale", "method", "method_sub", "method"], ["flask", "test_mode", "test_mode_sub", "test"],
     ["msg", "feedback", "feedback_sub", "feedback"], ["info", "about", "about_sub", "about"],
   ];
+  const install = canOfferInstall();
   return html`<div class="stack-l">
     <h2 style="font-size:var(--t-xl)">${t("more_title")}</h2>
+    ${install ? html`<button type="button" class="card raised row" style="width:100%;text-align:left" onClick=${installApp}>
+      <span class="install-ic"><${Logo} /></span><span class="grow stack-s" style="gap:2px"><b>${t("install_t")}</b><span class="small muted">${t("install_sub")}</span></span><${Icon} n="download" /></button>` : null}
     <div class="list">${items.map(([ic, k, sub, type]) => html`<button type="button" class="li" key=${type} onClick=${() => openSheet({ type })}>
       <span style="color:var(--plum)"><${Icon} n=${ic} s=${22} /></span>
       <span class="grow"><span class="t" style="display:block">${t(k)}</span><span class="s">${t(sub)}</span></span>

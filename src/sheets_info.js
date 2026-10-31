@@ -68,6 +68,7 @@ function Onboarding() {
       <div class="row"><button type="button" class="btn ghost" onClick=${() => setStep(0)}>${t("back")}</button><button type="button" class="btn primary grow" onClick=${() => setStep(2)}>${t("next")}</button></div></div>` : null}
     ${step === 2 ? html`<div class="stack-l"><h1 style="font-size:var(--t-xl);font-weight:800">${t("onb3_t")}</h1><${TownField} />
       <div class="field"><span class="lab">${t("my_chains")}</span><${ChainPicker} /></div>
+      <${OnbPreview} tp=${tp} />
       <button type="button" class="btn primary" onClick=${() => finish(suggested)}>${t("onb_start", { name: tl(tp) })}</button>
       <button type="button" class="btn ghost" onClick=${() => finish(null)}>${t("onb_empty")}</button>
       <button type="button" class="link-btn" onClick=${() => setStep(1)}>${t("back")}</button></div>` : null}
@@ -96,9 +97,25 @@ function SheetRouter({ s }) {
     case "purchase": return html`<${PurchaseSheet} cid=${s.cid} />`;
     case "savings": return html`<${SavingsSheet} />`;
     case "scan": return html`<${ScanSheet} />`;
+    case "install": return html`<${InstallSheet} />`;
     case "test": return html`<${TestSetupSheet} />`;
     case "testAfter": return html`<${TestAfterSheet} />`;
     case "testSummary": return html`<${TestSummarySheet} code=${s.code} />`;
     default: return null;
   }
+}
+
+/* the last onboarding step shows what Preuet answers, with the suggested basket */
+function OnbPreview({ tp }) {
+  if (!tp) return null;
+  const items = tp.items.map(([p, n]) => ({ p, n }));
+  const cmp = compareBasket(items, activeChains(), OPT());
+  const b = cmp.best, w = cmp.ranked.length > 1 ? cmp.ranked[cmp.ranked.length - 1] : null;
+  if (!b) return null;
+  return html`<div class="card raised stack-s">
+    <${Collage} pids=${items.map(x => x.p)} max=${6} />
+    <span class="eyebrow">${tl(tp)} · ${t("n_products", { n: items.length })}</span>
+    <div class="row"><span class="grow">${t("onb_preview", { chain: X.C.get(b.cid).name })}</span><${PriceTag} v=${cmp.key(b)} /></div>
+    ${w && cmp.key(w) - cmp.key(b) > 0.05 ? html`<span class="chip good" style="align-self:flex-start">${t("savings_vs", { x: eur(cmp.key(w) - cmp.key(b)), chain: X.C.get(w.cid).name })}</span>` : null}
+  </div>`;
 }

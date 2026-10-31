@@ -24,7 +24,7 @@ function RecipeSheet({ id }) {
   const foot = html`<button type="button" class="btn primary block" disabled=${!toAdd.length} onClick=${addAll}><${Icon} n="basket" />${t("add_ingredients")} (${toAdd.length})</button>`;
   return html`<${Sheet} title=${tl(r)} onClose=${closeSheet} foot=${foot} id=${id}>
     <div class="stack-l">
-      <div class="ph stack-s"><h1>${tl(r)}</h1>
+      <div class="ph stack-s"><${Collage} pids=${r.ing.map(x => x[0])} max=${6} size=${52} /><h1>${tl(r)}</h1>
         <div class="chips"><span class="chip"><${Icon} n="clock" s=${13} />${t("minutes", { n: r.mins })}</span>
           ${diet.vg ? html`<span class="chip good">${t("tag_vg")}</span>` : diet.vt ? html`<span class="chip good">${t("tag_vt")}</span>` : null}
           ${diet.sg ? html`<span class="chip good">${t("tag_sg")}</span>` : null}

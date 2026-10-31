@@ -23,3 +23,9 @@ function PackThumb({ o }) {
   return html`<span style="width:44px;height:44px;flex:none;border-radius:10px;overflow:hidden;background:#fff;border:1px solid var(--line);display:grid;place-items:center">
     <img src=${o.img.t} alt="" loading="lazy" decoding="async" width="44" height="44" style="width:100%;height:100%;object-fit:contain" /></span>`;
 }
+/* overlapping round photos of a few products (baskets, recipes) */
+function Collage({ pids, max, size }) {
+  const pics = pids.map(id => X.P.get(id)).filter(p => p && p.img && p.img.t).slice(0, max || 4);
+  if (pics.length < 2) return null;
+  return html`<span class="tpl-pics" aria-hidden="true" style=${size ? { "--pic": size + "px" } : null}>${pics.map(p => html`<img key=${p.id} src=${p.img.t} alt="" loading="lazy" width="48" height="48" />`)}</span>`;
+}
