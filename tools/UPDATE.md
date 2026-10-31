@@ -62,6 +62,10 @@ python3 tools/update_data.py apply-prices captures.json
 
 L'informe diu, per cadena, quants preus han canviat, quants són iguals i quants tenen més de 30 dies. Els canvis de preu unitari de més del 50 % es retenen: torna a mirar la pàgina i, només si el preu nou és correcte (per exemple, ha canviat el format del paquet amb el mateix nom), torna a executar amb `--accept-big`. Els productes nous que no segueix Preuet s'ignoren.
 
+### Productes llegits directament de Mercadona i Consum
+
+Els productes de `tools/new_products.py` (els 38 afegits el novembre de 2026) no cal llegir-los amb WebFetch: a GitHub, **Actions → Preus de productes nous → Run workflow** (mode `update`, branca `main`) torna a llegir la botiga en línia de Mercadona i el cercador de Consum, en refà els preus i els desa amb la data del dia. Per afegir-ne més, s'afegeixen a `tools/new_products.py` (noms, unitat, paraules obligatòries i excloses, mides) i es torna a executar.
+
 ## 3. Ofertes de la setmana (`offers.json`)
 
 Recull les promocions **vigents i properes** amb data, de:

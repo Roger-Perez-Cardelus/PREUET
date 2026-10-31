@@ -108,7 +108,7 @@ Els preus i les ofertes es tornen a llegir cada dilluns de les botigues en líni
 
 ## Dades i límits
 
-- Preus de les botigues en línia oficials (Bonpreu, Ametller Origen, Dia, Carrefour, Consum, bonÀrea), de comparadors públics (supersupers.com per a Mercadona, radarsuper.com per a Lidl i Aldi) i del fullet de Lidl. Cada preu guarda la font, l'enllaç i la data.
+- 131 productes. Preus de les botigues en línia oficials (Bonpreu, Ametller Origen, Dia, Carrefour, Consum, bonÀrea, i el catàleg públic de Mercadona per als productes afegits el novembre de 2026), de comparadors públics (supersupers.com per a Mercadona, radarsuper.com per a Lidl i Aldi) i del fullet de Lidl. Cada preu guarda la font, l'enllaç i la data.
 - Condis, Sorli, Spar i Suma no publiquen preus llegibles en línia: s'omplen amb preus aportats per la comunitat.
 - Els preus de la web poden diferir dels de la botiga física. El preu vàlid és sempre el de la botiga.
 - Els valors nutricionals són de referència per a un producte típic de cada classe; el semàfor fa servir els llindars de la FSA del Regne Unit. Cal llegir sempre l'etiqueta de la marca concreta.

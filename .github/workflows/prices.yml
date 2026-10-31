@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "probe: comprova les fonts · collect: desa el que llisten les botigues a tmp-raw/ per revisar-ho"
+        description: "update: actualitza els preus dels productes de tools/new_products.py · collect: només desa els llistats a tmp-raw/ · probe: comprova les fonts"
         type: choice
-        options: ["probe", "collect"]
-        default: "probe"
+        options: ["update", "collect", "probe"]
+        default: "update"
       branch:
         description: "Branca on es desen els preus"
         required: true
@@ -33,8 +33,23 @@ jobs:
         if: inputs.mode == 'probe'
         run: python3 tools/fetch_prices.py probe
       - name: Llegeix el que llisten les botigues
-        if: inputs.mode == 'collect'
+        if: inputs.mode != 'probe'
         run: python3 tools/fetch_prices.py collect
+      - name: Actualitza els preus
+        if: inputs.mode == 'update'
+        env:
+          BRANCH: ${{ inputs.branch }}
+        run: |
+          day=$(date +%F)
+          python3 tools/fetch_prices.py build "$day"
+          python3 tools/update_data.py history --date "$day"
+          python3 tools/update_data.py check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/preuet-data.json data/history.json
+          if git diff --cached --quiet; then echo "Cap preu nou"; exit 0; fi
+          git commit -m "Preus de Mercadona i Consum del $day (productes nous)"
+          git push origin "HEAD:$BRANCH"
       - name: Desa-ho a la branca
         if: inputs.mode == 'collect'
         env:
