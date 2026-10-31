@@ -83,11 +83,39 @@ await step("09-more", async () => {
   await page.locator(".list .li").first().waitFor();
 });
 
+// location + nearby shops, with OpenStreetMap answered by a fixed sample
+const geo = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, serviceWorkers: "block",
+  geolocation: { latitude: 41.2795, longitude: 1.9762 }, permissions: ["geolocation"] });
+const gp = await geo.newPage();
+gp.setDefaultTimeout(8000);
+gp.on("pageerror", e => errors.push("page (geo): " + e.message));
+gp.on("console", m => { if (m.type() === "error") errors.push("console (geo): " + m.text()); });
+await gp.route("https://overpass-api.de/**", r => r.fulfill({ contentType: "application/json", body: JSON.stringify({ elements: [
+  { type: "node", lat: 41.2801, lon: 1.9790, tags: { shop: "supermarket", brand: "Mercadona", name: "Mercadona", "addr:street": "Carrer de prova", "addr:housenumber": "1" } },
+  { type: "way", center: { lat: 41.2900, lon: 1.9900 }, tags: { shop: "supermarket", name: "Lidl" } },
+  { type: "node", lat: 41.2810, lon: 1.9770, tags: { shop: "convenience", name: "Fruites Paco" } },
+] }) }));
+await gp.addInitScript(() => localStorage.setItem("preuet:user:v1", JSON.stringify({ onboarded: true, updated: 1, town: "Barcelona" })));
+await step.call(null, "10-nearby", async () => {
+  await gp.goto(base + "#mes");
+  await gp.getByText(/^Supermercats/).first().click();
+  await gp.locator(".sheet .list .li").first().click();
+  await gp.getByRole("button", { name: /Fes servir la meva ubicació/ }).first().click();
+  await gp.getByText("Carrer de prova 1").waitFor();
+  const town = (await gp.locator(".topbar .pill-btn").innerText()).trim();
+  if (town !== "Castelldefels") throw new Error("town from location: " + town);
+  if (SHOTS) await gp.screenshot({ path: path.join(SHOTS, "10-nearby.png") });
+});
+await geo.close();
+
 if (process.env.AXE) {
   const axePath = require.resolve("axe-core/axe.min.js", { paths: [process.cwd(), ROOT] });
-  await page.goto(base + "#cistella");
-  await page.addScriptTag({ path: axePath });
-  const res = await page.evaluate(async () => (await window.axe.run(document, { runOnly: ["wcag2a", "wcag2aa"] })).violations.map(v => ({ id: v.id, impact: v.impact, n: v.nodes.length, help: v.help, eg: v.nodes.slice(0, 3).map(n => n.target.join(" ")) })));
+  const ax = await browser.newPage({ viewport: { width: 390, height: 844 }, serviceWorkers: "block", bypassCSP: true });
+  await ax.addInitScript(() => localStorage.setItem("preuet:user:v1", JSON.stringify({ onboarded: true, updated: 1, basket: [{ p: "llet-semi", n: 2 }, { p: "ous-m", n: 1 }, { p: "macarrons", n: 1 }, { p: "platan-canaries", n: 1 }] })));
+  await ax.goto(base + "#cistella");
+  await ax.locator(".receipt").waitFor();
+  await ax.addScriptTag({ path: axePath });
+  const res = await ax.evaluate(async () => (await window.axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag22aa"] })).violations.map(v => ({ id: v.id, impact: v.impact, n: v.nodes.length, help: v.help, eg: v.nodes.slice(0, 3).map(n => n.target.join(" ")) })));
   for (const v of res) console.log(`axe ${v.impact} ${v.id} (${v.n}): ${v.help} — ${v.eg.join(" | ")}`);
   if (res.some(v => v.impact === "critical" || v.impact === "serious")) errors.push("axe: serious or critical accessibility issues");
 }

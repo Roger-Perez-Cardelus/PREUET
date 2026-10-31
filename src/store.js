@@ -7,7 +7,8 @@ function lsDel(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */
 
 function defaultUser() {
   return { v: 1, updated: 0, lang: "ca", onboarded: false, seg: null, diets: [], avoid: [], town: "Castelldefels",
-    chains: null, brand: "any", fresh: true, estimate: true, w: 0.6, basket: [], schedules: [], nick: "", selChain: null, recipeChain: null };
+    chains: null, brand: "any", fresh: true, estimate: true, w: 0.6, basket: [], schedules: [], nick: "", selChain: null, recipeChain: null,
+    watch: [], purchases: [], loc: null, maxKm: null, ticked: {}, seenData: null };
 }
 function cleanUser(u) {
   const d = defaultUser();
@@ -23,6 +24,12 @@ function cleanUser(u) {
   o.w = clamp(Number(o.w) || 0.6, 0, 1);
   o.town = String(o.town || "Castelldefels").slice(0, 60);
   o.nick = String(o.nick || "").slice(0, 30);
+  o.watch = Array.isArray(o.watch) ? o.watch.filter(p => X.P.has(p)).slice(-60) : [];
+  o.purchases = Array.isArray(o.purchases) ? o.purchases.filter(p => p && p.id && /^\d{4}-\d\d-\d\d$/.test(p.date) && X.C.has(p.cid) && p.est >= 0).slice(-200) : [];
+  o.loc = Array.isArray(o.loc) && o.loc.length === 2 && o.loc.every(v => typeof v === "number" && isFinite(v)) ? o.loc : null;
+  o.maxKm = [1, 2, 5].includes(o.maxKm) ? o.maxKm : null;
+  o.ticked = o.ticked && typeof o.ticked === "object" && !Array.isArray(o.ticked) ? o.ticked : {};
+  o.seenData = typeof o.seenData === "string" ? o.seenData : null;
   return o;
 }
 

@@ -63,7 +63,7 @@ function startTest(meta) {
   S.user = Object.assign(defaultUser(), { lang: snap.lang, town: snap.town, chains: snap.chains, onboarded: !meta.onb, updated: Date.now() });
   S.test = {
     phase: meta.onb ? "onb" : "tasks", meta, snap, cur: 0, start: Date.now(), t0: Date.now(), tasksEnd: null, open: true, openUntil: Date.now() + 12000,
-    tasks: TASKS.map(x => ({ id: x.id, status: null, secs: 0, help: 0, auto: false, note: "" })),
+    tasks: TASKS.map(x => ({ id: x.id, status: null, secs: 0, help: 0, errors: 0, auto: false, note: "" })),
     ans: { useful: 0, easy: 0, trust: 0, use: "", pay: "", feature: "", ev: {}, decision: "" },
   };
   Store.refreshCommunity();
@@ -91,7 +91,7 @@ function testRecord() {
   return {
     code: T.meta.code, date: isoToday(), durMin: Math.round((end - T.start) / 600) / 100,
     facilitator: T.meta.facilitator, guio: T.meta.guio, version: T.meta.version, seg: T.meta.seg, profile: T.meta.profile,
-    criteria: T.meta.criteria, relation: T.meta.relation, consentP: T.meta.consentP, consentR: T.meta.consentR, notP: T.meta.notP,
+    criteria: T.meta.criteria, relation: T.meta.relation, cond: T.meta.cond || "preuet", consentP: T.meta.consentP, consentR: T.meta.consentR, notP: T.meta.notP,
     tasks: T.tasks.map(x => Object.assign({}, x)), ans: JSON.parse(JSON.stringify(T.ans)),
     savedBy: Store.me.id || null, savedAt: end, app: "Preuet V1", dataDate: X.D.meta.updated, lang: LANG,
   };
@@ -102,7 +102,7 @@ const REL = { none: "rel_none", known: "rel_known", family: "rel_family", mate: 
 const FEAT = ["feat_cmp", "feat_qp", "feat_nut", "feat_stock", "feat_rec", "feat_per", "feat_off", "feat_org"];
 function taskLine(x, i) {
   const st = x.status === "ok" ? ca("t_status_ok") : x.status === "help" ? ca("t_status_help") + " (" + x.help + ")" : ca("t_status_fail");
-  return "T" + (i + 1) + " " + ca(TASKS[i].h) + ": " + st + ", " + mmss(x.secs) + (x.auto ? ", " + ca("t_status_auto") : "") + (x.note ? " — " + x.note : "");
+  return "T" + (i + 1) + " " + ca(TASKS[i].h) + ": " + st + ", " + mmss(x.secs) + (x.errors ? ", " + x.errors + " " + (x.errors === 1 ? "error" : "errors") : "") + (x.auto ? ", " + ca("t_status_auto") : "") + (x.note ? " — " + x.note : "");
 }
 function fichaRows(r) {
   const a = r.ans || {};
@@ -122,6 +122,7 @@ function fichaRows(r) {
     ["Relació prèvia amb l'equip", ca(REL[r.relation] || "rel_none")],
     ["Consentiment per participar", r.consentP ? "Sí" : "No"],
     ["Consentiment per gravar", r.consentR ? "Sí" : "No (s'han pres notes)"],
+    ["Condició", r.cond === "control" ? "Control: la persona fa les mateixes tasques amb les webs dels supermercats" : "Preuet"],
     ["Versió del PMV i material mostrat", "PMV " + (r.version || "V1") + " — web app mòbil Preuet (dades del " + fmtDL(r.dataDate) + "): comparador per cistella, rànquing qualitat-preu, fitxa de producte, estoc col·laboratiu, receptes i compres periòdiques. La persona l'ha fet servir sola amb 6 tasques."],
     ["Tasca realitzada o observació", r.tasks.map(taskLine).join(" · ") + (a.observer ? ". Observació: " + a.observer : "")],
     ["Què va comprendre i què va valorar", [q(a.understood, "Comprensió"), "Utilitat " + (a.useful || "—") + "/5 · facilitat " + (a.easy || "—") + "/5 · confiança en els preus " + (a.trust || "—") + "/5", q(a.liked, "El que més li ha agradat"), a.feature ? "Funció que faria servir més: " + ca(a.feature) : ""].filter(Boolean).join(". ")],
@@ -139,14 +140,14 @@ function fichaMd(r) {
   return ["## Fitxa de prova de solució — " + r.code, "", "| Camp | Contingut |", "|---|---|"].concat(fichaRows(r).map(([k, v]) => "| " + esc(k) + " | " + esc(v) + " |")).join("\n") + "\n";
 }
 function testsCsv(all) {
-  const head = ["codi", "data", "durada_min", "segment", "versio_pmv", "relacio", "consent_participar", "consent_gravar"]
-    .concat(TASKS.flatMap((x, i) => ["t" + (i + 1) + "_estat", "t" + (i + 1) + "_segons", "t" + (i + 1) + "_ajudes"]))
+  const head = ["codi", "data", "durada_min", "condicio", "segment", "versio_pmv", "relacio", "consent_participar", "consent_gravar"]
+    .concat(TASKS.flatMap((x, i) => ["t" + (i + 1) + "_estat", "t" + (i + 1) + "_segons", "t" + (i + 1) + "_ajudes", "t" + (i + 1) + "_errors"]))
     .concat(["utilitat", "facilitat", "confianca", "faria_servir", "pagaria", "funcio_preferida", "evidencies", "decisio"]);
   const cell = v => { const s = v == null ? "" : String(v); return /[",;\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
   const rows = CODES.filter(c => all[c]).map(c => {
     const r = all[c], a = r.ans || {}, ev = a.ev || {};
-    return [r.code, r.date, r.durMin, r.seg, r.version, r.relation, r.consentP ? "si" : "no", r.consentR ? "si" : "no"]
-      .concat(TASKS.flatMap((x, i) => { const k = (r.tasks || [])[i] || {}; return [k.status || "", k.secs || 0, k.help || 0]; }))
+    return [r.code, r.date, r.durMin, r.cond || "preuet", r.seg, r.version, r.relation, r.consentP ? "si" : "no", r.consentR ? "si" : "no"]
+      .concat(TASKS.flatMap((x, i) => { const k = (r.tasks || [])[i] || {}; return [k.status || "", k.secs || 0, k.help || 0, k.errors || 0]; }))
       .concat([a.useful || "", a.easy || "", a.trust || "", a.use || "", a.pay || "", a.feature ? ca(a.feature) : "", Object.keys(ev).filter(k => ev[k]).join("+"), a.decision || ""]);
   });
   return [head].concat(rows).map(r => r.map(cell).join(",")).join("\n") + "\n";
@@ -156,7 +157,7 @@ function testsCsv(all) {
 function TestSetupSheet() {
   const saved = S.tests || {};
   const firstFree = CODES.find(c => !saved[c]) || "S01";
-  const [m, setM] = useState({ code: firstFree, facilitator: "", guio: "Guió de prova de solució v1 · 16/10/2026", version: "V1", seg: "A", profile: "", criteria: "", relation: "none", consentP: null, consentR: null, notP: false, onb: true });
+  const [m, setM] = useState({ code: firstFree, facilitator: "", guio: "Guió de prova de solució v1 · 16/10/2026", version: "V1", cond: "preuet", seg: "A", profile: "", criteria: "", relation: "none", consentP: null, consentR: null, notP: false, onb: true });
   const [key, setKey] = useState(lsGet(LS_TEAMKEY) || "");
   const upd = (k, v) => setM(Object.assign({}, m, { [k]: v }));
   const ok = m.consentP === true && m.notP && m.consentR !== null;
@@ -172,6 +173,8 @@ function TestSetupSheet() {
         <datalist id="team-hint">${TEAM_HINT.map(x => html`<option value=${x} key=${x}></option>`)}</datalist></div>
       <div class="field"><label for="tf-guio">${t("t_guio")}</label><input id="tf-guio" type="text" maxlength="80" value=${m.guio} onInput=${e => upd("guio", e.currentTarget.value)} /></div>
       <div class="field"><span class="lab">${t("t_version")}</span><${Seg} label=${t("t_version")} value=${m.version} onChange=${v => upd("version", v)} options=${[{ v: "V1", l: "V1" }, { v: "V2", l: "V2" }, { v: "V3", l: "V3" }]} /></div>
+      <div class="field"><span class="lab">${t("t_cond")}</span><${Seg} label=${t("t_cond")} value=${m.cond} onChange=${v => upd("cond", v)} options=${[{ v: "preuet", l: "Preuet" }, { v: "control", l: t("t_cond_control") }]} />
+        <span class="xs muted">${t("t_cond_note")}</span></div>
       <div class="field"><span class="lab">${t("t_seg")}</span><${Seg} label=${t("t_seg")} value=${m.seg} onChange=${v => upd("seg", v)} options=${["A", "B", "C"].map(s => ({ v: s, l: s + " · " + t("seg_" + s) }))} /></div>
       <div class="field"><label for="tf-prof">${t("t_profile")}</label><textarea id="tf-prof" maxlength="200" placeholder=${t("t_profile_ph")} value=${m.profile} onInput=${e => upd("profile", e.currentTarget.value)}></textarea></div>
       <div class="field"><label for="tf-crit">${t("t_criteria")}</label><textarea id="tf-crit" maxlength="200" placeholder=${t("t_criteria_ph")} value=${m.criteria} onInput=${e => upd("criteria", e.currentTarget.value)}></textarea></div>
@@ -242,8 +245,9 @@ function TestBar() {
   return html`<div class="testbar" ref=${ref} role="region" aria-label=${t("t_title")}>
     <div class="row tb-top">
       <b class="num">${T.meta.code} · <span class="tb-long">${t("t_task_n", { a: i + 1, b: TASKS.length })}</span><span class="tb-short" aria-hidden="true">${i + 1}/${TASKS.length}</span></b><span class="num tb-dim">${mmss(secs)}</span>
-      ${rec.help ? html`<span class="xs tb-dim">· ${t("t_help")} ${rec.help}</span>` : null}<span class="grow"></span>
+      ${rec.help ? html`<span class="xs tb-dim">· ${t("t_help")} ${rec.help}</span>` : null}${rec.errors ? html`<span class="xs tb-dim">· ${t("t_errors")} ${rec.errors}</span>` : null}<span class="grow"></span>
       <button type="button" class="alt" onClick=${() => { rec.help += 1; hold(); set({}); }}>${t("t_help")} +1</button>
+      <button type="button" class="alt" title=${t("t_errors_note")} onClick=${() => { rec.errors = (rec.errors || 0) + 1; hold(); set({}); }}>${t("t_errors")} +1</button>
       <button type="button" onClick=${() => completeTask("ok", false)}>${t("t_ok")}</button>
       <button type="button" class="alt tb-icon" aria-expanded=${String(T.open)} aria-label=${T.open ? t("t_hide") : t("t_show")} onClick=${() => { T.open = !T.open; hold(); set({}); }}>${T.open ? "▾" : "▴"}</button>
     </div>

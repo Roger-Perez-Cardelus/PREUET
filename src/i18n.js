@@ -102,7 +102,7 @@ const STR = {
   per_u_l: ["€/L", "€/L"], per_u_kg: ["€/kg", "€/kg"], per_u_dotzena: ["€/dotzena", "€/docena"], per_u_rentat: ["€/rentat", "€/lavado"],
   per_u_rotlle: ["€/rotlle", "€/rollo"], per_u_ud: ["€/ud.", "€/ud."],
   pack_bigger: ["es ven en paquets de {s}", "se vende en paquetes de {s}"],
-  receipt_note: ["Imports proporcionals a la quantitat de la cistella. Si un producte només es ven en paquets més grans, pagaràs el paquet sencer.", "Importes proporcionales a la cantidad de la cesta. Si un producto solo se vende en paquetes más grandes, pagarás el paquete entero."],
+  receipt_note: ["Imports a caixa: paquets sencers (la fruita i la verdura a granel, al pes). Si el paquet és més gran del que necessites, s'indica.", "Importes en caja: paquetes enteros (la fruta y la verdura a granel, al peso). Si el paquete es más grande de lo que necesitas, se indica."],
   qty_minus: ["Treu-ne un", "Quita uno"], qty_plus: ["Afegeix-ne un", "Añade uno"], remove: ["Treu de la cistella", "Quitar de la cesta"],
 
   prices_by_chain: ["Preus per supermercat", "Precios por supermercado"], cheapest_here: ["El més barat", "El más barato"],

@@ -75,7 +75,11 @@ function memo(key, deps, fn) {
   return v;
 }
 function defaultChains() { return X.D.chains.filter(c => ["complet", "parcial", "antic"].includes(c.status)).map(c => c.id); }
-function activeChains() { const a = S.user.chains; return a && a.length ? a : defaultChains(); }
+function activeChains() {
+  const a = S.user.chains && S.user.chains.length ? S.user.chains : defaultChains();
+  const reach = chainsInReach(); // with a distance set: only chains with a shop that close
+  return reach ? a.filter(c => reach.has(c)) : a;
+}
 /* Community prices: one person's report is used only when it is plausible (within −60 %…+60 % of the median official price
    for that product) or when a second report for the same product and chain agrees with it (±10 %). */
 function officialRef(pid) {
@@ -137,7 +141,7 @@ function stockMap() {
 }
 function basketCompare() {
   const u = S.user;
-  return memo("cmp", [u.basket, u.chains, u.brand, u.fresh, u.estimate, S.community, X], () =>
+  return memo("cmp", [u.basket, activeChains().join(), u.brand, u.fresh, u.estimate, S.community, X], () =>
     u.basket.length ? compareBasket(u.basket, activeChains(), OPT()) : null);
 }
 function nChainsWithData() { return X.D.chains.filter(c => c.n_products > 0).length; }

@@ -91,6 +91,10 @@ function SheetRouter({ s }) {
     case "town": return html`<${TownSheet} />`;
     case "method": return html`<${MethodSheet} />`;
     case "about": return html`<${AboutSheet} />`;
+    case "shoplist": return html`<${ShopListSheet} cid=${s.cid} />`;
+    case "purchase": return html`<${PurchaseSheet} cid=${s.cid} />`;
+    case "savings": return html`<${SavingsSheet} />`;
+    case "scan": return html`<${ScanSheet} />`;
     case "test": return html`<${TestSetupSheet} />`;
     case "testAfter": return html`<${TestAfterSheet} />`;
     case "testSummary": return html`<${TestSummarySheet} code=${s.code} />`;

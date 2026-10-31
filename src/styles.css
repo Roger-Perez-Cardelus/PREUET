@@ -6,7 +6,7 @@
   --sunk: #EEEAF1;
   --ink: #1E1525;
   --ink-2: #5D5266;
-  --ink-3: #857A8E;
+  --ink-3: #6E6378;
   --line: #E3DDE8;
   --plum: #47235C;
   --plum-ink: #FFFFFF;
@@ -38,14 +38,14 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #151018; --card: #1F1824; --sunk: #2A2230; --ink: #F2ECF5; --ink-2: #BCB0C4; --ink-3: #91869A;
+    --paper: #151018; --card: #1F1824; --sunk: #2A2230; --ink: #F2ECF5; --ink-2: #BCB0C4; --ink-3: #A69BAF;
     --line: #382D3F; --plum: #CDA9E3; --plum-ink: #1B1020; --plum-soft: #33243D; --tag: #FFD23F; --tag-ink: #231B05;
     --tag-edge: #C99A00; --leaf: #5CCB91; --leaf-soft: #173726; --warn: #F2B35B; --warn-soft: #3A2A12; --bad: #FF7A84;
     --bad-soft: #3D1A1F; --shadow: 0 1px 2px rgba(0, 0, 0, .45), 0 8px 22px rgba(0, 0, 0, .35); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #151018; --card: #1F1824; --sunk: #2A2230; --ink: #F2ECF5; --ink-2: #BCB0C4; --ink-3: #91869A;
+  --paper: #151018; --card: #1F1824; --sunk: #2A2230; --ink: #F2ECF5; --ink-2: #BCB0C4; --ink-3: #A69BAF;
   --line: #382D3F; --plum: #CDA9E3; --plum-ink: #1B1020; --plum-soft: #33243D; --tag: #FFD23F; --tag-ink: #231B05;
   --tag-edge: #C99A00; --leaf: #5CCB91; --leaf-soft: #173726; --warn: #F2B35B; --warn-soft: #3A2A12; --bad: #FF7A84;
   --bad-soft: #3D1A1F; --shadow: 0 1px 2px rgba(0, 0, 0, .45), 0 8px 22px rgba(0, 0, 0, .35); color-scheme: dark;
@@ -125,7 +125,10 @@ main { padding-block: 18px calc(var(--tabbar-h) + 28px + env(safe-area-inset-bot
   padding: 13px 14px 13px 44px; font-size: var(--t-md); box-shadow: var(--shadow);
 }
 .search input:focus { outline: none; border-color: var(--plum); }
-.search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--ink-3); }
+.search > svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--ink-3); }
+.search .scan-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border: 0; background: none; color: var(--ink-2); display: grid; place-items: center; border-radius: 10px; }
+.search .scan-btn:focus-visible { outline: 2px solid var(--plum); }
+.search:has(.scan-btn) input { padding-right: 52px; }
 
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-m); padding: 14px; }
 .card.flat { box-shadow: none; }

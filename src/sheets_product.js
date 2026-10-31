@@ -103,9 +103,11 @@ function ProductSheet({ id }) {
     : html`<button type="button" class="btn primary block" onClick=${() => { addToBasket(id); toast(t("added_to_basket")); }}><${Icon} n="basket" />${t("add_to_basket")}</button>`}</div>`;
   return html`<${Sheet} title=${tl(p)} onClose=${closeSheet} foot=${foot} id=${id}>
     <div class="stack-l">
+      <${ProductPhoto} p=${p} />
       <div class="ph stack-s">
         <span class="eyebrow">${tl(cat)} · ${p["ref_" + LANG]}</span>
         <h1>${tl(p)}</h1>
+        <div class="row wrap-ok"><${WatchButton} pid=${p.id} /></div>
         <div class="chips">${(p.tags || []).map(tg => html`<span class=${"chip " + (DIET_TAGS.includes(tg) ? "good" : "plum")} key=${tg}>${t("tag_" + tg)}</span>`)}</div>
         ${avoid.length ? html`<div class="callout warn" role="alert">${t("allergen_warn", { a: avoid.map(a => t("al_" + a)).join(", ") })}</div>` : null}
         <p class="xs muted">${p.kind === "marca" ? t("brand_note") : t("equivalent_note")} ${t("ref_qty", { ref: p["ref_" + LANG] })}.</p>

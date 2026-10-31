@@ -11,5 +11,7 @@ sheets_recipe.js
 sheets_more.js
 sheets_info.js
 history.js
+photos.js
+features.js
 testmode.js
 main.js

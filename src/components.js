@@ -34,7 +34,9 @@ const ICONS = {
   box: "M3.5 7.5 12 3.2l8.5 4.3v9L12 20.8l-8.5-4.3zM3.5 7.5 12 11.8l8.5-4.3M12 11.8v9",
   globe: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.4 2.6 3.7 5.6 3.7 9s-1.3 6.4-3.7 9c-2.4-2.6-3.7-5.6-3.7-9S9.6 5.6 12 3z",
   shield: "M12 3l7 3v6c0 4.4-3 7.7-7 9-4-1.3-7-4.6-7-9V6z",
-  play: "M8 5.5v13l10.5-6.5z", user: "M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-4.4 3.6-8 8-8s8 3.6 8 8",
+  play: "M8 5.5v13l10.5-6.5z",
+  barcode: "M4 6v12M7 6v12M10.5 6v12M13 6v12M16.5 6v12M20 6v12M2.5 4.5h3M18.5 4.5h3M2.5 19.5h3M18.5 19.5h3",
+  share: "M12 3.5v11M7.5 8 12 3.5 16.5 8M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5", user: "M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-4.4 3.6-8 8-8s8 3.6 8 8",
   refresh: "M19.5 11A7.5 7.5 0 0 0 6.2 6.5L4 9M4 4.5V9h4.5M4.5 13a7.5 7.5 0 0 0 13.3 4.5L20 15M20 19.5V15h-4.5",
   scale: "M12 4v16M5 8h14M7.5 8 4.5 14a3 3 0 0 0 6 0zM16.5 8l-3 6a3 3 0 0 0 6 0zM8 20h8",
   cat_lactics: "M8.5 3h7v3l2.5 3.5V21H6V9.5L8.5 6zM6 9.5h12M8.5 6h7M9.5 13.5h5",
@@ -67,7 +69,7 @@ const SHORT = { mercadona: "Me", lidl: "Li", aldi: "Al", carrefour: "Ca", dia: "
 function ChainBadge({ cid, noName, strong }) {
   const c = X.C.get(cid);
   if (!c) return null;
-  return html`<span class="cb"><i style=${{ background: c.color, color: textOn(c.color) }} aria-hidden="true">${SHORT[cid] || c.name.slice(0, 2)}</i>${noName ? null : html`<span style=${strong ? "font-weight:800" : ""}>${c.name}</span>`}</span>`;
+  return html`<span class="cb"><i style=${{ background: chipColor(c.color), color: textOn(chipColor(c.color)) }} aria-hidden="true">${SHORT[cid] || c.name.slice(0, 2)}</i>${noName ? null : html`<span style=${strong ? "font-weight:800" : ""}>${c.name}</span>`}</span>`;
 }
 function PriceTag({ v, sub, lg, plain, title }) {
   return html`<span class=${"ptag" + (lg ? " lg" : "") + (plain ? " plain" : "")} title=${title || null}><span class="p">${eur(v)}</span>${sub ? html`<span class="u">${sub}</span>` : null}</span>`;

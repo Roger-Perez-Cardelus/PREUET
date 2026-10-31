@@ -28,6 +28,7 @@ function ProductRow({ p }) {
   const qty = qtyOf(p.id);
   const avoid = (p.allergens || []).filter(a => S.user.avoid.includes(a));
   return html`<div class="li">
+    <${ProductThumb} p=${p} size=${44} />
     <button type="button" class="grow" style="text-align:left;background:none;border:0;padding:0;min-width:0" onClick=${() => openSheet({ type: "product", id: p.id })}>
       <div class="t">${tl(p)}</div>
       <div class="s">${tl(cat)} · ${p["ref_" + LANG]}</div>
@@ -59,12 +60,14 @@ function Home() {
       <p>${t("hero_sub", { n: nChainsWithData(), date: fmtDL(X.D.meta.updated) })}</p>
       <div class="search" role="search"><${Icon} n="search" />
         <input type="search" value=${q} placeholder=${t("search_ph")} aria-label=${t("search_label")} onInput=${e => set({ q: e.currentTarget.value })} />
+        <button type="button" class="scan-btn" aria-label=${t("scan_title")} onClick=${() => openSheet({ type: "scan" })}><${Icon} n="barcode" s=${22} /></button>
       </div>
     </section>
     ${res ? html`<${SearchResults} res=${res} q=${q} />` : html`
       <${StaleBanner} />
       <${DueSchedules} />
       ${S.user.basket.length ? html`<${BasketTeaser} />` : null}
+      <${WatchedOffers} />
       <${Templates} />
       <${Categories} />
       <${OffersTeaser} />
@@ -160,6 +163,7 @@ function Basket() {
         const p = X.P.get(it.p);
         const mp = minPrice(it.p, OPT());
         return html`<div class="li" key=${it.p}>
+          <${ProductThumb} p=${p} size=${40} />
           <button type="button" class="grow" style="text-align:left;background:none;border:0;padding:0;min-width:0" onClick=${() => openSheet({ type: "product", id: it.p })}>
             <div class="t">${tl(p)}</div><div class="s">${it.n} × ${p["ref_" + LANG]}${mp ? " · " + t("from_price", { p: eur(mp.cost) }) : ""}</div>
           </button>
@@ -187,6 +191,7 @@ function CompareOptions() {
         <${Seg} label=${t("brand_label")} value=${u.brand} onChange=${v => updUser({ brand: v })} options=${[{ v: "any", l: t("brand_any") }, { v: "mb", l: t("brand_mb") }, { v: "fab", l: t("brand_fab") }]} /></div>
       <${Toggle} checked=${u.fresh} onChange=${v => updUser({ fresh: v })} label=${t("fresh_label")} />
       <${Toggle} checked=${u.estimate} onChange=${v => updUser({ estimate: v })} label=${t("est_label")} />
+      <${DistanceOptions} />
       <${ChainPicker} />
     </div>
   </details>`;
@@ -220,6 +225,7 @@ function CompareResults({ cmp }) {
       <div class="row"><div class="grow stack-s">
         <${ChainBadge} cid=${best.cid} strong=${true} />
         <span class="small muted">${t("covers", { k: best.k, n: best.n })}${best.ne && u.estimate ? " · " + t("est_n", { n: best.ne }) : ""}</span>
+        ${nearestOf(best.cid) ? html`<span class="xs muted"><${Icon} n="pin" s=${12} /> ${t("near_at", { km: fmtNum(nearestOf(best.cid).km), name: nearestOf(best.cid).name })}</span>` : null}
         ${save > 0.05 ? html`<span class="chip good" style="align-self:flex-start">${t("savings_vs", { x: eur(save), chain: X.C.get(worst.cid).name })}</span>` : null}
       </div><${PriceTag} v=${cmp.key(best)} lg=${true} /></div>
       <div class="row"><span class="small muted grow">${t("tap_bar")}</span>
@@ -227,10 +233,14 @@ function CompareResults({ cmp }) {
       ${view === "bars" ? html`<${BasketBars} cmp=${cmp} selId=${selId} />` : html`<${BasketTable} cmp=${cmp} selId=${selId} />`}
       ${cmp.low.length ? html`<p class="xs faint">${t("insufficient", { list: cmp.low.map(r => X.C.get(r.cid).name + " (" + r.k + "/" + r.n + ")").join(", ") })}</p>` : null}
       ${cmp.minTotal ? html`<p class="xs muted">${t("theoretical", { x: eur(cmp.minTotal) })}</p>` : null}
+      <p class="xs muted">${t("how_calc", { k: best.k, n: best.n })}${best.ne && u.estimate ? " " + t("how_calc_est", { n: best.ne, idx: best.idx ? Math.round(best.idx) : "—" }) : ""} <button type="button" class="link-btn xs" style="padding:0" onClick=${() => openSheet({ type: "method" })}>${t("how_more")}</button></p>
     </div>
     <${PairCard} cmp=${cmp} />
     ${sel ? html`<${Receipt} row=${sel} cmp=${cmp} />` : null}
     <div class="row wrap-ok">
+      ${sel ? html`<button type="button" class="btn primary small" onClick=${() => openSheet({ type: "shoplist", cid: sel.cid })}><${Icon} n="check" s=${18} />${t("shop_open", { chain: X.C.get(sel.cid).name })}</button>
+      <button type="button" class="btn ghost small" onClick=${() => openSheet({ type: "purchase", cid: sel.cid })}><${Icon} n="receipt" s=${18} />${t("buy_done")}</button>` : null}
+      <button type="button" class="btn ghost small" onClick=${() => shareBasket(u.basket)}><${Icon} n="share" s=${18} />${t("share_basket")}</button>
       <button type="button" class="btn ghost small" onClick=${() => copyText(basketText(sel, u.basket))}><${Icon} n="copy" s=${18} />${t("list_copy")}</button>
       ${canDownload() ? html`<button type="button" class="btn ghost small" onClick=${() => download("llista-preuet-" + isoToday() + ".txt", basketText(sel, u.basket))}><${Icon} n="download" s=${18} />${t("list_download")}</button>` : null}
       <button type="button" class="btn ghost small" onClick=${() => openSheet({ type: "schedNew" })}><${Icon} n="calendar" s=${18} />${t("make_periodic")}</button>
@@ -244,12 +254,12 @@ function BasketBars({ cmp, selId }) {
   const [tip, setTip] = useState(null);
   const anyEst = u.estimate && rows.some(r => r.ne > 0);
   return html`<div style="position:relative">
-    <div class="bars" role="list" aria-label=${t("chart_title")}>
+    <div class="bars" role="group" aria-label=${t("chart_title")}>
       ${rows.map(r => {
         const real = r.total / max * 100, est = u.estimate ? r.est / max * 100 : 0;
         const isBest = r === cmp.best;
         const tipText = X.C.get(r.cid).name + " · " + eur(r.total) + " (" + t("covers", { k: r.k, n: r.n }) + ")" + (u.estimate && r.ne ? " + ~" + eur(r.est) : "") + (r.idx ? " · " + t("index_short", { x: Math.round(r.idx) }) : "");
-        return html`<button type="button" role="listitem" key=${r.cid} class=${"bar" + (isBest ? " best" : "")} aria-pressed=${String(r.cid === selId)} aria-label=${tipText}
+        return html`<button type="button" key=${r.cid} class=${"bar" + (isBest ? " best" : "")} aria-pressed=${String(r.cid === selId)} aria-label=${tipText}
           onClick=${() => { updUser({ selChain: r.cid }); emit("basket:chain", { cid: r.cid }); }}
           onMouseEnter=${e => setTip({ text: tipText, y: e.currentTarget.offsetTop })} onMouseLeave=${() => setTip(null)} onFocus=${e => setTip({ text: tipText, y: e.currentTarget.offsetTop })} onBlur=${() => setTip(null)}>
           <span class="lab"><${ChainBadge} cid=${r.cid} /></span>
@@ -412,7 +422,7 @@ function Recipes() {
 /* ---------- more ---------- */
 function More() {
   const items = [
-    ["calendar", "periodic", "periodic_sub", "schedules"], ["store", "supermarkets", "supermarkets_sub", "chains"],
+    ["calendar", "periodic", "periodic_sub", "schedules"], ["receipt", "sav_title", "sav_sub", "savings"], ["store", "supermarkets", "supermarkets_sub", "chains"],
     ["users", "community", "community_sub_short", "community"], ["user", "profile", "profile_sub", "profile"],
     ["scale", "method", "method_sub", "method"], ["flask", "test_mode", "test_mode_sub", "test"],
     ["msg", "feedback", "feedback_sub", "feedback"], ["info", "about", "about_sub", "about"],

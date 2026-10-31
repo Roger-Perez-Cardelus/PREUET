@@ -51,10 +51,22 @@ function fmtQty(q, unit) {
   if (unit === "dotzena") { const u = Math.round(q * 12); return u + (LANG === "es" ? (u === 1 ? " huevo" : " huevos") : (u === 1 ? " ou" : " ous")); }
   return (Math.round(q * 100) / 100).toString().replace(".", ",") + " " + t("u_" + unit);
 }
-function textOn(hex) { // readable ink for a chain colour chip
-  const c = hex.replace("#", ""); const r = parseInt(c.slice(0, 2), 16), g = parseInt(c.slice(2, 4), 16), b = parseInt(c.slice(4, 6), 16);
-  const L = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-  return L > 0.6 ? "#1E1525" : "#FFFFFF";
+function luminance(hex) {
+  const c = hex.replace("#", "");
+  const ch = i => { const v = parseInt(c.slice(i, i + 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  return 0.2126 * ch(0) + 0.7152 * ch(2) + 0.0722 * ch(4);
+}
+function contrast(a, b) { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+function textOn(hex) { // readable ink for a chain colour chip: whichever of white or dark ink contrasts more (WCAG)
+  return contrast(hex, "#FFFFFF") >= contrast(hex, "#1E1525") ? "#FFFFFF" : "#1E1525";
+}
+function chipColor(hex) { // the brand colour, darkened just enough for 4.5:1 when neither ink reaches it
+  let c = hex;
+  for (let i = 0; i < 12 && Math.max(contrast(c, "#FFFFFF"), contrast(c, "#1E1525")) < 4.5; i++) {
+    const v = c.replace("#", "").match(/../g).map(x => Math.round(parseInt(x, 16) * 0.94));
+    c = "#" + v.map(x => x.toString(16).padStart(2, "0")).join("");
+  }
+  return c;
 }
 
 /* ---------- data index ---------- */

@@ -40,6 +40,7 @@ function ChainSheet({ id }) {
         <a class="btn small ghost" href=${c.shop || c.site} target="_blank" rel="noopener noreferrer"><${Icon} n="store" s=${16} />${t("shop_online")} <${Icon} n="ext" s=${14} /></a>
         <a class="btn small ghost" href=${maps} target="_blank" rel="noopener noreferrer"><${Icon} n="pin" s=${16} />${t("directions")} <${Icon} n="ext" s=${14} /></a>
       </div>
+      <${NearbyStores} cid=${id} />
       ${offers.length ? html`<section class="stack"><div class="section-h"><h2 class="grow">${t("chain_offers")}</h2><span class="small muted">${offers.length}</span></div>${offers.slice(0, 6).map((o, i) => html`<${OfferCard} key=${i} o=${o} />`)}</section>` : null}
       ${st.length ? html`<section class="card"><h3>${t("chain_stock")}</h3>${st.slice(0, 8).map(x => html`<${FeedItem} key=${x.id} c=${x} />`)}</section>` : null}
       <${CommentsBlock} target=${"c:" + id} title=${t("rate_chain")} />
@@ -155,7 +156,8 @@ function SegmentPick() {
 function TownField() {
   return html`<div class="field"><label for="town-in">${t("town")}</label>
     <input id="town-in" type="text" list="amb-towns" value=${S.user.town} maxlength="60" onChange=${e => updUser({ town: e.currentTarget.value.trim() || "Castelldefels" })} />
-    <datalist id="amb-towns">${AMB_TOWNS.map(x => html`<option value=${x} key=${x}></option>`)}</datalist></div>`;
+    <datalist id="amb-towns">${AMB_TOWNS.map(x => html`<option value=${x} key=${x}></option>`)}</datalist>
+    <div style="margin-top:8px"><${LocateButton} small=${true} /></div></div>`;
 }
 function TownSheet() {
   return html`<${Sheet} title=${t("town")} onClose=${closeSheet} id="town"><div class="stack-l"><${TownField} />

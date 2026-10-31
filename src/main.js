@@ -99,6 +99,8 @@ async function boot() {
     }
   } catch (e) { console.warn("user", e); }
   set({});
+  if (!openSharedBasket()) announceWatched();
+  window.addEventListener("hashchange", () => { if (/^#c=/.test(location.hash)) openSharedBasket(); });
   try { Store.subscribeCommunity(list => set({ community: list || [] })); } catch (e) { console.warn("community", e); }
   try { Store.subscribeTests(o => set({ tests: o || {} })); } catch (e) { console.warn("tests", e); }
 }
