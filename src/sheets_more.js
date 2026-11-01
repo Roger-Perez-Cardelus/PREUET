@@ -13,7 +13,7 @@ function ChainsSheet() {
         const cr = crowdOf("c:" + c.id, S.community);
         return html`<button type="button" class="li" key=${c.id} onClick=${() => openSheet({ type: "chain", id: c.id })}>
           <span class="grow stack-s" style="min-width:0"><${ChainBadge} cid=${c.id} strong=${true} />
-            <span class="chips">${statusChip(c.status)}<span class="chip outline">${t("products_with_price", { n: c.n_products })}</span></span>
+            <span class="chips">${statusChip(c.status)}<span class="chip outline">${t("products_with_price", { n: c.n_products })}</span>${chainNewest(c.id) ? html`<span class=${"chip " + ((chainStaleDays(c.id) || 0) > STALE_DAYS ? "warn" : "good")}>${t("prices_of", { d: fmtD(chainNewest(c.id)) })}</span>` : null}</span>
             <span class="xs muted">${g ? t("index_short", { x: Math.round(g.idx) }) : "—"} · ${c.ocu_note ? "OCU " + c.ocu_note : t("ocu_none")}${cr.n ? " · " + fmtNum(Math.round(cr.avg * 10) / 10) + "★ (" + cr.n + ")" : ""}</span></span>
           <span class="chev"><${Icon} n="chevR" /></span></button>`;
       })}</div></div><//>`;

@@ -86,6 +86,17 @@ function memo(key, deps, fn) {
   MEMO.set(key, { deps, v });
   return v;
 }
+/* the typical (median) price date per chain: some shops are read every week, others only when they let us */
+function chainNewest(cid) {
+  return memo("newest", [X], () => {
+    const by = new Map();
+    for (const o of X.D.offerings) { if (!by.has(o.c)) by.set(o.c, []); by.get(o.c).push(o.date); }
+    const m = new Map();
+    for (const [c, ds] of by) { ds.sort(); m.set(c, ds[Math.floor((ds.length - 1) / 2)]); }
+    return m;
+  }).get(cid) || null;
+}
+function chainStaleDays(cid) { const d = chainNewest(cid); return d ? daysBetween(d, isoToday()) : null; }
 function defaultChains() { return X.D.chains.filter(c => ["complet", "parcial", "antic"].includes(c.status)).map(c => c.id); }
 function activeChains() {
   const a = S.user.chains && S.user.chains.length ? S.user.chains : defaultChains();

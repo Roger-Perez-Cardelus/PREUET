@@ -88,4 +88,6 @@ Object.assign(STR, {
   search_recent: ["Cerques recents", "Búsquedas recientes"], search_popular: ["Prova amb", "Prueba con"], search_clear: ["Esborra", "Borrar"],
   jump_label: ["Seccions de la fitxa", "Secciones de la ficha"],
   onb_preview: ["Amb aquesta cistella, on surt més barata: {chain}", "Con esta cesta, dónde sale más barata: {chain}"],
+  chains_old: ["Preus més antics d'aquests súpers: {list}. Comprova'ls a la botiga.", "Precios más antiguos de estos súpers: {list}. Compruébalos en la tienda."],
+  prices_of: ["preus del {d}", "precios del {d}"],
 });

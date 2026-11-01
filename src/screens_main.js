@@ -252,6 +252,8 @@ function CompareResults({ cmp }) {
       ${view === "bars" ? html`<${BasketBars} cmp=${cmp} selId=${selId} />` : html`<${BasketTable} cmp=${cmp} selId=${selId} />`}
       ${cmp.low.length ? html`<p class="xs faint">${t("insufficient", { list: cmp.low.map(r => X.C.get(r.cid).name + " (" + r.k + "/" + r.n + ")").join(", ") })}</p>` : null}
       ${cmp.minTotal ? html`<p class="xs muted">${t("theoretical", { x: eur(cmp.minTotal) })}</p>` : null}
+      ${(() => { const old = cmp.ranked.filter(r => (chainStaleDays(r.cid) || 0) > STALE_DAYS);
+        return old.length ? html`<p class="stale-line" role="status"><${Icon} n="clock" s=${14} />${t("chains_old", { list: old.map(r => X.C.get(r.cid).name + " (" + fmtD(chainNewest(r.cid)) + ")").join(", ") })}</p>` : null; })()}
       <p class="xs muted">${t("how_calc", { k: best.k, n: best.n })}${best.ne && u.estimate ? " " + t("how_calc_est", { n: best.ne, idx: best.idx ? Math.round(best.idx) : "—" }) : ""} <button type="button" class="link-btn xs" style="padding:0" onClick=${() => openSheet({ type: "method" })}>${t("how_more")}</button></p>
     </div>
     <${PairCard} cmp=${cmp} />
