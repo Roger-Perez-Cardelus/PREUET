@@ -93,6 +93,8 @@ REJECT = {
     "mercadona | Aceitunas verdes rellenas de anchoa Hacendado",
     "mercadona | Vinagre de vino tinto Hacendado Botella",
     "mercadona | Refresco Fanta naranja Botella",
+    "consum | S.PELLEGRINO Agua Mineral  con Gas Botella Pet 1 L",
+    "consum | DANONE Yogur Griego Natural 920 Gr",
 }
 
 

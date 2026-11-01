@@ -2386,10 +2386,8 @@
   "score": "barcode"
  },
  "consum | DANONE Yogur Griego Natural 920 Gr": {
-  "code": "8410500032777",
-  "match": "Yogur natural",
-  "quantity": "920 g",
-  "score": "barcode"
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "consum | DANONE Yogur Natural Pack de 8 Unidades 8 x 120 Gr": {
   "code": "8410500001360",
@@ -2978,10 +2976,8 @@
   "score": "barcode"
  },
  "consum | S.PELLEGRINO Agua Mineral  con Gas Botella Pet 1 L": {
-  "code": "8002270002045",
-  "match": "Eau Gazeuse San Pellegrino",
-  "quantity": "1 l",
-  "score": "barcode"
+  "match": null,
+  "why": "rejected by hand (photo)"
  },
  "consum | SALUSTAR Toallitas Húmedas Bebé Ecológicas 60 U": {
   "code": "8410800068667",
