@@ -382,6 +382,21 @@ def cmd_build():
         print(f"{pid:22s} {'NEW' if pid not in have else '   '} " + (" | ".join(f"{x['c'][:4]} {x['name'][:42]} {x['price']}€/{x['size']}" for x in keep) or "— nothing found"))
 
 
+def cmd_pages():
+    """Saves the source page of every price older than two days (shops other than Mercadona's own and Consum) to tmp-raw/."""
+    d = json.loads(DATA.read_text(encoding="utf-8"))
+    cut = time.strftime("%Y-%m-%d", time.gmtime(time.time() - 2 * 86400))
+    urls = sorted({o["src"] for o in d["offerings"] if o["date"] < cut and str(o.get("src", "")).startswith("https://")})
+    RAW.mkdir(exist_ok=True)
+    out = {}
+    for i, url in enumerate(urls):
+        time.sleep(1.5)
+        st, ct, body = fetch(url)
+        out[url] = {"status": st, "type": ct, "body": body[:3_000_000].decode("utf-8", "replace")}
+        print(f"{i + 1}/{len(urls)} {st} {len(body):>8} {url}", flush=True)
+    (RAW / "pages.json.gz").write_bytes(gzip.compress(json.dumps(out, ensure_ascii=False).encode()))
+
+
 def cmd_probe():
     for name, url in PROBES.items():
         st, ct, body = fetch(url)
@@ -391,4 +406,4 @@ def cmd_probe():
 
 
 if __name__ == "__main__":
-    {"probe": cmd_probe, "collect": cmd_collect, "build": cmd_build}[sys.argv[1]]()
+    {"probe": cmd_probe, "collect": cmd_collect, "build": cmd_build, "pages": cmd_pages}[sys.argv[1]]()

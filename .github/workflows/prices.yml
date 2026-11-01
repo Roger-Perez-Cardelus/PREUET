@@ -8,7 +8,7 @@ on:
       mode:
         description: "update: actualitza els preus dels productes de tools/new_products.py · collect: només desa els llistats a tmp-raw/ · probe: comprova les fonts"
         type: choice
-        options: ["update", "collect", "probe"]
+        options: ["update", "collect", "pages", "probe"]
         default: "update"
       branch:
         description: "Branca on es desen els preus"
@@ -33,8 +33,11 @@ jobs:
         if: inputs.mode == 'probe'
         run: python3 tools/fetch_prices.py probe
       - name: Llegeix el que llisten les botigues
-        if: inputs.mode != 'probe'
+        if: inputs.mode == 'update' || inputs.mode == 'collect'
         run: python3 tools/fetch_prices.py collect
+      - name: Baixa les pàgines font dels preus antics
+        if: inputs.mode == 'pages'
+        run: python3 tools/fetch_prices.py pages
       - name: Actualitza els preus
         if: inputs.mode == 'update'
         env:
@@ -51,7 +54,7 @@ jobs:
           git commit -m "Preus de Mercadona i Consum del $day (productes nous)"
           git push origin "HEAD:$BRANCH"
       - name: Desa-ho a la branca
-        if: inputs.mode == 'collect'
+        if: inputs.mode == 'collect' || inputs.mode == 'pages'
         env:
           BRANCH: ${{ inputs.branch }}
         run: |
