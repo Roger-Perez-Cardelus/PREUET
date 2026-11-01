@@ -64,7 +64,7 @@ L'informe diu, per cadena, quants preus han canviat, quants són iguals i quants
 
 ### Mercadona i Consum: llegits directament
 
-Mercadona (tots els paquets que Preuet segueix) i Consum (tots els productes) no cal llegir-los amb WebFetch: a GitHub, **Actions → Preus de productes nous → Run workflow** (mode `update`, branca `main`) torna a llegir la botiga en línia de Mercadona i el cercador de Consum, en refà els preus i els desa amb la data del dia. Fes-ho **abans** de la resta de l'actualització. Les regles de Consum dels productes originals són a `tools/existing_rules.py`; per afegir productes nous, a `tools/new_products.py` (noms, unitat, paraules obligatòries i excloses, mides) i es torna a executar.
+Mercadona (tots els paquets que Preuet segueix) i Consum (tots els productes) no cal llegir-los amb WebFetch: l'acció **Preus de productes nous** s'executa sola cada dilluns a les 4:23 (UTC) i torna a publicar la web. També es pot llançar a mà: **Actions → Preus de productes nous → Run workflow** (mode `update`, branca `main`). Cada execució torna a llegir la botiga en línia de Mercadona i el cercador de Consum, en refà els preus i els desa amb la data del dia. Les regles de Consum dels productes originals són a `tools/existing_rules.py`; per afegir productes nous, a `tools/new_products.py` (noms, unitat, paraules obligatòries i excloses, mides) i es torna a executar.
 
 ## 3. Ofertes de la setmana (`offers.json`)
 
