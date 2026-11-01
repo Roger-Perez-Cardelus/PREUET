@@ -390,8 +390,11 @@ def cmd_pages():
     RAW.mkdir(exist_ok=True)
     out = {}
     for i, url in enumerate(urls):
-        time.sleep(1.5)
-        st, ct, body = fetch(url)
+        for attempt in range(3):  # Bonpreu answers 202 (still preparing) or times out now and then
+            time.sleep(1.5 + 8 * attempt)
+            st, ct, body = fetch(url)
+            if st == 200:
+                break
         out[url] = {"status": st, "type": ct, "body": body[:3_000_000].decode("utf-8", "replace")}
         print(f"{i + 1}/{len(urls)} {st} {len(body):>8} {url}", flush=True)
     (RAW / "pages.json.gz").write_bytes(gzip.compress(json.dumps(out, ensure_ascii=False).encode()))
