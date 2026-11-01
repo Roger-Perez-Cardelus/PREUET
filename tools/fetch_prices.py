@@ -163,13 +163,42 @@ def mercadona_items(raw, p, day):
     return out
 
 
+def consum_pool(raw):
+    """Every item any search returned, once: a product often shows up in another product's search."""
+    seen, out = set(), []
+    for items in raw.values():
+        for it in items:
+            if it.get("id") not in seen:
+                seen.add(it.get("id"))
+                out.append(it)
+    return out
+
+
+CROSS_KG_L = {"maionesa"}
+LEAD = {"porciones", "porcion", "lomito", "lomitos", "lomo", "lomos", "filete", "filetes", "rodaja", "rodajas", "suprema", "supremas",
+        "cereales", "de", "del", "la", "el", "pack", "bolsa", "malla", "bandeja"}
+
+
+def starts_with_product(p, text):
+    """The shelf name (without the brand) must begin with the product itself: "Mantequilla ..." yes, "Croissants de mantequilla" no."""
+    words = norm(text).split()
+    while words and words[0] in LEAD:
+        words = words[1:]
+    head = " " + " ".join(words) + " "
+    return any(head.startswith(" " + norm(w).strip() + " ") or head.startswith(" " + norm(w).strip()) and not w.endswith(" ")
+               for group in p["must"] for w in group)  # sold by the litre at Consum, by the kilo at Preuet: about 1 kg per litre
+
+
 def consum_items(raw, p, day):
     out = []
-    for it in raw.get(p["id"], []):
+    pool = raw if isinstance(raw, list) else consum_pool(raw)
+    for it in pool:
         pd = it.get("productData") or {}
         text = (pd.get("description") or pd.get("name") or "")
         brand = (pd.get("brand") or {}).get("name") or ""
         if not matches(p, text + " " + brand):
+            continue
+        if p.get("start") and not starts_with_product(p, text):
             continue
         prices = (it.get("priceData") or {}).get("prices") or []
         reg = next((x for x in prices if x.get("id") == "PRICE"), prices[0] if prices else None)
@@ -179,6 +208,8 @@ def consum_items(raw, p, day):
         upt = norm((it.get("priceData") or {}).get("unitPriceUnitType")).strip()
         if p["unit"] in ("kg", "l"):
             per = {"1 kg": ("kg", 1), "1 l": ("l", 1), "100 ml": ("l", 0.1), "100 g": ("kg", 0.1), "100 gr": ("kg", 0.1)}.get(upt)
+            if per and p["id"] in CROSS_KG_L and per[0] == "l":
+                per = ("kg", per[1])
             if not unit_price or not per or per[0] != p["unit"]:
                 continue
             size = round(price / unit_price * per[1], 3)
@@ -192,7 +223,9 @@ def consum_items(raw, p, day):
         else:
             m = COUNT.search(norm(text)) or re.search(r"(\d+)\s*u\b", norm(text))
             if p["unit"] == "dotzena":
-                if " docena " in norm(text) and not m:
+                if re.search(r" 1 2 docena | media docena ", norm(text)):
+                    size = 0.5
+                elif " docena " in norm(text) and not m:
                     size = 1
                 elif m:
                     size = round(int(m.group(1)) / 12, 3)
@@ -209,38 +242,71 @@ def consum_items(raw, p, day):
     return out
 
 
+PACK_WORDS = set("brick brik bricks briks paquete bandeja pieza tarro bote botella garrafa pack latas lata tarrina tarrinas ud uds unidades "
+                 "x de del en la el con kg g l ml grande pequena mini".split())
+
+
+def name_words(name):
+    return {w for w in norm(name).split() if w not in PACK_WORDS and not re.match(r"^[\d.,]+$", w) and not re.match(r"^pack\d", w)}
+
+
+def item_size(pi, unit):
+    """A Mercadona item's pack size in Preuet's unit for the product (kg, L, dozens, units...)."""
+    try:
+        price, bulk = float(pi.get("unit_price")), float(pi.get("bulk_price") or 0)
+    except (TypeError, ValueError):
+        return None
+    ref = str(pi.get("reference_format") or "").lower().strip()
+    if unit in ("kg", "l"):
+        per = {"kg": ("kg", 1), "l": ("l", 1), "100 ml": ("l", 0.1), "100 g": ("kg", 0.1)}.get(ref)
+        return round(price / bulk * per[1], 3) if per and per[0] == unit and bulk else None
+    n = pi.get("unit_size") if str(pi.get("size_format")) == "ud" else pi.get("total_units")
+    try:
+        n = float(n)
+    except (TypeError, ValueError):
+        return None
+    return round(n / 12, 3) if unit == "dotzena" else n
+
+
 def refresh_existing(d, merc, cons, day, report):
     """Mercadona: each pack Preuet already follows gets today's price from the shop itself (matched by its exact name).
     Consum: the original products get Consum's packs through tools/existing_rules.py."""
     from existing_rules import RULES
-    shop = {}
+    items = []
     for it in merc:
-        shop.setdefault(norm((it.get("name") or "") + " " + (it.get("packaging") or "")).strip(), it)
+        pi = it.get("pi") or {}
+        try:
+            items.append((it, float(pi.get("unit_price")), name_words(it.get("name"))))
+        except (TypeError, ValueError):
+            pass
     P = {p["id"]: p for p in d["products"]}
     hit = miss = 0
     for o in d["offerings"]:
         if o["c"] != "mercadona" or o["p"] not in RULES:
             continue
-        key = norm(o["name"]).strip()
-        cands = [k for k in shop if key == k or (key.startswith(k + " ") and re.fullmatch(r"[\d.,x ]*(kg|g|l|ml|ud|u)?[\d.,x ]*(kg|g|l|ml|ud|u)?", key[len(k):].strip() or "", re.I))]
-        if not cands:
+        mine, unit = name_words(o["name"]), P[o["p"]]["unit"]
+        best = None
+        for it, price, words in items:
+            if not words or not mine:
+                continue
+            sim = len(mine & words) / len(mine | words)
+            if sim < 0.75 or (best and sim <= best[0]):
+                continue
+            size = item_size(it.get("pi") or {}, unit)
+            if size and abs(size - o["size"]) <= 0.1 * o["size"]:
+                best = (sim, it, price)
+        if not best:
             miss += 1
             continue
-        it = shop[max(cands, key=len)]
-        pi = it.get("pi") or {}
-        try:
-            price = round(float(pi.get("unit_price")), 2)
-        except (TypeError, ValueError):
-            miss += 1
-            continue
+        _, it, price = best
         old = o["price"]
-        o.update(price=price, up=round(price / o["size"], 4), src=it.get("url") or o["src"], date=day, st="web")
+        o.update(price=round(price, 2), up=round(price / o["size"], 4), src=it.get("url") or o["src"], date=day, st="web")
         hit += 1
         if abs(price - old) > 0.005:
-            report.append(("~" + o["p"], [{"c": "mercadona", "name": o["name"] + f" (abans {old}€)", "price": price, "size": o["size"]}]))
+            report.append(("~" + o["p"], [{"c": "mercadona", "name": o["name"][:44] + f" (abans {old}) ", "price": round(price, 2), "size": o["size"]}]))
     print(f"mercadona: {hit} prices refreshed from the shop, {miss} packs not found (they keep their price and date)")
     for pid, (q, must, avoid, size) in RULES.items():
-        p = dict(P[pid], q=q, must=must, avoid=avoid, size=size)
+        p = dict(P[pid], q=q, must=must, avoid=avoid, size=size, start=P[pid].get("kind") != "marca")
         found = [x for x in consum_items(cons, p, day) if size[0] <= x["size"] <= size[1] and x["price"] > 0]
         for x in found:
             x["up"] = round(x["price"] / x["size"], 4)
@@ -271,7 +337,7 @@ def cmd_build():
     from new_products import PRODUCTS
     day = sys.argv[2] if len(sys.argv) > 2 else time.strftime("%Y-%m-%d")
     merc = json.loads(gzip.decompress((RAW / "mercadona.json.gz").read_bytes()))
-    cons = json.loads(gzip.decompress((RAW / "consum.json.gz").read_bytes()))
+    cons = consum_pool(json.loads(gzip.decompress((RAW / "consum.json.gz").read_bytes())))
     d = json.loads(DATA.read_text(encoding="utf-8"))
     have = {p["id"] for p in d["products"]}
     report = []

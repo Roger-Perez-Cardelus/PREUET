@@ -99,7 +99,7 @@ await gp.addInitScript(() => localStorage.setItem("preuet:user:v1", JSON.stringi
 await step.call(null, "10-nearby", async () => {
   await gp.goto(base + "#mes");
   await gp.getByText(/^Supermercats/).first().click();
-  await gp.locator(".sheet .list .li").first().click();
+  await gp.locator(".sheet .list .li", { hasText: "Mercadona" }).first().click();
   await gp.getByRole("button", { name: /Fes servir la meva ubicació/ }).first().click();
   await gp.getByText("Carrer de prova 1").waitFor();
   const town = (await gp.locator(".topbar .pill-btn").innerText()).trim();
