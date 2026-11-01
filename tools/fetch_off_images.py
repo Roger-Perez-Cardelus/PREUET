@@ -256,9 +256,22 @@ def main():
             o.pop("ean", None)
             continue
         tried += 1
+        key = o["c"] + " | " + o["name"]
+        o.pop("img", None)
+        shop_ean = o.get("ean") if o.get("st") == "web" and o["c"] == "consum" else None  # the shop's own barcode: exact
+        if shop_ean:
+            r = get(f"https://world.openfoodfacts.org/api/v2/product/{shop_ean}.json?fields=product_name,image_front_url,quantity", pause=0.8)
+            prod = (r or {}).get("product") or {}
+            if prod.get("image_front_url") and photo(shop_ean, prod["image_front_url"]):
+                o["img"] = {"f": f"img/off/{shop_ean}.jpg", "t": f"img/off/{shop_ean}-s.jpg", "s": f"https://world.openfoodfacts.org/product/{shop_ean}"}
+                log[key] = {"match": prod.get("product_name") or "", "quantity": prod.get("quantity"), "code": shop_ean, "score": "barcode"}
+                found += 1
+                print(f"  ok {key[:70]:70s} → by barcode {shop_ean}", flush=True)
+            else:
+                log[key] = {"match": None, "code": shop_ean, "why": "barcode not on Open Food Facts or no photo"}
+            continue  # with a shop barcode, never guess by name
         want = brand_of(o["name"])
         q = " ".join(w for w in norm(o["name"]).split() if not re.match(r"^\d", w) and w not in STOP)
-        o.pop("img", None)
         o.pop("ean", None)
         best, why = None, "no hits"
         for h in search(q):
@@ -267,7 +280,6 @@ def main():
                 best = (s, h)
             elif reason:
                 why = reason
-        key = o["c"] + " | " + o["name"]
         if not best:
             log[key] = {"match": None, "why": why}
             print(f"  -  {key[:70]:70s} {why}", flush=True)
