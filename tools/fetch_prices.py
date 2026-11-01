@@ -72,8 +72,9 @@ def cmd_collect():
                                  "cat": group["name"] + " / " + c["name"] + " / " + sub.get("name", ""), "pi": p.get("price_instructions")})
             print(f"mercadona {c['name']}: {len(merc)}", flush=True)
     (RAW / "mercadona.json.gz").write_bytes(gzip.compress(json.dumps(merc, ensure_ascii=False).encode()))
+    from existing_rules import RULES
     consum = {}
-    for p in PRODUCTS:
+    for p in PRODUCTS + [{"id": k, "q": v[0]} for k, v in RULES.items()]:
         items = []
         for off in (0, 40):
             d = get_json("https://tienda.consum.es/api/rest/V1.0/catalog/product?" + urllib.parse.urlencode({"limit": 40, "offset": off, "q": p["q"]}))
@@ -99,7 +100,7 @@ import unicodedata  # noqa: E402
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "preuet-data.json"
 OWN_BRANDS = re.compile(r"\b(hacendado|bosque verde|deliplus|compy|consum|mascoteros|steinburg|adlerbrau)\b")
-COUNT = re.compile(r"(\d+)\s*(?:x\s*)?(?:u|ud|uds|unidades|unid|bolsitas|bolsas|pastillas|capsulas|tabletas|toallitas|lavados|dosis)\b")
+COUNT = re.compile(r"(\d+)\s*(?:x\s*)?(?:u|ud|uds|unidades|unid|bolsitas|bolsas|pastillas|capsulas|tabletas|toallitas|lavados|dosis|rollos|panales)\b")
 
 
 def norm(s):
@@ -108,12 +109,19 @@ def norm(s):
     return " " + re.sub(r"\s+", " ", re.sub(r"[^a-z0-9,. ]", " ", s)).strip() + " "
 
 
+def has(t, w):
+    """w with a space before or after is a whole word ("con ", " m "); otherwise a word that starts with w."""
+    n = norm(w).strip()
+    if not n:
+        return False
+    if w != w.strip():
+        return re.search(r"(?<![a-z0-9])" + re.escape(n) + r"(?![a-z0-9])", t) is not None
+    return re.search(r"(?<![a-z0-9])" + re.escape(n), t) is not None
+
+
 def matches(p, text):
     t = norm(text)
-    for group in p["must"]:
-        if not any(re.search(r"\b" + re.escape(norm(w).strip()), t) for w in group):
-            return False
-    return not any(norm(w).strip() in t for w in p.get("avoid", []))
+    return all(any(has(t, w) for w in group) for group in p["must"]) and not any(has(t, w) for w in p.get("avoid", []))
 
 
 def mercadona_items(raw, p, day):
@@ -175,7 +183,7 @@ def consum_items(raw, p, day):
                 continue
             size = round(price / unit_price * per[1], 3)
         elif p["unit"] == "rentat":
-            m = re.search(r"(\d+)\s*lv", norm(text))
+            m = re.search(r"(\d+)\s*(?:lv|lavados|dosis)", norm(text))
             if not m:
                 continue
             size = int(m.group(1))
@@ -183,14 +191,79 @@ def consum_items(raw, p, day):
             size = 1
         else:
             m = COUNT.search(norm(text)) or re.search(r"(\d+)\s*u\b", norm(text))
-            if not m:
+            if p["unit"] == "dotzena":
+                if " docena " in norm(text) and not m:
+                    size = 1
+                elif m:
+                    size = round(int(m.group(1)) / 12, 3)
+                else:
+                    continue
+            elif not m:
                 continue
-            size = int(m.group(1))
+            else:
+                size = int(m.group(1))
         offer = next((x for x in prices if x.get("id") != "PRICE"), None)
         promo = ("Oferta: " + str(offer["value"].get("centAmount")).replace(".", ",") + " €")[:60] if offer else ""
         out.append({"c": "consum", "name": (brand + " " + text).strip() if brand and brand.upper() not in text.upper() else text, "price": round(price, 2),
                     "size": size, "src": pd.get("url"), "own": brand.upper() == "CONSUM", "promo": promo, "ean": it.get("ean")})
     return out
+
+
+def refresh_existing(d, merc, cons, day, report):
+    """Mercadona: each pack Preuet already follows gets today's price from the shop itself (matched by its exact name).
+    Consum: the original products get Consum's packs through tools/existing_rules.py."""
+    from existing_rules import RULES
+    shop = {}
+    for it in merc:
+        shop.setdefault(norm((it.get("name") or "") + " " + (it.get("packaging") or "")).strip(), it)
+    P = {p["id"]: p for p in d["products"]}
+    hit = miss = 0
+    for o in d["offerings"]:
+        if o["c"] != "mercadona" or o["p"] not in RULES:
+            continue
+        key = norm(o["name"]).strip()
+        cands = [k for k in shop if key == k or (key.startswith(k + " ") and re.fullmatch(r"[\d.,x ]*(kg|g|l|ml|ud|u)?[\d.,x ]*(kg|g|l|ml|ud|u)?", key[len(k):].strip() or "", re.I))]
+        if not cands:
+            miss += 1
+            continue
+        it = shop[max(cands, key=len)]
+        pi = it.get("pi") or {}
+        try:
+            price = round(float(pi.get("unit_price")), 2)
+        except (TypeError, ValueError):
+            miss += 1
+            continue
+        old = o["price"]
+        o.update(price=price, up=round(price / o["size"], 4), src=it.get("url") or o["src"], date=day, st="web")
+        hit += 1
+        if abs(price - old) > 0.005:
+            report.append(("~" + o["p"], [{"c": "mercadona", "name": o["name"] + f" (abans {old}€)", "price": price, "size": o["size"]}]))
+    print(f"mercadona: {hit} prices refreshed from the shop, {miss} packs not found (they keep their price and date)")
+    for pid, (q, must, avoid, size) in RULES.items():
+        p = dict(P[pid], q=q, must=must, avoid=avoid, size=size)
+        found = [x for x in consum_items(cons, p, day) if size[0] <= x["size"] <= size[1] and x["price"] > 0]
+        for x in found:
+            x["up"] = round(x["price"] / x["size"], 4)
+        if found:
+            med = statistics.median(x["up"] for x in found)
+            found = [x for x in found if med / 3 <= x["up"] <= med * 3]
+        seen, uniq = set(), []
+        for x in sorted(found, key=lambda x: x["up"]):
+            if (x["price"], x["size"]) not in seen:
+                seen.add((x["price"], x["size"]))
+                uniq.append(x)
+        keep = [x for x in uniq if x["own"]][:2] + [x for x in uniq if not x["own"]][:2]
+        report.append(("+" + pid, keep))
+        if not keep:
+            continue  # nothing recognisable at Consum: keep whatever Preuet had there
+        d["offerings"] = [o for o in d["offerings"] if not (o["p"] == pid and o["c"] == "consum")]
+        fresh = p["cat"] == "fruita"
+        for x in keep:
+            o = {"p": pid, "c": "consum", "name": x["name"][:120], "price": x["price"], "size": x["size"], "up": x["up"], "promo": x.get("promo", ""),
+                 "src": x["src"], "date": day, "st": "web", "desde": False, "bk": "fresc" if fresh and not x["own"] else ("mb" if x["own"] else "fab"), "rank": 0}
+            if x.get("ean"):
+                o["ean"] = x["ean"]
+            d["offerings"].append(o)
 
 
 def cmd_build():
@@ -234,6 +307,7 @@ def cmd_build():
             if x.get("ean"):
                 o["ean"] = x["ean"]
             d["offerings"].append(o)
+    refresh_existing(d, merc, cons, day, report)
     sys.path.insert(0, str(ROOT / "tools"))
     import update_data
     update_data.fix(d, d["meta"]["updated"])
