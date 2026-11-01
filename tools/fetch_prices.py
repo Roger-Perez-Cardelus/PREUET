@@ -268,6 +268,16 @@ def item_size(pi, unit):
     return round(n / 12, 3) if unit == "dotzena" else n
 
 
+def keep_photo(prev, o):
+    """A pack read again keeps the photo (and barcode) it already had."""
+    old = prev.get((o["p"], o["c"], o["name"]))
+    if old:
+        for k in ("img", "ean"):
+            if old.get(k) and not o.get(k):
+                o[k] = old[k]
+    return o
+
+
 def refresh_existing(d, merc, cons, day, report):
     """Mercadona: each pack Preuet already follows gets today's price from the shop itself (matched by its exact name).
     Consum: the original products get Consum's packs through tools/existing_rules.py."""
@@ -322,6 +332,7 @@ def refresh_existing(d, merc, cons, day, report):
         report.append(("+" + pid, keep))
         if not keep:
             continue  # nothing recognisable at Consum: keep whatever Preuet had there
+        prev = {(o["p"], o["c"], o["name"]): o for o in d["offerings"] if o["p"] == pid}
         d["offerings"] = [o for o in d["offerings"] if not (o["p"] == pid and o["c"] == "consum")]
         fresh = p["cat"] == "fruita"
         for x in keep:
@@ -329,7 +340,7 @@ def refresh_existing(d, merc, cons, day, report):
                  "src": x["src"], "date": day, "st": "web", "desde": False, "bk": "fresc" if fresh and not x["own"] else ("mb" if x["own"] else "fab"), "rank": 0}
             if x.get("ean"):
                 o["ean"] = x["ean"]
-            d["offerings"].append(o)
+            d["offerings"].append(keep_photo(prev, o))
 
 
 def cmd_build():
@@ -364,7 +375,11 @@ def cmd_build():
             continue
         prod = {k: p[k] for k in ("id", "ca", "es", "cat", "unit", "ref", "ref_ca", "ref_es")}
         prod.update(kind="equivalent", tags=p.get("tags", []), allergens=p.get("allergens", []), traces=p.get("traces", []), nut=p.get("nut"))
-        d["products"] = [x for x in d["products"] if x["id"] != p["id"]] + [prod]
+        old_prod = next((x for x in d["products"] if x["id"] == p["id"]), None)
+        if old_prod and old_prod.get("img"):
+            prod["img"] = old_prod["img"]
+        d["products"] = [x if x["id"] != p["id"] else prod for x in d["products"]] if old_prod else d["products"] + [prod]
+        prev = {(o["p"], o["c"], o["name"]): o for o in d["offerings"] if o["p"] == p["id"]}
         d["offerings"] = [o for o in d["offerings"] if o["p"] != p["id"]]
         fresh = p["cat"] == "fruita"
         for x in keep:
@@ -372,7 +387,7 @@ def cmd_build():
                  "src": x["src"], "date": day, "st": "web", "desde": False, "bk": "fresc" if fresh and not x["own"] else ("mb" if x["own"] else "fab"), "rank": 0}
             if x.get("ean"):
                 o["ean"] = x["ean"]
-            d["offerings"].append(o)
+            d["offerings"].append(keep_photo(prev, o))
     refresh_existing(d, merc, cons, day, report)
     sys.path.insert(0, str(ROOT / "tools"))
     import update_data
