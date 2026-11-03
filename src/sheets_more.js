@@ -40,8 +40,8 @@ function ChainSheet({ id }) {
         <a class="btn small ghost" href=${c.shop || c.site} target="_blank" rel="noopener noreferrer"><${Icon} n="store" s=${16} />${t("shop_online")} <${Icon} n="ext" s=${14} /></a>
         <a class="btn small ghost" href=${maps} target="_blank" rel="noopener noreferrer"><${Icon} n="pin" s=${16} />${t("directions")} <${Icon} n="ext" s=${14} /></a>
       </div>
-      <${NearbyStores} cid=${id} />
-      ${offers.length ? html`<section class="stack"><div class="section-h"><h2 class="grow">${t("chain_offers")}</h2><span class="small muted">${offers.length}</span></div>${offers.slice(0, 6).map((o, i) => html`<${OfferCard} key=${i} o=${o} />`)}</section>` : null}
+      ${hasPlus() ? html`<${NearbyStores} cid=${id} />` : html`<${PlusLock} f="nearby" />`}
+      ${offers.length && !hasPlus() ? html`<${PlusLock} f="offers" />` : offers.length ? html`<section class="stack"><div class="section-h"><h2 class="grow">${t("chain_offers")}</h2><span class="small muted">${offers.length}</span></div>${offers.slice(0, 6).map((o, i) => html`<${OfferCard} key=${i} o=${o} />`)}</section>` : null}
       ${st.length ? html`<section class="card"><h3>${t("chain_stock")}</h3>${st.slice(0, 8).map(x => html`<${FeedItem} key=${x.id} c=${x} />`)}</section>` : null}
       <${CommentsBlock} target=${"c:" + id} title=${t("rate_chain")} />
     </div><//>`;

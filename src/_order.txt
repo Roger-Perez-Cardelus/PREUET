@@ -13,5 +13,6 @@ sheets_info.js
 history.js
 photos.js
 features.js
+premium.js
 testmode.js
 main.js

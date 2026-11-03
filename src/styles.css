@@ -438,3 +438,24 @@ main:focus { outline: none; }
 .topbar .pill-btn { flex-shrink: 1; min-width: 0; }
 .topbar .pill-btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 420px) { :root[style*="125%"] .topbar .logo b { display: none; } }
+
+/* ---------- Preuet Plus ---------- */
+.plus-badge { display: inline-flex; align-items: center; gap: 3px; border-radius: 999px; padding: 1px 7px; font-size: var(--t-xs); font-weight: 700; line-height: 1.5;
+  background: var(--plum); color: var(--plum-ink); white-space: nowrap; vertical-align: middle; margin-left: 6px; flex: none; }
+.plus-ic { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 12px; background: var(--plum-soft); color: var(--plum); flex: none; }
+.plus-ic.lg { width: 56px; height: 56px; border-radius: 18px; }
+.plus-lock { width: 100%; text-align: left; gap: 12px; }
+.plus-gate { align-items: flex-start; }
+.plus-gate .plus-badge { margin-left: 0; align-self: flex-start; }
+.plus-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.plus-list li { display: flex; align-items: center; gap: 10px; }
+.plus-list li.on b { color: var(--plum); }
+.plus-list.free .ok { color: var(--leaf); display: inline-flex; }
+.plus-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.plus-plan { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; border-radius: 14px; border: 2px solid var(--line); background: var(--card); color: inherit; text-align: left; font: inherit; cursor: pointer; min-height: 44px; }
+.plus-plan[aria-checked="true"] { border-color: var(--plum); box-shadow: 0 0 0 1px var(--plum) inset; }
+.plus-plan .num { font-size: var(--t-lg); font-weight: 700; }
+.plus-plan small { font-size: var(--t-xs); font-weight: 500; color: var(--ink-2); }
+.plus-card .plus-ic { background: var(--plum); color: var(--plum-ink); }
+.btn.primary .plus-badge { background: var(--plum-ink); color: var(--plum); }
+.plus-mini { display: inline-flex; vertical-align: -1px; margin-left: 3px; color: var(--plum); }

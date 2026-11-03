@@ -187,7 +187,7 @@ function watchedOffers() {
 }
 function WatchButton({ pid }) {
   const on = isWatched(pid);
-  return html`<button type="button" class=${"btn small " + (on ? "primary" : "ghost")} aria-pressed=${String(on)} onClick=${() => toggleWatch(pid)}>
+  return html`<button type="button" class=${"btn small " + (on ? "primary" : "ghost")} aria-pressed=${String(on)} onClick=${() => needPlus("alerts") || toggleWatch(pid)}>
     <${Icon} n="star" s=${16} fill=${on} />${on ? t("watching") : t("watch")}</button>`;
 }
 function WatchedOffers() {
@@ -201,7 +201,7 @@ function WatchedOffers() {
 /* called when the app opens with data it has not shown this person yet */
 function announceWatched() {
   const u = S.user;
-  if (!u || u.seenData === X.D.meta.updated) return;
+  if (!u || u.seenData === X.D.meta.updated || !hasPlus()) return;
   const first = !u.seenData;
   updUser({ seenData: X.D.meta.updated });
   if (first) return;
@@ -405,7 +405,7 @@ function voiceSearch(onText) {
 function VoiceButton({ onText }) {
   if (!canListen()) return null;
   return html`<button type="button" class=${"scan-btn voice-btn" + (S.listening ? " on" : "")} aria-label=${S.listening ? t("voice_listening") : t("voice_search")} aria-pressed=${String(!!S.listening)}
-    onClick=${() => voiceSearch(onText)}><${Icon} n="mic" s=${21} /></button>`;
+    onClick=${() => needPlus("voice") || voiceSearch(onText)}><${Icon} n="mic" s=${21} /></button>`;
 }
 function speak(text) {
   try {

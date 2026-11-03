@@ -67,9 +67,25 @@ await step("05-product", async () => {
 await step("06-product-bottom", async () => {
   await page.locator(".sheet-body").evaluate(el => el.scrollTo(0, 1600));
 });
-await step("07-offers", async () => {
+// Plus: the offers tab shows the offer first; asking for Plus records the answer and unlocks it (nothing is charged)
+await step("07-plus-gate", async () => {
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: /^Ofertes|^Ofertas/ }).click();
+  await page.locator(".plus-gate").waitFor();
+  if (await page.locator("article.offer-card").count()) throw new Error("offers shown without Plus");
+  await page.getByRole("button", { name: /Descobreix Preuet Plus/ }).click();
+  await page.getByRole("radio", { name: /Mensual/ }).click();
+  await page.getByRole("button", { name: /^2,00/ }).click();
+});
+await step("07b-plus-join", async () => {
+  await page.getByRole("button", { name: /Vull Preuet Plus/ }).click();
+  await page.getByText(/encara no cobra/).waitFor();
+  await page.waitForFunction(() => { const u = JSON.parse(localStorage.getItem("preuet:user:v1") || "{}"); return u.plus && u.plus.on; });
+  const pl = await page.evaluate(() => JSON.parse(localStorage.getItem("preuet:user:v1")).plus);
+  if (!pl.on || pl.plan !== "month" || pl.wtp !== 2 || pl.from !== "offers" || pl.views.offers !== 1) throw new Error("Plus answer not saved: " + JSON.stringify(pl));
+  await page.getByRole("button", { name: /^Continua/ }).click();
+});
+await step("07c-offers", async () => {
   await page.locator("article.offer-card").first().waitFor();
 });
 await step("08-recipes", async () => {
@@ -122,7 +138,7 @@ await gp.route("https://overpass-api.de/**", r => r.fulfill({ contentType: "appl
   { type: "way", center: { lat: 41.2900, lon: 1.9900 }, tags: { shop: "supermarket", name: "Lidl" } },
   { type: "node", lat: 41.2810, lon: 1.9770, tags: { shop: "convenience", name: "Fruites Paco" } },
 ] }) }));
-await gp.addInitScript(() => localStorage.setItem("preuet:user:v1", JSON.stringify({ onboarded: true, updated: 1, town: "Barcelona" })));
+await gp.addInitScript(() => localStorage.setItem("preuet:user:v1", JSON.stringify({ onboarded: true, updated: 1, town: "Barcelona", plus: { on: true } })));
 await step.call(null, "10-nearby", async () => {
   await gp.goto(base + "#mes");
   await gp.getByText(/^Supermercats/).first().click();

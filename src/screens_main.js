@@ -68,9 +68,9 @@ function Home() {
     ${res ? html`<${SearchResults} res=${res} q=${q} />` : html`
       <${SearchChips} />
       <${StaleBanner} />
-      <${DueSchedules} />
+      ${hasPlus() ? html`<${DueSchedules} />` : null}
       ${S.user.basket.length ? html`<${BasketTeaser} />` : null}
-      <${WatchedOffers} />
+      ${hasPlus() ? html`<${WatchedOffers} />` : null}
       <${Templates} />
       <${Categories} />
       <${OffersTeaser} />
@@ -145,7 +145,7 @@ function OffersTeaser() {
   const now = st.filter(s => s === "now").length, nx = st.filter(s => s === "next").length;
   return html`<button type="button" class="card row" style="width:100%;text-align:left" onClick=${() => go("ofertes")}>
     <span style="color:var(--plum)"><${Icon} n="tag" s=${26} /></span>
-    <span class="grow stack-s"><b>${t("offers_teaser", { n: now })}</b>${nx ? html`<span class="small muted">${t("offers_teaser_next", { n: nx })}</span>` : null}</span>
+    <span class="grow stack-s"><span class="row" style="gap:6px"><b>${t("offers_teaser", { n: now })}</b><${PlusTag} /></span>${nx ? html`<span class="small muted">${t("offers_teaser_next", { n: nx })}</span>` : null}</span>
     <${Icon} n="chevR" />
   </button>`;
 }
@@ -212,7 +212,7 @@ function CompareOptions() {
         <${Seg} label=${t("brand_label")} value=${u.brand} onChange=${v => updUser({ brand: v })} options=${[{ v: "any", l: t("brand_any") }, { v: "mb", l: t("brand_mb") }, { v: "fab", l: t("brand_fab") }]} /></div>
       <${Toggle} checked=${u.fresh} onChange=${v => updUser({ fresh: v })} label=${t("fresh_label")} />
       <${Toggle} checked=${u.estimate} onChange=${v => updUser({ estimate: v })} label=${t("est_label")} />
-      <${DistanceOptions} />
+      ${hasPlus() ? html`<${DistanceOptions} />` : html`<${PlusLock} f="nearby" />`}
       <${ChainPicker} />
     </div>
   </details>`;
@@ -261,14 +261,14 @@ function CompareResults({ cmp }) {
     <${PairCard} cmp=${cmp} />
     ${sel ? html`<${Receipt} row=${sel} cmp=${cmp} />` : null}
     ${sel ? html`<div class="act-main">
-      <button type="button" class="btn primary" onClick=${() => openSheet({ type: "shoplist", cid: sel.cid })}><${Icon} n="check" s=${18} />${t("shop_open", { chain: X.C.get(sel.cid).name })}</button>
-      <button type="button" class="btn ghost" onClick=${() => openSheet({ type: "purchase", cid: sel.cid })}><${Icon} n="receipt" s=${18} />${t("buy_done")}</button>
+      <button type="button" class="btn primary" onClick=${() => openSheet({ type: "shoplist", cid: sel.cid })}><${Icon} n="check" s=${18} />${t("shop_open", { chain: X.C.get(sel.cid).name })}<${PlusTag} /></button>
+      <button type="button" class="btn ghost" onClick=${() => openSheet({ type: "purchase", cid: sel.cid })}><${Icon} n="receipt" s=${18} />${t("buy_done")}<${PlusTag} /></button>
     </div>` : null}
     <div class="act-row" role="group" aria-label=${t("more_actions")}>
-      <button type="button" onClick=${() => shareBasket(u.basket)}><${Icon} n="share" s=${20} /><span>${t("share_basket")}</span></button>
-      <button type="button" onClick=${() => copyText(basketText(sel, u.basket))}><${Icon} n="copy" s=${20} /><span>${t("act_copy")}</span></button>
-      ${canDownload() ? html`<button type="button" onClick=${() => download("llista-preuet-" + isoToday() + ".txt", basketText(sel, u.basket))}><${Icon} n="download" s=${20} /><span>${t("act_download")}</span></button>` : null}
-      <button type="button" onClick=${() => openSheet({ type: "schedNew" })}><${Icon} n="calendar" s=${20} /><span>${t("act_periodic")}</span></button>
+      <button type="button" onClick=${() => needPlus("share") || shareBasket(u.basket)}><${Icon} n="share" s=${20} /><span>${t("share_basket")}<${PlusMini} /></span></button>
+      <button type="button" onClick=${() => needPlus("share") || copyText(basketText(sel, u.basket))}><${Icon} n="copy" s=${20} /><span>${t("act_copy")}<${PlusMini} /></span></button>
+      ${canDownload() ? html`<button type="button" onClick=${() => needPlus("share") || download("llista-preuet-" + isoToday() + ".txt", basketText(sel, u.basket))}><${Icon} n="download" s=${20} /><span>${t("act_download")}<${PlusMini} /></span></button>` : null}
+      <button type="button" onClick=${() => openSheet({ type: "schedNew" })}><${Icon} n="calendar" s=${20} /><span>${t("act_periodic")}<${PlusMini} /></span></button>
     </div>
   </section>`;
 }
@@ -470,9 +470,11 @@ function More() {
     <h2 style="font-size:var(--t-xl)">${t("more_title")}</h2>
     ${install ? html`<button type="button" class="card raised row" style="width:100%;text-align:left" onClick=${installApp}>
       <span class="install-ic"><${Logo} /></span><span class="grow stack-s" style="gap:2px"><b>${t("install_t")}</b><span class="small muted">${t("install_sub")}</span></span><${Icon} n="download" /></button>` : null}
+    <${PlusCard} />
     <div class="list">${items.map(([ic, k, sub, type]) => html`<button type="button" class="li" key=${type} onClick=${() => openSheet({ type })}>
       <span style="color:var(--plum)"><${Icon} n=${ic} s=${22} /></span>
       <span class="grow"><span class="t" style="display:block">${t(k)}</span><span class="s">${t(sub)}</span></span>
+      ${PLUS_SHEETS[type] ? html`<${PlusTag} />` : null}
       ${type === "schedules" && S.user.schedules.length ? html`<span class="chip">${S.user.schedules.length}</span>` : null}
       <span class="chev"><${Icon} n="chevR" /></span></button>`)}</div>
   </div>`;

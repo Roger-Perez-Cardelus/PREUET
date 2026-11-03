@@ -39,7 +39,7 @@ function App() {
     <${Header} />
     ${S.offline ? html`<div class="offline-bar" role="status"><${Icon} n="alert" s=${14} />${t("offline_bar")}</div>` : null}
     <main id="contingut" tabindex="-1"><div class="wrap">
-      ${tab === "inici" ? html`<${Home} />` : tab === "cistella" ? html`<${Basket} />` : tab === "ofertes" ? html`<${Offers} />` : tab === "receptes" ? html`<${Recipes} />` : html`<${More} />`}
+      ${PLUS_TABS[tab] && !hasPlus() ? html`<${PlusGate} key=${tab} f=${PLUS_TABS[tab]} />` : tab === "inici" ? html`<${Home} />` : tab === "cistella" ? html`<${Basket} />` : tab === "ofertes" ? html`<${Offers} />` : tab === "receptes" ? html`<${Recipes} />` : html`<${More} />`}
     </div></main>
     <${TabBar} />
     ${S.sheets.map((s, i) => html`<${SheetRouter} key=${i + ":" + s.type + ":" + (s.id || s.code || "")} s=${s} />`)}

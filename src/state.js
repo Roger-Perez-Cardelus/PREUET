@@ -47,6 +47,7 @@ function go(tab) {
 /* each open sheet remembers what had the focus, so closing it puts the keyboard / screen reader back there */
 const FOCUS_STACK = [];
 function openSheet(s) {
+  if (PLUS_SHEETS[s.type] && !hasPlus()) s = { type: "plus", f: PLUS_SHEETS[s.type], next: s }; // Plus features show the offer first
   FOCUS_STACK.push(typeof document !== "undefined" ? document.activeElement : null);
   set({ sheets: S.sheets.concat([s]) }); emit("sheet", s);
 }
@@ -125,7 +126,7 @@ function chainStaleDays(cid) { const d = chainNewest(cid); return d ? daysBetwee
 function defaultChains() { return X.D.chains.filter(c => ["complet", "parcial", "antic"].includes(c.status)).map(c => c.id); }
 function activeChains() {
   const a = S.user.chains && S.user.chains.length ? S.user.chains : defaultChains();
-  const reach = chainsInReach(); // with a distance set: only chains with a shop that close
+  const reach = hasPlus() ? chainsInReach() : null; // with a distance set (Plus): only chains with a shop that close
   return reach ? a.filter(c => reach.has(c)) : a;
 }
 /* Community prices: one person's report is used only when it is plausible (within −60 %…+60 % of the median official price

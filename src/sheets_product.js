@@ -107,7 +107,7 @@ function ProductSheet({ id }) {
       <div class="ph stack-s">
         <span class="eyebrow">${tl(cat)} · ${p["ref_" + LANG]}</span>
         <h1>${tl(p)}</h1>
-        <div class="row wrap-ok"><${WatchButton} pid=${p.id} /><button type="button" class="btn small ghost" onClick=${() => shareProduct(p)}><${Icon} n="share" s=${16} />${t("share_basket")}</button></div>
+        <div class="row wrap-ok"><${WatchButton} pid=${p.id} /><button type="button" class="btn small ghost" onClick=${() => needPlus("share") || shareProduct(p)}><${Icon} n="share" s=${16} />${t("share_basket")}</button></div>
         <div class="chips">${(p.tags || []).map(tg => html`<span class=${"chip " + (DIET_TAGS.includes(tg) ? "good" : "plum")} key=${tg}>${t("tag_" + tg)}</span>`)}</div>
         ${avoid.length ? html`<div class="callout warn" role="alert">${t("allergen_warn", { a: avoid.map(a => t("al_" + a)).join(", ") })}</div>` : null}
         <p class="xs muted">${p.kind === "marca" ? t("brand_note") : t("equivalent_note")} ${t("ref_qty", { ref: p["ref_" + LANG] })}.</p>
@@ -120,7 +120,7 @@ function ProductSheet({ id }) {
         ${none.length ? html`<p class="xs faint">${t("no_price_here", { chain: none.map(c => c.name).join(", ") })}</p>` : null}
         <${PriceReport} p=${p} />
       </section>
-      <${PriceHistory} p=${p} />
+      ${hasPlus() ? html`<${PriceHistory} p=${p} />` : html`<${PlusLock} f="history" />`}
       <section class="card stack" ref=${nutRef} id="sec-nut">
         <div class="row"><h3 class="grow">${t("nutrition")}</h3><span class="xs muted">${t("per100", { b: p.nut && p.nut.basis === "ml" ? "ml" : "g" })}</span></div>
         <${NutritionTable} p=${p} />

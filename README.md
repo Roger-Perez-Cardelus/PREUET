@@ -18,6 +18,34 @@ Producte mínim viable (PMV) de l'equip AT2 · Grup F (Empresa, EETAC–UPC, cur
 
 Bilingüe (català i castellà), tema clar i fosc, pensada per al mòbil.
 
+## Preuet Plus (prova de disposició a pagar, no es cobra res)
+
+Gratis per a tothom: on és més barata la cistella (comparador i tiquet), el rànquing qualitat-preu, la fitxa del producte
+(preus per cadena, al·lèrgens, nutrició, origen), les aportacions de la comunitat i l'accessibilitat.
+
+Marcat com a Plus: ofertes, receptes, llista de la compra, compres periòdiques, compres i estalvi, evolució del preu,
+avisos d'ofertes, súpers a prop, escàner, cerca per veu i compartir o exportar.
+
+Quan algú obre una funció Plus veu l'oferta (2,49 €/mes o 19,99 €/any) i la pregunta «Quant pagaries de debò cada mes?».
+L'app compta quantes vegades s'ha vist l'oferta per a cada funció. Si la persona toca «Vull Preuet Plus», es desa el pla
+triat i el preu que diu que pagaria. Només llavors se li explica que Preuet encara no cobra, i se li desbloqueja Plus.
+No es demana cap dada de pagament. El mode prova S01–S10 ho té tot desbloquejat.
+
+Les respostes es guarden al perfil de cada persona (`plus` dins de `user_state`). A Supabase, des de l'editor SQL:
+
+```sql
+select count(*) filter (where state->'plus'->'views' <> '{}'::jsonb) as han_vist_oferta,
+       count(*) filter (where (state->'plus'->>'on')::boolean)       as volen_plus,
+       round(avg((state->'plus'->>'wtp')::numeric), 2)               as pagarien_de_mitjana
+from user_state;
+select state->'plus'->>'from' as funcio, state->'plus'->>'plan' as pla, state->'plus'->>'wtp' as pagaria,
+       state->'plus'->'views' as vistes, state->'plus'->>'no' as ara_no
+from user_state where state ? 'plus' order by updated_at desc;
+```
+
+Un bloqueig fet només al navegador es pot saltar: serveix per mesurar l'interès, no per protegir res. Per cobrar de debò
+caldria un servei de pagament (per exemple Stripe) amb un servidor que comprovi qui ha pagat.
+
 ## Dues versions, un sol codi
 
 | | Artifact de Claude | Web a GitHub Pages |
@@ -32,6 +60,7 @@ Bilingüe (català i castellà), tema clar i fosc, pensada per al mòbil.
 ```
 src/                 codi de l'app (Preact + htm, sense pas de compilació) i estils
   _order.txt         ordre en què s'ajunten els mòduls
+  premium.js         Preuet Plus: què és gratis, què és Plus i la prova de disposició a pagar
 data/
   preuet-data.json   preus, ofertes, productes, receptes, cistelles i fonts
   history.json       preu setmanal per kg o litre de cada producte i cadena (evolució de preus)
