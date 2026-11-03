@@ -415,3 +415,26 @@ button.offer-title:hover { color: var(--plum); text-decoration: underline; }
 .jump .filter { font-size: var(--t-xs); }
 .sheet section[id], .sheet div[id^="sec-"] { scroll-margin-top: 72px; }
 .recipe-li .tpl-pics { margin-bottom: 4px; }
+
+/* ---------- accessibility (November 2026) ---------- */
+.skip-link { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--plum); color: var(--plum-ink); padding: 10px 14px; border-radius: 10px; font-weight: 700; text-decoration: none; }
+.skip-link:focus { top: calc(8px + env(safe-area-inset-top, 0px)); }
+main:focus { outline: none; }
+.search .voice-btn { right: 48px; }
+.search:has(.voice-btn) input { padding-right: 96px; }
+.search .voice-btn.on { color: var(--bad); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: translateY(-50%) scale(1.15); } }
+:root[data-motion="reduce"] *, :root[data-motion="reduce"] *::before { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+/* high contrast: darker text, visible borders, underlined links, solid focus ring */
+:root[data-contrast="high"] { --ink-2: #2E2436; --ink-3: #3F3547; --line: #6E6378; --plum: #2E0F42; }
+@media (prefers-color-scheme: dark) { :root[data-contrast="high"]:not([data-theme="light"]) { --ink: #FFFFFF; --ink-2: #EDE6F2; --ink-3: #DCD2E3; --line: #A69BAF; --plum: #E6CCF5; } }
+:root[data-contrast="high"][data-theme="dark"] { --ink: #FFFFFF; --ink-2: #EDE6F2; --ink-3: #DCD2E3; --line: #A69BAF; --plum: #E6CCF5; }
+:root[data-contrast="high"] a, :root[data-contrast="high"] .link-btn { text-decoration: underline; }
+:root[data-contrast="high"] .card, :root[data-contrast="high"] .li, :root[data-contrast="high"] .filter, :root[data-contrast="high"] .btn.ghost { border-width: 2px; }
+:root[data-contrast="high"] :focus-visible { outline: 4px solid var(--ink); outline-offset: 3px; }
+/* larger text: the town name gives way first, the language switch never gets cut */
+.topbar .wrap > * { min-width: 0; }
+.topbar .lang { flex: none; }
+.topbar .pill-btn { flex-shrink: 1; min-width: 0; }
+.topbar .pill-btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 420px) { :root[style*="125%"] .topbar .logo b { display: none; } }

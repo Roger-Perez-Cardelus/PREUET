@@ -18,6 +18,12 @@ function App() {
     document.body.style.overflow = S.sheets.length || (S.user && !S.user.onboarded) ? "hidden" : "";
     document.body.classList.toggle("testing", !!(S.test && S.test.phase === "tasks"));
     document.body.classList.toggle("sheet-open", S.sheets.length > 0);
+    // while a sheet or the welcome is open, the page behind it is out of reach for keyboards and screen readers
+    const behind = S.sheets.length > 0 || !!(S.user && !S.user.onboarded);
+    document.querySelectorAll("#app > header, #app > main, #app > nav").forEach(el => { el.inert = behind; });
+    // only the top sheet is live
+    const sheets = document.querySelectorAll("#app > .sheet");
+    sheets.forEach((el, i) => { el.inert = i < sheets.length - 1; });
   });
   const ids = [...new Set(S.community.map(c => c.uid).filter(Boolean))].sort().join(",");
   useEffect(() => {
@@ -29,9 +35,10 @@ function App() {
   if (!S.ready) return html`<div class="loading"><div><b>Preuet</b><p>${t("loading")}</p></div></div>`;
   const tab = S.tab;
   return html`
+    <a class="skip-link" href="#contingut" onClick=${e => { e.preventDefault(); const m = document.getElementById("contingut"); if (m) m.focus(); }}>${t("skip_content")}</a>
     <${Header} />
     ${S.offline ? html`<div class="offline-bar" role="status"><${Icon} n="alert" s=${14} />${t("offline_bar")}</div>` : null}
-    <main><div class="wrap">
+    <main id="contingut" tabindex="-1"><div class="wrap">
       ${tab === "inici" ? html`<${Home} />` : tab === "cistella" ? html`<${Basket} />` : tab === "ofertes" ? html`<${Offers} />` : tab === "receptes" ? html`<${Recipes} />` : html`<${More} />`}
     </div></main>
     <${TabBar} />
@@ -81,6 +88,7 @@ async function boot() {
   if (TABS.some(x => x[0] === h)) S.tab = h;
   S.ready = true;
   applyTheme(S.user.theme);
+  applyA11y(S.user.a11y);
   const root = document.getElementById("app");
   root.textContent = ""; // the static "loading" placeholder: Preact would otherwise leave it at the bottom of every page
   render(html`<${App} />`, root);

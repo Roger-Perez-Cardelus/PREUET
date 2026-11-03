@@ -35,6 +35,8 @@ const ICONS = {
   globe: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.4 2.6 3.7 5.6 3.7 9s-1.3 6.4-3.7 9c-2.4-2.6-3.7-5.6-3.7-9S9.6 5.6 12 3z",
   shield: "M12 3l7 3v6c0 4.4-3 7.7-7 9-4-1.3-7-4.6-7-9V6z",
   play: "M8 5.5v13l10.5-6.5z",
+  mic: "M12 3.5a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0v-5a3 3 0 0 0-3-3zM5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7",
+  speaker: "M4 9.5h3.5L12 5.5v13l-4.5-4H4zM15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11",
   barcode: "M4 6v12M7 6v12M10.5 6v12M13 6v12M16.5 6v12M20 6v12M2.5 4.5h3M18.5 4.5h3M2.5 19.5h3M18.5 19.5h3",
   share: "M12 3.5v11M7.5 8 12 3.5 16.5 8M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5", user: "M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-4.4 3.6-8 8-8s8 3.6 8 8",
   refresh: "M19.5 11A7.5 7.5 0 0 0 6.2 6.5L4 9M4 4.5V9h4.5M4.5 13a7.5 7.5 0 0 0 13.3 4.5L20 15M20 19.5V15h-4.5",
@@ -113,7 +115,15 @@ function Sheet({ title, onClose, children, foot, id }) {
     const el = ref.current;
     if (el) { const hd = el.querySelector("h2"); if (hd) hd.focus({ preventScroll: true }); }
   }, [id]);
-  return html`<section class="sheet" ref=${ref} role="dialog" aria-modal="true" aria-label=${title}>
+  const trap = e => { // Tab and Shift+Tab stay inside the open sheet
+    if (e.key !== "Tab" || !ref.current) return;
+    const f = [...ref.current.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])')].filter(x => x.offsetParent !== null);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && (document.activeElement === first || !ref.current.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
+  return html`<section class="sheet" ref=${ref} role="dialog" aria-modal="true" aria-label=${title} onKeyDown=${trap}>
     <div class="sheet-head"><div class="wrap">
       ${onClose ? html`<button type="button" class="icon-btn" onClick=${onClose} aria-label=${t("back")}><${Icon} n="chevL" /></button>` : null}
       <h2 class="grow" tabindex="-1">${title}</h2>

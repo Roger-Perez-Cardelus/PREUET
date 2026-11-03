@@ -83,6 +83,33 @@ await step("09-more", async () => {
   await page.locator(".list .li").first().waitFor();
 });
 
+// keyboard only: open a product sheet, Tab stays inside it, the page behind is inert, Esc closes it and the focus comes back
+await step("09b-keyboard", async () => {
+  await page.getByRole("button", { name: /^Inici|^Inicio/ }).click();
+  await page.locator(".cat-btn").first().waitFor();
+  const opener = page.locator(".cat-btn").first();
+  await opener.focus();
+  await page.keyboard.press("Enter");
+  await page.locator(".sheet").last().waitFor();
+  const row = page.locator(".sheet .list .li button.grow").first();
+  await row.focus();
+  await page.keyboard.press("Enter");
+  await page.locator(".sheet h1").waitFor();
+  for (let i = 0; i < 40; i++) await page.keyboard.press("Tab");
+  const inside = await page.evaluate(() => { const s = document.querySelectorAll("#app > .sheet"); return s[s.length - 1].contains(document.activeElement); });
+  if (!inside) throw new Error("Tab left the open sheet");
+  const inert = await page.evaluate(() => document.querySelector("#app > main").inert && document.querySelectorAll("#app > .sheet")[0].inert);
+  if (!inert) throw new Error("the page behind the sheet is not inert");
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(100);
+  const back = await page.evaluate(() => document.activeElement && document.activeElement.matches(".sheet .list .li button.grow"));
+  if (!back) throw new Error("focus did not return to the row that opened the sheet");
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(100);
+  const home = await page.evaluate(() => document.activeElement && document.activeElement.classList.contains("cat-btn"));
+  if (!home) throw new Error("focus did not return to the category button");
+});
+
 // location + nearby shops, with OpenStreetMap answered by a fixed sample
 const geo = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, serviceWorkers: "block",
   geolocation: { latitude: 41.2795, longitude: 1.9762 }, permissions: ["geolocation"] });

@@ -61,6 +61,7 @@ function Home() {
       <div class="search" role="search"><${Icon} n="search" />
         <input type="search" value=${q} placeholder=${t("search_ph")} aria-label=${t("search_label")} onInput=${e => set({ q: e.currentTarget.value })}
           onKeyDown=${e => { if (e.key === "Enter") { rememberSearch(q); e.currentTarget.blur(); } }} onBlur=${() => rememberSearch(q)} />
+        <${VoiceButton} onText=${txt => { set({ q: txt }); rememberSearch(txt); }} />
         <button type="button" class="scan-btn" aria-label=${t("scan_title")} onClick=${() => openSheet({ type: "scan" })}><${Icon} n="barcode" s=${22} /></button>
       </div>
     </section>
@@ -90,7 +91,8 @@ function BasketSummary({ cmp }) {
   const worst = cmp.ranked.length > 1 ? cmp.ranked[cmp.ranked.length - 1] : null;
   const save = worst ? cmp.key(worst) - cmp.key(b) : 0;
   const jump = () => { const el = document.getElementById("results"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
-  return html`<button type="button" class="sum-bar" onClick=${jump} aria-label=${t("home_best") + ": " + X.C.get(b.cid).name + " " + eur(cmp.key(b))}>
+  const said = t("home_best") + ": " + X.C.get(b.cid).name + ", " + eur(cmp.key(b));
+  return html`<span class="sr" aria-live="polite">${said}</span><button type="button" class="sum-bar" onClick=${jump} aria-label=${t("home_best") + ": " + X.C.get(b.cid).name + " " + eur(cmp.key(b))}>
     <span class="grow stack-s" style="gap:2px;min-width:0"><span class="eyebrow">${t("home_best")}</span>
       <span class="row" style="gap:8px"><${ChainBadge} cid=${b.cid} strong=${true} />${save > 0.05 ? html`<span class="chip good">−${eur(save)}</span>` : null}</span></span>
     <${PriceTag} v=${cmp.key(b)} /><${Icon} n="chevD" s=${18} />

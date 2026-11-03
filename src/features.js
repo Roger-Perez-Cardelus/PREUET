@@ -136,6 +136,7 @@ function ShopListSheet({ cid }) {
       ${left === 0 && row ? html`<button type="button" class="btn small primary" onClick=${() => replaceSheet({ type: "purchase", cid })}>${t("buy_done")}</button>` : null}</div>`}>
     <div class="stack">
       <p class="small muted">${t("shop_sub")}</p>
+      ${canSpeak() ? html`<button type="button" class="btn small ghost" style="align-self:flex-start" onClick=${() => speakList(groups, ticked)}><${Icon} n="speaker" s=${18} />${t("listen_list")}</button>` : null}
       ${groups.map(g => html`<section key=${g.cat} class="stack-s"><span class="eyebrow">${tl(X.CAT.get(g.cat))}</span>
         <div class="list">${g.items.map(({ it, p, l }) => html`<label class="li" key=${it.p} style="cursor:pointer">
           <input type="checkbox" checked=${!!ticked[it.p]} onChange=${() => tick(it.p)} style="width:22px;height:22px;flex:none" />
@@ -384,4 +385,43 @@ function openSharedProduct() {
   try { history.replaceState(null, "", "#inici"); } catch (e) { /* ignore */ }
   openSheet({ type: "product", id: m[1] });
   return true;
+}
+
+/* ---------- voice: search by speaking, hear the shopping list ---------- */
+function canListen() { return typeof window !== "undefined" && !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
+function canSpeak() { return typeof window !== "undefined" && "speechSynthesis" in window; }
+function voiceSearch(onText) {
+  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Rec) return;
+  const r = new Rec();
+  r.lang = LANG === "es" ? "es-ES" : "ca-ES";
+  r.interimResults = false; r.maxAlternatives = 1;
+  set({ listening: true });
+  r.onresult = e => { const txt = (e.results[0] && e.results[0][0] && e.results[0][0].transcript) || ""; if (txt) onText(txt.replace(/[.?!]$/, "")); };
+  r.onerror = () => toast(t("voice_failed"));
+  r.onend = () => set({ listening: false });
+  try { r.start(); } catch (e) { set({ listening: false }); }
+}
+function VoiceButton({ onText }) {
+  if (!canListen()) return null;
+  return html`<button type="button" class=${"scan-btn voice-btn" + (S.listening ? " on" : "")} aria-label=${S.listening ? t("voice_listening") : t("voice_search")} aria-pressed=${String(!!S.listening)}
+    onClick=${() => voiceSearch(onText)}><${Icon} n="mic" s=${21} /></button>`;
+}
+function speak(text) {
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = LANG === "es" ? "es-ES" : "ca-ES";
+    u.rate = 0.95;
+    speechSynthesis.speak(u);
+  } catch (e) { /* ignore */ }
+}
+function speakList(groups, ticked) {
+  const parts = [];
+  for (const g of groups) {
+    const todo = g.items.filter(x => !ticked[x.it.p]);
+    if (!todo.length) continue;
+    parts.push(tl(X.CAT.get(g.cat)) + ": " + todo.map(x => x.it.n + " " + tl(x.p)).join(", ") + ".");
+  }
+  speak(parts.length ? parts.join(" ") : t("shop_done"));
 }

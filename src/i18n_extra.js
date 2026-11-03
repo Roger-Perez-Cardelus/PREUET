@@ -90,4 +90,12 @@ Object.assign(STR, {
   onb_preview: ["Amb aquesta cistella, on surt més barata: {chain}", "Con esta cesta, dónde sale más barata: {chain}"],
   chains_old: ["Preus més antics d'aquests súpers: {list}. Comprova'ls a la botiga.", "Precios más antiguos de estos súpers: {list}. Compruébalos en la tienda."],
   prices_of: ["preus del {d}", "precios del {d}"],
+  skip_content: ["Salta al contingut", "Saltar al contenido"],
+  a11y_title: ["Accessibilitat", "Accesibilidad"], a11y_size: ["Mida del text", "Tamaño del texto"],
+  a11y_contrast: ["Contrast alt (text més fosc, vores i enllaços més visibles)", "Contraste alto (texto más oscuro, bordes y enlaces más visibles)"],
+  a11y_motion: ["Menys animacions", "Menos animaciones"],
+  a11y_note: ["També funciona amb el teclat (Tab, Maj+Tab, Esc) i amb lectors de pantalla (VoiceOver, TalkBack).", "También funciona con el teclado (Tab, Mayús+Tab, Esc) y con lectores de pantalla (VoiceOver, TalkBack)."],
+  voice_search: ["Cerca per veu", "Buscar por voz"], voice_listening: ["T'escolto… (toca per aturar)", "Te escucho… (toca para parar)"],
+  voice_failed: ["No t'he entès. Torna-ho a provar o escriu-ho.", "No te he entendido. Vuelve a probar o escríbelo."],
+  listen_list: ["Escolta la llista", "Escuchar la lista"],
 });

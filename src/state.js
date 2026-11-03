@@ -14,6 +14,15 @@ function toast(msg, action) { // action = { label, run }: an undo button, the to
 }
 function buzz() { try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) { /* ignore */ } }
 let saveTimer = null;
+/* accessibility preferences: text size, high contrast, fewer animations (Més → Perfil → Accessibilitat) */
+function applyA11y(a) {
+  try {
+    const r = document.documentElement, v = a || {};
+    r.style.fontSize = { 1: "112.5%", 2: "125%" }[v.size] || "";
+    if (v.contrast) r.setAttribute("data-contrast", "high"); else r.removeAttribute("data-contrast");
+    if (v.motion === false) r.setAttribute("data-motion", "reduce"); else r.removeAttribute("data-motion");
+  } catch (e) { /* ignore */ }
+}
 function applyTheme(th) { // "auto" follows the phone; "light" / "dark" override it
   try { if (th === "light" || th === "dark") document.documentElement.setAttribute("data-theme", th); else document.documentElement.removeAttribute("data-theme"); } catch (e) { /* ignore */ }
 }
@@ -22,6 +31,7 @@ function updUser(patch) {
   S.user = Object.assign({}, S.user, p, { updated: Date.now() });
   if (S.user.lang !== LANG) { LANG = S.user.lang; document.documentElement.lang = LANG; }
   if (p && "theme" in p) applyTheme(S.user.theme);
+  if (p && "a11y" in p) applyA11y(S.user.a11y);
   set({});
   clearTimeout(saveTimer);
   if (!Store.sandbox) saveTimer = setTimeout(() => Store.saveUser(S.user), 1200);
@@ -34,8 +44,23 @@ function go(tab) {
   try { history.replaceState(null, "", "#" + tab); } catch (e) { /* ignore */ }
   emit("tab", { tab });
 }
-function openSheet(s) { set({ sheets: S.sheets.concat([s]) }); emit("sheet", s); }
-function closeSheet() { set({ sheets: S.sheets.slice(0, -1) }); }
+/* each open sheet remembers what had the focus, so closing it puts the keyboard / screen reader back there */
+const FOCUS_STACK = [];
+function openSheet(s) {
+  FOCUS_STACK.push(typeof document !== "undefined" ? document.activeElement : null);
+  set({ sheets: S.sheets.concat([s]) }); emit("sheet", s);
+}
+function closeSheet() {
+  set({ sheets: S.sheets.slice(0, -1) });
+  const el = FOCUS_STACK.pop();
+  if (el && el.isConnected && el.focus) setTimeout(() => {
+    try {
+      const host = el.closest("[inert]"); // the sheet or page under it becomes live again on this same close
+      if (host) host.inert = false;
+      el.focus({ preventScroll: true });
+    } catch (e) { /* ignore */ }
+  }, 0);
+}
 function replaceSheet(s) { set({ sheets: S.sheets.slice(0, -1).concat([s]) }); }
 
 /* ---------- basket ---------- */
