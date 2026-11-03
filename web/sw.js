@@ -1,5 +1,6 @@
 /* Preuet service worker: lets the installed app open offline and fast on a weak signal.
    - Prices (data/*.json): network first, but after 3 s the saved copy is used, and refreshed when the network answers.
+   - The page itself (index.html, which carries all the code): network first too, so a new version shows at once.
    - Everything else on this site: the saved copy at once, refreshed in the background (a new version shows on the next visit).
    Supabase and any other origin are never touched. VERSION changes with every build, so each deploy starts a clean cache. */
 const VERSION = "preuet-@@BUILD@@";
@@ -35,6 +36,6 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
-  if (/\/data\/[^/]+\.json$/.test(url.pathname)) e.respondWith(networkFirst(req, 3000));
+  if (/\/data\/[^/]+\.json$/.test(url.pathname) || req.mode === "navigate") e.respondWith(networkFirst(req, 3000));
   else e.respondWith(staleWhileRevalidate(req, e));
 });
