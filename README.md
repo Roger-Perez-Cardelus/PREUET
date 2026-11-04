@@ -138,6 +138,8 @@ L'acció de GitHub les executa totes abans de publicar: si alguna falla, la web 
 
 Per comprovar-ho: a l'app, **Més → Sobre Preuet → Mode de dades** ha de dir «Servidor propi (Supabase)».
 
+El pla gratuït de Supabase pausa els projectes després de 7 dies amb poca activitat. L'acció **Supabase keep-alive** (`.github/workflows/supabase-keepalive.yml`) hi fa una lectura cada 3 dies perquè no passi; si mai surt en vermell, comprova al tauler de Supabase que el projecte no estigui pausat (*Restore project*).
+
 **Si ja havies executat una versió anterior de `schema.sql`**, torna-la a executar sencera: és la versió 3 (afegeix el panell d'equip) i no esborra dades. Fins que no ho facis, l'app continua funcionant amb el sistema antic.
 
 ### CAPTCHA (recomanat si l'enllaç es fa públic)

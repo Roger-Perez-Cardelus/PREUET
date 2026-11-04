@@ -95,6 +95,9 @@ per a la resta) i un panell amb els resultats de Preuet Plus de tots els mòbils
 cada súper. S'hi entra amb l'enllaç `#equip` o tocant 5 vegades la línia de la versió a Més → Sobre Preuet. Als mòbils
 en mode equip el Plus està obert i no compta.
 
+**Supabase keep-alive** (`.github/workflows/supabase-keepalive.yml`, d'una altra sessió): cada 3 dies fa una lectura
+real (`rpc/list_contributions`, amb la clau pública) perquè el projecte gratuït no es pausi per inactivitat.
+
 **GitHub**: README amb captures (`docs/img/`), estat de les accions i formularis d'incidències.
 
 ## 4. Preuet Plus: model de pagament simulat (decisió de l'equip)
