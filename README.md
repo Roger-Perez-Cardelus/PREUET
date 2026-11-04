@@ -25,6 +25,8 @@
 
 Producte mínim viable (PMV) de l'equip AT2 · Grup F (Empresa, EETAC–UPC, curs 2026–2027).
 
+Què ha canviat des de la V1 i què queda pendent: [docs/TRASPAS.md](docs/TRASPAS.md).
+
 ## Què fa
 
 | Funció | On és a l'app |
