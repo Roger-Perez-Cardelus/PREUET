@@ -135,4 +135,13 @@ Object.assign(STR, {
   plus_card_sub: ["Ofertes, receptes, llista de la compra, avisos i més", "Ofertas, recetas, lista de la compra, avisos y más"],
   plus_active_sub: ["Actiu (gratis durant la prova del projecte)", "Activo (gratis durante la prueba del proyecto)"],
   plus_in_test: ["En el mode de prova tot està desbloquejat", "En el modo de prueba todo está desbloqueado"],
+  tk_title: ["Quin tiquet vols veure?", "¿Qué tique quieres ver?"],
+  tk_cheap: ["Més barata", "Más barata"], tk_pair: ["Combinada", "Combinada"], tk_qp: ["Qualitat-preu", "Calidad-precio"],
+  tk_cap_cheap: ["{chain}: el supermercat on la cistella et surt més barata.", "{chain}: el supermercado donde la cesta te sale más barata."],
+  tk_cap_pair: ["{a} + {b}: cada producte al dels dos on és més barat. Total {x}.", "{a} + {b}: cada producto en el de los dos donde es más barato. Total {x}."],
+  tk_cap_qp: ["{chain}: el primer del rànquing qualitat-preu ({s}/100).", "{chain}: el primero del ranking calidad-precio ({s}/100)."],
+  tk_cap_chain: ["{chain}: l'has triat tu.", "{chain}: lo has elegido tú."],
+  tk_more: [" Et costa {x} més que la més barata.", " Te cuesta {x} más que la más barata."],
+  tk_back: ["Torna a la més barata", "Volver a la más barata"],
+  receipt_pair: ["Tiquet combinat", "Tique combinado"], receipt_sub: ["Subtotal {chain}", "Subtotal {chain}"],
 });

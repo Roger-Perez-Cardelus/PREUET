@@ -459,3 +459,5 @@ main:focus { outline: none; }
 .plus-card .plus-ic { background: var(--plum); color: var(--plum-ink); }
 .btn.primary .plus-badge { background: var(--plum-ink); color: var(--plum); }
 .plus-mini { display: inline-flex; vertical-align: -1px; margin-left: 3px; color: var(--plum); }
+.receipt .rsub { margin: 10px 0 2px; font-family: var(--f-body, inherit); }
+.receipt .rsubtotal { color: var(--ink-2); font-weight: 600; border-bottom: 1px dashed var(--line); padding-bottom: 8px; }

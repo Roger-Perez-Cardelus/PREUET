@@ -235,8 +235,9 @@ function CompareResults({ cmp }) {
   const [view, setView] = useState("bars");
   if (!cmp || !cmp.best) return html`<div class="callout warn" ref=${ref}>${t("no_prices")}</div>`;
   const best = cmp.best;
-  const selId = u.selChain && cmp.rows.find(r => r.cid === u.selChain && r.k > 0) ? u.selChain : best.cid;
-  const sel = cmp.rows.find(r => r.cid === selId);
+  const tk = ticketChoice(cmp);
+  const selId = tk.cid;
+  const sel = selId ? cmp.rows.find(r => r.cid === selId) : null;
   const worst = cmp.ranked.length > 1 ? cmp.ranked[cmp.ranked.length - 1] : null;
   const save = worst ? cmp.key(worst) - cmp.key(best) : 0;
   return html`<section class="stack" ref=${ref} id="results" style="scroll-margin-top:72px">
@@ -259,8 +260,11 @@ function CompareResults({ cmp }) {
       <p class="xs muted">${t("how_calc", { k: best.k, n: best.n })}${best.ne && u.estimate ? " " + t("how_calc_est", { n: best.ne, idx: best.idx ? Math.round(best.idx) : "—" }) : ""} <button type="button" class="link-btn xs" style="padding:0" onClick=${() => openSheet({ type: "method" })}>${t("how_more")}</button></p>
     </div>
     <${PairCard} cmp=${cmp} />
-    ${sel ? html`<${Receipt} row=${sel} cmp=${cmp} />` : null}
-    ${sel ? html`<div class="act-main">
+    <${TicketPicker} cmp=${cmp} tk=${tk} />
+    ${tk.k === "pair" ? html`<${PairReceipt} pr=${cmp.pair} cmp=${cmp} />` : sel ? html`<${Receipt} row=${sel} cmp=${cmp} />` : null}
+    ${tk.k === "pair" ? html`<div class="act-main">${[cmp.pair.a.cid, cmp.pair.b.cid].map((cid, j) => html`<button type="button" key=${cid} class=${"btn " + (j ? "ghost" : "primary")}
+        onClick=${() => openSheet({ type: "shoplist", cid, pids: u.basket.filter((it, i) => cmp.pair.pick[i] === (j ? "b" : "a")).map(it => it.p) })}><${Icon} n="check" s=${18} />${t("shop_open", { chain: X.C.get(cid).name })}<${PlusTag} /></button>`)}</div>`
+    : sel ? html`<div class="act-main">
       <button type="button" class="btn primary" onClick=${() => openSheet({ type: "shoplist", cid: sel.cid })}><${Icon} n="check" s=${18} />${t("shop_open", { chain: X.C.get(sel.cid).name })}<${PlusTag} /></button>
       <button type="button" class="btn ghost" onClick=${() => openSheet({ type: "purchase", cid: sel.cid })}><${Icon} n="receipt" s=${18} />${t("buy_done")}<${PlusTag} /></button>
     </div>` : null}
@@ -285,7 +289,7 @@ function BasketBars({ cmp, selId }) {
         const isBest = r === cmp.best;
         const tipText = X.C.get(r.cid).name + " · " + eur(r.total) + " (" + t("covers", { k: r.k, n: r.n }) + ")" + (u.estimate && r.ne ? " + ~" + eur(r.est) : "") + (r.idx ? " · " + t("index_short", { x: Math.round(r.idx) }) : "");
         return html`<button type="button" key=${r.cid} class=${"bar" + (isBest ? " best" : "")} aria-pressed=${String(r.cid === selId)} aria-label=${tipText}
-          onClick=${() => { updUser({ selChain: r.cid }); emit("basket:chain", { cid: r.cid }); }}
+          onClick=${() => { pickTicketChain(r.cid); emit("basket:chain", { cid: r.cid }); }}
           onMouseEnter=${e => setTip({ text: tipText, y: e.currentTarget.offsetTop })} onMouseLeave=${() => setTip(null)} onFocus=${e => setTip({ text: tipText, y: e.currentTarget.offsetTop })} onBlur=${() => setTip(null)}>
           <span class="lab"><${ChainBadge} cid=${r.cid} short=${true} /></span>
           <span class="track" style="display:flex;gap:2px">
@@ -305,7 +309,7 @@ function BasketTable({ cmp, selId }) {
   const u = S.user;
   return html`<div class="tbl-wrap"><table class="tbl" style="min-width:0">
     <thead><tr><th>${t("tbl_chain")}</th><th style="text-align:right">${t("tbl_total")}</th><th style="text-align:right">${t("tbl_cov")}</th><th style="text-align:right">${t("tbl_index")}</th></tr></thead>
-    <tbody>${cmp.ranked.concat(cmp.low).map(r => html`<tr key=${r.cid} style=${r.cid === selId ? "background:var(--plum-soft)" : ""} onClick=${() => updUser({ selChain: r.cid })}>
+    <tbody>${cmp.ranked.concat(cmp.low).map(r => html`<tr key=${r.cid} style=${r.cid === selId ? "background:var(--plum-soft)" : ""} onClick=${() => pickTicketChain(r.cid)}>
       <td>${X.C.get(r.cid).name}</td><td class="n">${eur(u.estimate && cmp.ranked.includes(r) ? r.estTotal : r.total)}</td><td class="n">${r.k}/${r.n}</td><td class="n">${r.idx ? Math.round(r.idx) : "—"}</td></tr>`)}</tbody>
   </table></div>`;
 }
@@ -325,6 +329,67 @@ function PairCard({ cmp }) {
       ${open ? html`<div class="stack-s">${[["a", pr.a.cid], ["b", pr.b.cid]].map(([w, cid]) => html`<div key=${w}><${ChainBadge} cid=${cid} />
         <ul class="small" style="margin:6px 0 0;padding-left:1.2em">${S.user.basket.map((it, i) => pr.pick[i] === w ? html`<li key=${it.p}>${it.n} × ${tl(X.P.get(it.p))} · ${eur((w === "a" ? pr.a : pr.b).lines[i].cost)}</li>` : null)}</ul></div>`)}</div>` : null}`
     : html`<span class="small">${t("pair_not_worth", { save: eur(Math.max(0, pr.save)) })}</span>`}
+  </div>`;
+}
+/* which ticket is shown: the cheapest single shop, the two-shop combination, the best quality-price shop, or one tapped on the chart */
+function pairWorth(cmp) { const pr = cmp.pair; return !!(pr && cmp.best && pr.k >= cmp.best.k && (pr.save >= 0.05 || pr.extra > 0)); }
+function qpTop(cmp) {
+  return qpRows(cmp, activeChains(), S.user.w, S.community).find(r => r.score != null && cmp.rows.some(x => x.cid === r.cid && x.k > 0 && x.cov >= 0.6)) || null;
+}
+function ticketChoice(cmp) {
+  const want = S.ticket || { k: "cheap" };
+  if (want.k === "pair" && pairWorth(cmp)) return { k: "pair", cid: null };
+  if (want.k === "qp") { const q = qpTop(cmp); if (q) return { k: "qp", cid: q.cid, score: q.score }; }
+  if (want.k === "chain" && cmp.rows.some(r => r.cid === want.cid && r.k > 0)) return { k: want.cid === cmp.best.cid ? "cheap" : "chain", cid: want.cid };
+  return { k: "cheap", cid: cmp.best.cid };
+}
+function pickTicketChain(cid) {
+  updUser({ selChain: cid }); // still the default shop for stock reports
+  set({ ticket: { k: "chain", cid } });
+  setTimeout(() => { const el = document.querySelector(".ticket-pick"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 30);
+}
+function TicketPicker({ cmp, tk }) {
+  const best = cmp.best, key = cmp.key;
+  const opts = [{ v: "cheap", l: t("tk_cheap") }];
+  if (pairWorth(cmp)) opts.push({ v: "pair", l: t("tk_pair") });
+  const q = qpTop(cmp);
+  if (q) opts.push({ v: "qp", l: t("tk_qp") });
+  const name = cid => X.C.get(cid).name;
+  const diff = row => { const d = key(row) - key(best); return d > 0.005 ? t("tk_more", { x: eur(d) }) : ""; };
+  let cap;
+  if (tk.k === "pair") cap = t("tk_cap_pair", { a: name(cmp.pair.a.cid), b: name(cmp.pair.b.cid), x: eur(cmp.pair.total) });
+  else if (tk.k === "qp") cap = t("tk_cap_qp", { chain: name(tk.cid), s: Math.round(tk.score) }) + diff(cmp.rows.find(r => r.cid === tk.cid));
+  else if (tk.k === "chain") cap = t("tk_cap_chain", { chain: name(tk.cid) }) + diff(cmp.rows.find(r => r.cid === tk.cid));
+  else cap = t("tk_cap_cheap", { chain: name(best.cid) });
+  return html`<div class="stack-s ticket-pick" style="scroll-margin-top:130px">
+    <h3>${t("tk_title")}</h3>
+    ${opts.length > 1 ? html`<${Seg} label=${t("tk_title")} value=${tk.k === "chain" ? null : tk.k} onChange=${v => set({ ticket: { k: v } })} options=${opts} />` : null}
+    <p class="small muted" aria-live="polite">${cap}${tk.k === "chain" ? html` <button type="button" class="link-btn small" style="padding:0" onClick=${() => set({ ticket: { k: "cheap" } })}>${t("tk_back")}</button>` : null}</p>
+  </div>`;
+}
+function PairReceipt({ pr, cmp }) {
+  const u = S.user;
+  const side = w => (w === "a" ? pr.a : pr.b);
+  const sub = w => sum(u.basket.map((it, i) => (pr.pick[i] === w ? side(w).lines[i].cost : 0)));
+  return html`<div>
+    <div class="receipt" aria-label=${t("receipt_pair")}>
+      <div class="rhead"><span class="eyebrow">${t("receipt_pair")}</span><b>${X.C.get(pr.a.cid).name} + ${X.C.get(pr.b.cid).name}</b><span class="xs faint">${fmtDL(X.D.meta.updated)} · ${u.town}</span></div>
+      ${["a", "b"].map(w => html`<div key=${w}>
+        <div class="rsub"><${ChainBadge} cid=${side(w).cid} /></div>
+        ${u.basket.map((it, i) => {
+          if (pr.pick[i] !== w) return null;
+          const p = X.P.get(it.p), l = side(w).lines[i];
+          return html`<div class="rline" key=${it.p}><span class="n">${it.n} × ${tl(p)}</span><span>${eur(l.cost)}</span>
+            <span class="d">${l.o.name} · ${packText(l, p)}${l.o.promo && !/^origen/i.test(l.o.promo) ? " · " + l.o.promo : ""}</span></div>`;
+        })}
+        <div class="rline rsubtotal"><span class="n">${t("receipt_sub", { chain: X.C.get(side(w).cid).name })}</span><span>${eur(sub(w))}</span></div>
+      </div>`)}
+      ${u.basket.map((it, i) => pr.pick[i] ? null : html`<div class="rline" key=${it.p} style="color:var(--ink-3)"><span class="n">${it.n} × ${tl(X.P.get(it.p))}</span><span>—</span>
+        <span class="d">${t("no_price_anywhere")}</span></div>`)}
+      <div class="rtotal"><span>${t("receipt_total_real")}</span><span>${eur(pr.total)}</span></div>
+    </div><div class="receipt-gap"></div>
+    ${pr.save >= 0.05 ? html`<p class="xs muted">${t("pair_save", { save: eur(pr.save) })}</p>` : null}
+    <p class="xs faint">${t("receipt_note")}</p>
   </div>`;
 }
 function Receipt({ row, cmp }) {
@@ -363,7 +428,7 @@ function QPCard({ cmp }) {
       <span class="small muted" style="text-align:center">${t("qp_weight", { p, q: 100 - p })}</span>
     </div>
     <div>${rows.map((r, i) => html`<button type="button" class="qp" key=${r.cid} style="width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left"
-        aria-pressed=${String(pick === r.cid)} onClick=${() => { setPick(r.cid); updUser({ selChain: r.cid }); emit("qp:pick", { cid: r.cid }); }}>
+        aria-pressed=${String(pick === r.cid)} onClick=${() => { setPick(r.cid); pickTicketChain(r.cid); emit("qp:pick", { cid: r.cid }); }}>
       <span class="row" style="min-width:0"><span class="faint num" style="width:18px">${i + 1}</span><${ChainBadge} cid=${r.cid} />${pick === r.cid ? html`<span class="chip plum">${t("qp_pick")}</span>` : null}</span>
       <span class="score">${r.score == null ? "—" : Math.round(r.score)}</span>
       <span class="meter"><span style=${{ width: (r.score == null ? 0 : r.score) + "%" }}></span></span>

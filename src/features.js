@@ -120,20 +120,20 @@ function NearbyStores({ cid }) {
 
 /* ---------- shopping list in aisle order, with ticks ---------- */
 const AISLE = ["fruita", "fleca", "carn", "lactics", "rebost", "dietes", "begudes", "llar", "higiene"];
-function ShopListSheet({ cid }) {
+function ShopListSheet({ cid, pids }) {
   const u = S.user;
   const ch = X.C.get(cid);
   const cmp = basketCompare();
   const row = cmp && cmp.rows.find(r => r.cid === cid);
   const ticked = u.ticked || {};
-  const lines = u.basket.map((it, i) => ({ it, p: X.P.get(it.p), l: row ? row.lines[i] : null }));
+  const lines = u.basket.map((it, i) => ({ it, p: X.P.get(it.p), l: row ? row.lines[i] : null })).filter(x => !pids || pids.includes(x.it.p));
   const groups = AISLE.concat(X.D.categories.map(c => c.id).filter(c => !AISLE.includes(c))).map(cat => ({ cat, items: lines.filter(x => x.p.cat === cat) })).filter(g => g.items.length);
   const left = lines.filter(x => !ticked[x.it.p]).length;
   const tick = pid => updUser({ ticked: Object.assign({}, ticked, { [pid]: !ticked[pid] }) });
   return html`<${Sheet} title=${t("shop_title", { chain: ch ? ch.name : "" })} onClose=${closeSheet} id="shoplist"
     foot=${html`<div class="row"><span class="grow small">${left ? t("shop_left", { n: left }) : t("shop_done")}</span>
       <button type="button" class="btn small ghost" onClick=${() => updUser({ ticked: {} })}>${t("shop_reset")}</button>
-      ${left === 0 && row ? html`<button type="button" class="btn small primary" onClick=${() => replaceSheet({ type: "purchase", cid })}>${t("buy_done")}</button>` : null}</div>`}>
+      ${left === 0 && row && !pids ? html`<button type="button" class="btn small primary" onClick=${() => replaceSheet({ type: "purchase", cid })}>${t("buy_done")}</button>` : null}</div>`}>
     <div class="stack">
       <p class="small muted">${t("shop_sub")}</p>
       ${canSpeak() ? html`<button type="button" class="btn small ghost" style="align-self:flex-start" onClick=${() => speakList(groups, ticked)}><${Icon} n="speaker" s=${18} />${t("listen_list")}</button>` : null}
