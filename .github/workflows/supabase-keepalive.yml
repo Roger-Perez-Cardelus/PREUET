@@ -1,0 +1,24 @@
+# Evita que Supabase pausi el projecte gratuït (es pausa després de 7 dies amb poca activitat).
+# Cada 3 dies fa una lectura real de la base de dades amb la mateixa funció pública que fa servir l'app.
+# La URL i la clau «publishable» ja són públiques (web/config.js), per això no calen secrets.
+name: Supabase keep-alive
+
+on:
+  schedule:
+    - cron: "17 7 */3 * *"
+  workflow_dispatch: {}
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lectura real a la base de dades
+        run: |
+          curl --fail --silent --show-error --retry 3 --retry-delay 10 \
+            -X POST "https://vxsorejvvfgpmfzsihjy.supabase.co/rest/v1/rpc/list_contributions" \
+            -H "apikey: sb_publishable_RaVIkwJJQDoF3Jy_U3W7cg_5LNIQnag" \
+            -H "Content-Type: application/json" \
+            -d '{"p_limit": 1}' > /dev/null
+          echo "Supabase actiu"
