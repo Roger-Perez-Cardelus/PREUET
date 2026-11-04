@@ -111,9 +111,13 @@ await step("09b-keyboard", async () => {
   await row.focus();
   await page.keyboard.press("Enter");
   await page.locator(".sheet h1").waitFor();
-  for (let i = 0; i < 40; i++) await page.keyboard.press("Tab");
-  const inside = await page.evaluate(() => { const s = document.querySelectorAll("#app > .sheet"); return s[s.length - 1].contains(document.activeElement); });
-  if (!inside) throw new Error("Tab left the open sheet");
+  await page.waitForTimeout(600); // let the photo, the price history and the comments load
+  const inTop = () => page.evaluate(() => { const s = document.querySelectorAll("#app > .sheet"); return s[s.length - 1].contains(document.activeElement); });
+  for (let i = 0; i < 60; i++) { // checked after every key, so one gap in the trap is enough to fail
+    await page.keyboard.press(i % 7 === 6 ? "Shift+Tab" : "Tab");
+    await page.waitForTimeout(5);
+    if (!(await inTop())) throw new Error("Tab left the open sheet after " + (i + 1) + " keys");
+  }
   const inert = await page.evaluate(() => document.querySelector("#app > main").inert && document.querySelectorAll("#app > .sheet")[0].inert);
   if (!inert) throw new Error("the page behind the sheet is not inert");
   await page.keyboard.press("Escape");

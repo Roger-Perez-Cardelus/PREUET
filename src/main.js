@@ -11,8 +11,16 @@ function App() {
       if (top.type === "testAfter" || (top.type === "testSummary" && !top.code)) return;
       closeSheet();
     };
+    // if the focus ever lands outside the sheet on top (or the welcome), it goes back there
+    const onFocus = e => {
+      const top = [...document.querySelectorAll("#app > .sheet, #app > .onb")].pop();
+      if (!top || top.contains(e.target) || (e.target.closest && e.target.closest(".toast, .testbar"))) return;
+      const h = top.querySelector("h2, h1, button");
+      if (h) h.focus({ preventScroll: true });
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    document.addEventListener("focusin", onFocus);
+    return () => { window.removeEventListener("keydown", onKey); document.removeEventListener("focusin", onFocus); };
   }, []);
   useEffect(() => {
     document.body.style.overflow = S.sheets.length || (S.user && !S.user.onboarded) ? "hidden" : "";
@@ -20,7 +28,8 @@ function App() {
     document.body.classList.toggle("sheet-open", S.sheets.length > 0);
     // while a sheet or the welcome is open, the page behind it is out of reach for keyboards and screen readers
     const behind = S.sheets.length > 0 || !!(S.user && !S.user.onboarded);
-    document.querySelectorAll("#app > header, #app > main, #app > nav").forEach(el => { el.inert = behind; });
+    // everything except the sheets, the welcome, the toast and the test bar (the skip link too)
+    document.querySelectorAll("#app > :not(.sheet):not(.onb):not(.toast):not(.testbar)").forEach(el => { el.inert = behind; });
     // only the top sheet is live
     const sheets = document.querySelectorAll("#app > .sheet");
     sheets.forEach((el, i) => { el.inert = i < sheets.length - 1; });

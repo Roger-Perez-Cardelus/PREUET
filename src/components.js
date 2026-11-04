@@ -118,11 +118,14 @@ function Sheet({ title, onClose, children, foot, id }) {
   }, [id]);
   const trap = e => { // Tab and Shift+Tab stay inside the open sheet
     if (e.key !== "Tab" || !ref.current) return;
-    const f = [...ref.current.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])')].filter(x => x.offsetParent !== null);
+    const box = ref.current;
+    const f = [...box.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),summary,[contenteditable="true"],audio[controls],video[controls],[tabindex]:not([tabindex="-1"])')].filter(x => x.offsetParent !== null);
     if (!f.length) return;
     const first = f[0], last = f[f.length - 1];
-    if (e.shiftKey && (document.activeElement === first || !ref.current.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+    if (e.shiftKey && (document.activeElement === first || !box.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    // anything the list above missed (content that loaded later, an unusual control): if the focus still left, bring it back
+    else setTimeout(() => { if (box.isConnected && !box.contains(document.activeElement)) (e.shiftKey ? last : first).focus(); }, 0);
   };
   return html`<section class="sheet" ref=${ref} role="dialog" aria-modal="true" aria-label=${title} onKeyDown=${trap}>
     <div class="sheet-head"><div class="wrap">
