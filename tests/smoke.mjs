@@ -38,7 +38,11 @@ page.setDefaultTimeout(8000);
 page.on("console", m => { if (m.type() === "error") errors.push("console: " + m.text()); });
 page.on("pageerror", e => errors.push("page: " + e.message));
 const shot = async name => { if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: true }); await page.screenshot({ path: path.join(SHOTS, name + ".png"), fullPage: false }); } };
+// a hang must fail the run, not keep it going for hours
+const watchdog = setTimeout(() => { console.error("smoke: timed out (still at " + current + ")\n" + errors.join("\n")); process.exit(1); }, 180000);
+let current = "start";
 const step = async (name, fn) => {
+  current = name; console.log("· " + name);
   try { await fn(); await page.waitForTimeout(150); await shot(name); }
   catch (e) { errors.push(name + ": " + e.message.split("\n")[0]); await shot(name + "-error"); }
 };
@@ -211,5 +215,7 @@ if (process.env.AXE) {
 
 await browser.close();
 server.close();
+clearTimeout(watchdog);
 if (errors.length) { console.error(errors.join("\n")); process.exit(1); }
 console.log("smoke: ok");
+process.exit(0); // open connections (the stand-in Supabase socket) must not keep the run alive
