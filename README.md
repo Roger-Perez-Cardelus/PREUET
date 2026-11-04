@@ -1,6 +1,28 @@
-# Preuet
+<p align="center"><img src="web/icons/icon.svg" width="88" height="88" alt=""></p>
+<h1 align="center">Preuet</h1>
 
-Compara la cistella sencera entre els supermercats de l'àrea de Barcelona i compra on et surt més a compte.
+<p align="center"><b>Compara la cistella sencera entre els supermercats de l'àrea de Barcelona<br>i compra on et surt més a compte.</b></p>
+
+<p align="center">
+  <a href="https://roger-perez-cardelus.github.io/PREUET/"><b>Obre l'app</b></a> ·
+  <a href="#què-fa">Què fa</a> ·
+  <a href="#provar-la-a-lordinador">Provar-la</a> ·
+  <a href="#actualització-setmanal">Dades</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Roger-Perez-Cardelus/PREUET/actions/workflows/pages.yml"><img src="https://github.com/Roger-Perez-Cardelus/PREUET/actions/workflows/pages.yml/badge.svg" alt="Publicació a GitHub Pages"></a>
+  <a href="https://github.com/Roger-Perez-Cardelus/PREUET/actions/workflows/prices.yml"><img src="https://github.com/Roger-Perez-Cardelus/PREUET/actions/workflows/prices.yml/badge.svg" alt="Preus setmanals"></a>
+</p>
+
+<p align="center">
+  <img src="docs/img/1-inici.jpg" width="19%" alt="Inici: cercador i cistelles per començar">
+  <img src="docs/img/2-comparador.jpg" width="19%" alt="On és més barata la cistella, supermercat per supermercat">
+  <img src="docs/img/3-tiquet.jpg" width="19%" alt="Tiquet combinat de dos supermercats">
+  <img src="docs/img/4-qualitat-preu.jpg" width="19%" alt="Rànquing qualitat-preu">
+  <img src="docs/img/5-producte.jpg" width="19%" alt="Fitxa de producte amb foto del paquet i preus per supermercat">
+</p>
+
 Producte mínim viable (PMV) de l'equip AT2 · Grup F (Empresa, EETAC–UPC, curs 2026–2027).
 
 ## Què fa
@@ -72,7 +94,9 @@ tools/
   page_body.html     capçalera de la versió artifact
 web/                 fitxers només de la versió web: config.js, manifest, service worker, fonts, llibreries, icones
 supabase/schema.sql  taules, polítiques de seguretat (RLS) i funcions de Supabase
-.github/workflows/   publicació automàtica a GitHub Pages
+.github/workflows/   publicació automàtica a GitHub Pages, preus setmanals i fotos
+.github/ISSUE_TEMPLATE/  formularis per avisar d'un preu incorrecte o d'un error
+docs/img/            captures de pantalla i imatge per compartir el repositori
 ```
 
 ## Provar-la a l'ordinador
@@ -149,6 +173,7 @@ Els preus i les ofertes es tornen a llegir cada dilluns de les botigues en líni
 - Fonts Figtree, Bricolage Grotesque i DM Mono: SIL Open Font License 1.1 (fitxers de Fontsource).
 - htm 3.1.1 amb Preact: Apache-2.0 i MIT.
 - supabase-js 2.117.1: MIT.
+- Les captures de `docs/img/` inclouen fotos de paquets d'Open Food Facts (CC BY-SA 3.0), amb l'atribució visible a la fitxa de producte.
 
 ## Ús d'IA
 

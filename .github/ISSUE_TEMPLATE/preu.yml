@@ -1,0 +1,29 @@
+name: Preu incorrecte
+description: Un preu, un paquet o una foto que no corresponen al que hi ha al supermercat
+title: "Preu: "
+labels: ["dades"]
+body:
+  - type: input
+    id: producte
+    attributes:
+      label: Producte
+      placeholder: Llet semidesnatada
+    validations:
+      required: true
+  - type: dropdown
+    id: super
+    attributes:
+      label: Supermercat
+      options: [Mercadona, Consum, Carrefour, Dia, Bonpreu, Ametller Origen, Lidl, Aldi, bonÀrea, Un altre]
+    validations:
+      required: true
+  - type: input
+    id: preu
+    attributes:
+      label: Preu que surt a Preuet i preu real
+      placeholder: "Preuet: 0,83 € · a la botiga: 0,89 €"
+  - type: textarea
+    id: detall
+    attributes:
+      label: Detalls
+      description: On l'has vist (botiga i municipi, o web), la data i, si pots, un enllaç o una foto del tiquet o del lineal.

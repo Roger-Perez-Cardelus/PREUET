@@ -1,0 +1,22 @@
+name: Error a l'app
+description: Alguna cosa no funciona o es veu malament
+title: "Error: "
+labels: ["error"]
+body:
+  - type: textarea
+    id: que
+    attributes:
+      label: Què ha passat?
+      description: Què feies, què esperaves que passés i què ha passat.
+    validations:
+      required: true
+  - type: input
+    id: on
+    attributes:
+      label: Mòbil i navegador
+      placeholder: "Android 15, Chrome · iPhone 13, Safari · app instal·lada"
+  - type: textarea
+    id: captura
+    attributes:
+      label: Captura de pantalla
+      description: Si en tens, arrossega-la aquí.
