@@ -226,8 +226,7 @@ function ChainPicker() {
     updUser({ chains: next.length ? next : [] });
   };
   return html`<div class="field"><span class="lab">${t("chains_label")}</span>
-    <div class="chips">${X.D.chains.map(c => html`<button type="button" key=${c.id} class="filter" aria-pressed=${String(sel.includes(c.id))} onClick=${() => toggle(c.id)}>${c.name}${c.n_products ? "" : " *"}</button>`)}</div>
-    <p class="xs faint">* ${t("status_sense")} / ${t("status_ofertes")}</p></div>`;
+    <div class="chips">${X.D.chains.map(c => html`<button type="button" key=${c.id} class="filter" aria-pressed=${String(sel.includes(c.id))} onClick=${() => toggle(c.id)}>${c.name}</button>`)}</div></div>`;
 }
 function CompareResults({ cmp }) {
   const u = S.user;

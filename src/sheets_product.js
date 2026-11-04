@@ -227,7 +227,7 @@ function NotifyChain({ pid, cid }) {
       <a class="btn small ghost" href=${ch.site} target="_blank" rel="noopener noreferrer">${t("open_web", { chain: ch.name })} <${Icon} n="ext" s=${14} /></a></div></div>`;
 }
 function PriceReport({ p }) {
-  const [cid, setCid] = useState(X.D.chains.find(c => c.status === "sense").id);
+  const [cid, setCid] = useState((X.D.chains.find(c => c.status !== "complet") || X.D.chains[0]).id);
   const [price, setPrice] = useState("");
   const [size, setSize] = useState(String(p.ref).replace(".", ","));
   const pv = Number(String(price).replace(",", ".")), sv = Number(String(size).replace(",", "."));

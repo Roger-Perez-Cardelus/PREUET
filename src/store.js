@@ -19,7 +19,7 @@ function cleanUser(u) {
   o.diets = Array.isArray(o.diets) ? o.diets.filter(x => DIET_TAGS.includes(x)) : [];
   o.avoid = Array.isArray(o.avoid) ? o.avoid.filter(x => ALLERGENS.includes(x)) : [];
   if (o.chains && !Array.isArray(o.chains)) o.chains = null;
-  if (Array.isArray(o.chains)) o.chains = o.chains.filter(c => X.C.has(c));
+  if (Array.isArray(o.chains)) o.chains = o.chains.filter(c => X.D.chains.some(x => x.id === c));
   o.lang = o.lang === "es" ? "es" : "ca";
   o.w = clamp(Number(o.w) || 0.6, 0, 1);
   o.town = String(o.town || "Castelldefels").slice(0, 60);

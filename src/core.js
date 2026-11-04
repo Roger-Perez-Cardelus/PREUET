@@ -73,7 +73,11 @@ function chipColor(hex) { // the brand colour, darkened just enough for 4.5:1 wh
 let X = null;
 function indexData(D) {
   const P = new Map(D.products.map(p => [p.id, p]));
-  const C = new Map(D.chains.map(c => [c.id, c]));
+  const C = new Map(D.chains.map(c => [c.id, c])); // every chain, so old community reports still have a name
+  // shops without any product price are hidden (and their promotions with them) until the data has prices for them
+  D.chains = D.chains.filter(c => c.n_products > 0);
+  const shown = new Set(D.chains.map(c => c.id));
+  D.offers = D.offers.filter(o => shown.has(o.c));
   const CAT = new Map(D.categories.map(c => [c.id, c]));
   const R = new Map(D.recipes.map(r => [r.id, r]));
   const byPC = new Map(), byP = new Map();

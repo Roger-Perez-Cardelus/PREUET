@@ -47,3 +47,11 @@ test("healthier swaps only when the data says so", () => {
   // nothing to offer when the healthier product is already in the basket
   assert.equal(app.healthySwaps([{ p: "llet-sencera", n: 1 }, { p: "llet-semi", n: 1 }]).length, 0);
 });
+
+test("shops without any product price are hidden, with their promotions", () => {
+  const app = loadApp();
+  const ids = app.X.D.chains.map(c => c.id);
+  assert.ok(ids.length > 0 && app.X.D.chains.every(c => c.n_products > 0));
+  assert.ok(app.X.D.offers.every(o => ids.includes(o.c)));
+  assert.ok(app.X.C.has("condis")); // still known, for old community reports
+});
