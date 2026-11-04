@@ -159,7 +159,6 @@ const STR = {
   rate: ["Valora", "Valora"], your_rating: ["La teva valoració", "Tu valoración"],
   avg_rating: ["{x} de 5 · {n} valoració|{x} de 5 · {n} valoracions", "{x} de 5 · {n} valoración|{x} de 5 · {n} valoraciones"],
   rating_sent: ["Gràcies per valorar!", "¡Gracias por valorar!"], stars_n: ["{n} estrella|{n} estrelles", "{n} estrella|{n} estrellas"],
-  signin_needed: ["Inicia la sessió a Claude per fer aportacions.", "Inicia sesión en Claude para hacer aportaciones."],
   readonly_note: ["Pots veure les aportacions, però amb aquest accés no en pots fer.", "Puedes ver las aportaciones, pero con este acceso no puedes hacerlas."],
   local_note: ["Mode local: les aportacions només es veuen en aquest dispositiu.", "Modo local: las aportaciones solo se ven en este dispositivo."],
   test_note: ["Mode prova: les aportacions no es publiquen.", "Modo prueba: las aportaciones no se publican."],
@@ -257,7 +256,6 @@ const STR = {
   reset_all: ["Esborra les meves dades", "Borrar mis datos"],
   reset_confirm: ["S'esborrarà la cistella, les compres periòdiques i les preferències.", "Se borrará la cesta, las compras periódicas y las preferencias."],
   reset_done: ["Dades esborrades", "Datos borrados"],
-  data_where_claude: ["La cistella i les preferències es desen al teu espai privat de Preuet: ningú més les veu.", "La cesta y las preferencias se guardan en tu espacio privado de Preuet: nadie más las ve."],
   data_where_local: ["Les teves dades es desen només en aquest navegador.", "Tus datos se guardan solo en este navegador."],
   data_where_supa: ["Les teves dades es desen associades a un usuari anònim d'aquest dispositiu.", "Tus datos se guardan asociados a un usuario anónimo de este dispositivo."],
   nickname: ["Àlies públic", "Alias público"], nickname_ph: ["Ex.: Veïna del centre", "Ej.: Vecina del centro"],
@@ -276,7 +274,7 @@ const STR = {
   about_version: ["Versió {v} · dades del {d}", "Versión {v} · datos del {d}"],
   ai_note: ["L'app s'ha desenvolupat amb l'ajuda d'una eina d'intel·ligència artificial (Claude, d'Anthropic), tal com es declara a l'annex del DP.", "La app se ha desarrollado con la ayuda de una herramienta de inteligencia artificial (Claude, de Anthropic), tal como se declara en el anexo del DP."],
   disclaimer: ["Preuet no té cap relació amb els supermercats que compara. Els preus són orientatius i poden canviar: el preu vàlid és el de la botiga.", "Preuet no tiene ninguna relación con los supermercados que compara. Los precios son orientativos y pueden cambiar: el precio válido es el de la tienda."],
-  storage_mode: ["Mode de dades", "Modo de datos"], mode_claude: ["Compartit (Claude)", "Compartido (Claude)"],
+  storage_mode: ["Mode de dades", "Modo de datos"],
   mode_local: ["Local (aquest navegador)", "Local (este navegador)"], mode_supabase: ["Servidor propi (Supabase)", "Servidor propio (Supabase)"],
 
   // test mode
@@ -354,7 +352,7 @@ const STR = {
   t_open: ["Obre", "Abrir"], t_none_saved: ["Encara no hi ha cap prova desada.", "Aún no hay ninguna prueba guardada."],
   t_overwrite: ["Ja hi ha una fitxa {c}. Desar-la la substituirà.", "Ya hay una ficha {c}. Guardarla la sustituirá."],
   t_tasks_done: ["Tasques fetes", "Tareas hechas"], t_avg: ["Mitjana", "Media"], t_dur: ["Durada", "Duración"],
-  t_new: ["Nova prova", "Nueva prueba"], t_team_only: ["Les fitxes només les veuen els membres de l'equip amb accés de col·laborador.", "Las fichas solo las ven los miembros del equipo con acceso de colaborador."],
+  t_new: ["Nova prova", "Nueva prueba"],
   t_status_ok: ["feta", "hecha"], t_status_help: ["feta amb ajuda", "hecha con ayuda"], t_status_fail: ["no feta", "no hecha"],
   t_status_auto: ["detectada", "detectada"], t_scale: ["1 = gens · 5 = molt", "1 = nada · 5 = mucho"],
   feat_cmp: ["Comparador per cistella", "Comparador por cesta"], feat_qp: ["Rànquing qualitat-preu", "Ranking calidad-precio"],

@@ -86,6 +86,10 @@ nou, quines decisions s'han pres i què queda pendent.
 **Súpers sense cap preu** (Caprabo, Condis, Sorli, Spar, Suma): s'amaguen a tot arreu, també les 4 ofertes de Caprabo.
 Continuen a les dades i tornaran a sortir soles quan tinguin preus (`indexData` a `src/core.js`).
 
+**Sense versió d'artifact**: l'app només es publica a GitHub Pages. S'ha tret la versió d'artifact de Claude (la V1
+de https://claude.ai/artifact/… s'ha quedat antiga i no s'actualitza), el mode de dades de Claude de `src/store.js` i
+`tools/page_body.html` i `tools/cdn.txt`. Les dades compartides només van a Supabase.
+
 **GitHub**: README amb captures (`docs/img/`), estat de les accions i formularis d'incidències.
 
 ## 4. Preuet Plus: model de pagament simulat (decisió de l'equip)

@@ -1,21 +1,16 @@
 #!/usr/bin/env python3
 """Build Preuet.
 
-    python3 tools/build.py artifact   -> dist/artifact/   page for the Claude artifact (shared data in Claude's db)
-    python3 tools/build.py web        -> dist/web/        static site for GitHub Pages (shared data in Supabase)
-    python3 tools/build.py            -> both
+    python3 tools/build.py            -> dist/web/   static site for GitHub Pages (shared data in Supabase)
 
 Sources
     src/_order.txt + src/*.js   app modules, concatenated in that order into one script
     src/styles.css              all styles
-    data/preuet-data.json       prices, offers, products, recipes, templates, sources. The artifact inlines it (and swaps in
-                                data/preuet-data.json when that is newer); the web version fetches it once, and its
-                                service worker keeps a copy for offline use
+    data/preuet-data.json       prices, offers, products, recipes, templates, sources: fetched once, and the service
+                                worker keeps a copy for offline use
     data/history.json           weekly price history, fetched when a product sheet opens
-    tools/page_body.html        artifact page head (title, fonts from Google Fonts, CSS slot, #app)
-    tools/cdn.txt               artifact: Preact + htm from jsDelivr
     web/                        web-only files: config.js, manifest, service worker, self-hosted fonts, vendor libs, icons
-    web/img/products/           product photos (both versions; see tools/fetch_images.py)
+    web/img/products/           product photos (see tools/fetch_off_images.py)
 """
 import base64
 import hashlib
@@ -28,7 +23,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
 
-# The artifact host wraps the page in this base; the web build carries the same rules so both render alike.
+# base rules every page starts from (the styles in src/styles.css build on them)
 BASE_CSS = (":root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);"
             "padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}"
             "body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}"
@@ -36,6 +31,10 @@ BASE_CSS = (":root{color-scheme:light;box-sizing:border-box;padding-top:env(safe
 
 DESCRIPTION = ("Preuet compara la cistella sencera entre supermercats de l'àrea de Barcelona amb preus reals, "
                "qualitat-preu, nutrició, estoc col·laboratiu i receptes.")
+
+APP_DIV = ('<div id="app"><div class="loading" aria-busy="true"><div class="skel-wrap"><b>Preuet</b><p>Carregant preus…</p>'
+           '<i class="skel"></i><i class="skel"></i><i class="skel short"></i></div></div></div>')
+NOSCRIPT = '<noscript><p style="padding:24px">Preuet necessita JavaScript. / Preuet necesita JavaScript.</p></noscript>'
 
 SW_REGISTER = ('if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) '
                'window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));')
@@ -48,8 +47,6 @@ def read(rel):
 def load_data():
     txt = read("data/preuet-data.json")
     data = json.loads(txt)  # fail early on broken JSON
-    if "</" in txt:
-        raise SystemExit("data contains '</' — it would close the inline <script> tag")
     for key in ("meta", "categories", "chains", "products", "offerings", "offers", "recipes", "templates", "sources"):
         if key not in data:
             raise SystemExit(f"data is missing '{key}'")
@@ -59,25 +56,6 @@ def load_data():
 def app_js():
     order = [n.strip() for n in read("src/_order.txt").split("\n") if n.strip()]
     return "\n".join(read("src/" + n) for n in order)
-
-
-def data_tag(txt):
-    return '<script id="preuet-data" type="application/json">' + txt + "</script>"
-
-
-def build_artifact(txt, data):
-    out = DIST / "artifact"
-    (out / "data").mkdir(parents=True, exist_ok=True)
-    body = read("tools/page_body.html").replace("/*@@CSS@@*/", read("src/styles.css"), 1)
-    html = "\n".join([body, data_tag(txt), read("tools/cdn.txt"), "<script>", app_js(), "</script>", ""])
-    (out / "index.html").write_text(html, encoding="utf-8")
-    (out / "data" / "preuet-data.json").write_text(txt, encoding="utf-8")
-    copy_history(out)
-    imgs = ROOT / "web" / "img"
-    if imgs.exists():
-        shutil.rmtree(out / "img", ignore_errors=True)
-        shutil.copytree(imgs, out / "img")
-    return out / "index.html", html
 
 
 def copy_history(out):
@@ -115,9 +93,6 @@ def build_web(txt, data):
     (out / "data").mkdir(parents=True, exist_ok=True)
     (out / "data" / "preuet-data.json").write_text(txt, encoding="utf-8")
     copy_history(out)
-    body = read("tools/page_body.html")
-    app_div = re.search(r'^<div id="app">.*$', body, re.M).group(0)
-    noscript = re.search(r"^<noscript>.*$", body, re.M).group(0)
     app = app_js()
     head = [
         "<!doctype html>",
@@ -146,8 +121,8 @@ def build_web(txt, data):
         '<script src="config.js"></script>',
         "</head>",
         "<body>",
-        app_div,
-        noscript,
+        APP_DIV,
+        NOSCRIPT,
         '<script src="vendor/htm-preact-standalone-3.1.1.umd.js"></script>',
         "<script>" + app + "</script>",
         "<script>" + SW_REGISTER + "</script>",
@@ -165,17 +140,14 @@ def build_web(txt, data):
 
 
 def main(argv):
-    targets = argv or ["artifact", "web"]
+    if any(a != "web" for a in argv):  # "web" is still accepted, so older commands keep working
+        raise SystemExit("usage: python3 tools/build.py [web]")
     txt, data = load_data()
     meta = data["meta"]
-    for tgt in targets:
-        fn = {"artifact": build_artifact, "web": build_web}.get(tgt)
-        if not fn:
-            raise SystemExit(f"unknown target {tgt!r} (use artifact or web)")
-        path, html = fn(txt, data)
-        print(f"{tgt:8s} {path.relative_to(ROOT)}  {len(html.encode('utf-8')):,} bytes  "
-              f"data {meta.get('updated')}: {meta.get('n_prices')} prices, {meta.get('n_products')} products, "
-              f"{len(data['offers'])} offers")
+    path, html = build_web(txt, data)
+    print(f"web      {path.relative_to(ROOT)}  {len(html.encode('utf-8')):,} bytes  "
+          f"data {meta.get('updated')}: {meta.get('n_prices')} prices, {meta.get('n_products')} products, "
+          f"{len(data['offers'])} offers")
 
 
 if __name__ == "__main__":

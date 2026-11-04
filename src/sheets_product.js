@@ -13,7 +13,7 @@ async function contribute(item, okMsg) {
 }
 function ContribGate({ children }) {
   if (!Store.canContribute()) {
-    const msg = Store.mode === "claude" && !Store.me.id ? t("signin_needed") : t("readonly_note");
+    const msg = t("readonly_note");
     return html`<p class="small muted">${msg}</p>`;
   }
   return html`<div class="stack">${children}

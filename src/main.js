@@ -25,11 +25,6 @@ function App() {
     const sheets = document.querySelectorAll("#app > .sheet");
     sheets.forEach((el, i) => { el.inert = i < sheets.length - 1; });
   });
-  const ids = [...new Set(S.community.map(c => c.uid).filter(Boolean))].sort().join(",");
-  useEffect(() => {
-    if (!ids || Store.mode !== "claude") return;
-    Store.profiles(ids.split(",")).then(p => { if (p && Object.keys(p).length) set({ profiles: Object.assign({}, S.profiles, p) }); });
-  }, [ids]);
   if (err) return html`<div class="loading"><div class="stack"><b>${t("error_t")}</b><p>${t("error_s")}</p>
     <button type="button" class="btn primary" onClick=${() => { set({ sheets: [] }); resetErr(); }}>${t("reload")}</button></div></div>`;
   if (!S.ready) return html`<div class="loading"><div><b>Preuet</b><p>${t("loading")}</p></div></div>`;
@@ -49,17 +44,6 @@ function App() {
     ${S.toast ? html`<div class=${"toast" + (S.toastAction ? " has-action" : "")} role="status" aria-live="polite"><span>${S.toast}</span>${S.toastAction ? html`<button type="button" onClick=${() => { const a = S.toastAction; set({ toast: null, toastAction: null }); a.run(); }}>${S.toastAction.label}</button>` : null}</div>` : null}`;
 }
 
-async function fetchNewerData() {
-  try {
-    const r = await fetch("data/preuet-data.json", { cache: "no-store" });
-    if (!r.ok) return;
-    const D = await r.json();
-    if (D && D.meta && Array.isArray(D.products) && D.meta.updated > X.D.meta.updated) {
-      indexData(D); MEMO.clear(); S.user = cleanUser(S.user); set({});
-    }
-  } catch (e) { /* offline or not published: keep embedded data */ }
-}
-
 function loadScript(src) { // web build: supabase-js is fetched only when a Supabase project is configured
   return new Promise((resolve, reject) => {
     const s = document.createElement("script");
@@ -68,18 +52,16 @@ function loadScript(src) { // web build: supabase-js is fetched only when a Supa
   });
 }
 
-/* The artifact carries the data inline; the web version fetches data/preuet-data.json (the service worker keeps a copy offline). */
+/* the data is fetched once; the service worker keeps a copy for offline use */
 async function readData() {
-  const el = document.getElementById("preuet-data");
-  if (el && el.textContent.trim()) return { D: JSON.parse(el.textContent), inline: true };
   const r = await fetch("data/preuet-data.json");
   if (!r.ok) throw new Error("data " + r.status);
-  return { D: await r.json(), inline: false };
+  return r.json();
 }
 
 async function boot() {
-  let D = null, inline = false;
-  try { ({ D, inline } = await readData()); } catch (e) { console.error("data", e); }
+  let D = null;
+  try { D = await readData(); } catch (e) { console.error("data", e); }
   if (!D) { document.getElementById("app").textContent = "Preuet: no s'han pogut carregar les dades. Torna-ho a provar amb connexió. / No se han podido cargar los datos."; return; }
   indexData(D);
   S.user = cleanUser(lsGet(LS_USER));
@@ -92,18 +74,14 @@ async function boot() {
   const root = document.getElementById("app");
   root.textContent = ""; // the static "loading" placeholder: Preact would otherwise leave it at the bottom of every page
   render(html`<${App} />`, root);
-  if (inline) fetchNewerData();
   const cfg = window.PREUET_CONFIG || null;
-  let ok = false;
   if (cfg && cfg.supabaseUrl && cfg.supabaseAnonKey) {
     try {
       if (!window.supabase && cfg.supabaseJs) await loadScript(cfg.supabaseJs);
-      ok = await Store.initSupabase(cfg);
+      await Store.initSupabase(cfg);
     } catch (e) { console.warn("supabase", e); }
   }
-  if (!ok) { try { ok = await Store.initClaude(); } catch (e) { console.warn("claude", e); } }
   S.mode = Store.mode;
-  initDownloads().then(() => set({}));
   try {
     const remote = await Store.loadUser();
     if (remote && !S.test && (remote.updated || 0) > (S.user.updated || 0)) {

@@ -53,39 +53,12 @@ function cleanItem(it) { // shared data is other people's input: keep only known
   if (it.t === "origin") { o.txt = str(it.txt, 80); if (!o.p || !o.txt.trim()) return null; }
   return o;
 }
-function pruneMine(items) {
-  const now = Date.now();
-  let a = items.filter(x => x && !(x.t === "stock" && now - x.ts > 14 * DAY));
-  const seen = new Set();
-  a = a.slice().reverse().filter(x => { // one rating per target: keep the newest
-    if (x.t !== "rating") return true;
-    if (seen.has(x.target)) return false;
-    seen.add(x.target); return true;
-  }).reverse();
-  if (a.length > 400) a = a.slice(a.length - 400);
-  while (a.length && JSON.stringify(a).length > 200000) a = a.slice(1);
-  return a.map(({ uid: _u, ...rest }) => rest);
-}
 
 const Store = {
-  mode: "local", me: { id: null, name: "", avatar: "", isOwner: false, canWrite: null }, db: null, userCap: null, supa: null,
-  sandbox: false, sandboxItems: [], v2: false, _myIds: new Set(), _mine: null, _q: Promise.resolve(), _commCb: null, _localComm: [],
+  mode: "local", me: { id: null, name: "", avatar: "", isOwner: false, canWrite: null }, supa: null,
+  sandbox: false, sandboxItems: [], v2: false, _myIds: new Set(), _q: Promise.resolve(), _commCb: null, _localComm: [],
   queue(fn) { const p = this._q.then(fn, fn); this._q = p.catch(() => {}); return p; },
 
-  async initClaude() {
-    if (!window.claude || typeof window.claude.use !== "function") return false;
-    let db = null, user = null;
-    try { [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]); } catch (e) { return false; }
-    if (!db) return false;
-    this.db = db; this.userCap = user;
-    let me = { id: null, name: "", avatarUrl: "", isOwner: false };
-    try { if (user) me = await user.me(); } catch (e) { /* defaults */ }
-    let canWrite = null;
-    try { canWrite = user ? await user.can("data.write") : null; } catch (e) { canWrite = null; }
-    this.me = { id: me.id || null, name: me.name || "", avatar: me.avatarUrl || "", isOwner: !!me.isOwner, canWrite };
-    this.mode = "claude";
-    return true;
-  },
   async initSupabase(cfg) {
     if (!cfg || !cfg.supabaseUrl || !cfg.supabaseAnonKey || !window.supabase) return false;
     const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true } });
@@ -107,7 +80,6 @@ const Store = {
   },
   canContribute() {
     if (this.sandbox) return true;
-    if (this.mode === "claude") return !!this.me.id && this.me.canWrite !== false;
     return true;
   },
 
@@ -115,25 +87,6 @@ const Store = {
   subscribeCommunity(cb) {
     this._commCb = cb;
     const emitAll = list => cb(list.concat(this.sandboxItems));
-    if (this.mode === "claude") {
-      let last = [];
-      this._emitClaude = () => emitAll(last);
-      return this.db.collection("community").onSnapshot(snap => {
-        const all = [];
-        let mine = null;
-        for (const d of snap.docs) {
-          const body = d.data() || {};
-          if (d.id === this.me.id) mine = body;
-          for (const raw of Array.isArray(body.items) ? body.items : []) {
-            const it = cleanItem(Object.assign({}, raw, { uid: d.id }));
-            if (it) all.push(it);
-          }
-        }
-        this._mine = { items: mine && Array.isArray(mine.items) ? mine.items.slice() : [] };
-        last = all;
-        emitAll(all);
-      }, err => { console.warn("community feed", err && err.code); emitAll(last); });
-    }
     if (this.mode === "supabase") return this._subscribeSupabase(emitAll);
     this._localComm = (lsGet(LS_COMM) || []).map(cleanItem).filter(Boolean);
     emitAll(this._localComm);
@@ -176,7 +129,6 @@ const Store = {
   },
   refreshCommunity() {
     if (!this._commCb) return;
-    if (this.mode === "claude" && this._emitClaude) return this._emitClaude();
     if (this.mode === "supabase" && this._emitSupa) return this._emitSupa();
     this._commCb(this._localComm.concat(this.sandboxItems));
   },
@@ -187,26 +139,6 @@ const Store = {
       if (item.t === "rating") this.sandboxItems = this.sandboxItems.filter(x => !(x.t === "rating" && x.target === item.target));
       this.sandboxItems.push(Object.assign({}, item, { uid: this.me.id || "test" }));
       this.refreshCommunity();
-      return item;
-    }
-    if (this.mode === "claude") {
-      if (!this.me.id) throw { code: "no_id" };
-      await this.queue(async () => {
-        if (!this._mine) {
-          const s = await this.db.doc("community/" + this.me.id).get();
-          this._mine = { items: s.exists && Array.isArray((s.data() || {}).items) ? s.data().items.slice() : [] };
-        }
-        let cur = this._mine.items.slice();
-        if (item.t === "rating") cur = cur.filter(x => !(x.t === "rating" && x.target === item.target));
-        const items = pruneMine(cur.concat([item]));
-        try {
-          await this.db.doc("community/" + this.me.id).set({ v: 1, items, updated: Date.now() });
-        } catch (e) {
-          if (e && e.code === "invalid_argument") this.me.canWrite = false;
-          throw e;
-        }
-        this._mine = { items };
-      });
       return item;
     }
     if (this.mode === "supabase") {
@@ -235,23 +167,6 @@ const Store = {
     if (this.sandbox && this.sandboxItems.some(x => x.id === id)) {
       this.sandboxItems = this.sandboxItems.filter(x => x.id !== id); this.refreshCommunity(); return;
     }
-    if (this.mode === "claude") {
-      await this.queue(async () => {
-        if (ownerUid === this.me.id) {
-          const items = ((this._mine && this._mine.items) || []).filter(x => x.id !== id);
-          await this.db.doc("community/" + this.me.id).set({ v: 1, items, updated: Date.now() });
-          this._mine = { items };
-        } else if (this.me.isOwner) {
-          const ref = this.db.doc("community/" + ownerUid);
-          const s = await ref.get();
-          if (!s.exists) return;
-          const body = s.data() || {};
-          const items = (Array.isArray(body.items) ? body.items : []).filter(x => x && x.id !== id);
-          await ref.set({ v: 1, items, updated: Date.now(), moderated: Date.now() });
-        }
-      });
-      return;
-    }
     if (this.mode === "supabase") {
       const r = this.v2 ? await this.supa.rpc("delete_contribution", { p_id: id }) : await this.supa.from("contributions").delete().eq("id", id);
       if (r.error) throw r.error;
@@ -262,22 +177,13 @@ const Store = {
     lsSet(LS_COMM, this._localComm);
     this.refreshCommunity();
   },
-  async profiles(ids) {
-    if (this.mode === "claude" && this.userCap && ids.length) {
-      try { return await this.userCap.profiles(ids); } catch (e) { return {}; }
-    }
-    return {};
-  },
 
   /* ----- per-viewer state ----- */
   async loadUser() {
     const local = lsGet(LS_USER);
     let remote = null;
     try {
-      if (this.mode === "claude" && this.me.id) {
-        const s = await this.db.doc("data/users/" + this.me.id + "/profile").get();
-        remote = s.exists ? s.data() : null;
-      } else if (this.mode === "supabase") {
+      if (this.mode === "supabase") {
         const r = await this.supa.from("user_state").select("state").eq("user_id", this.me.id).maybeSingle();
         remote = r.data ? r.data.state : null;
       }
@@ -289,9 +195,7 @@ const Store = {
     if (this.sandbox) return;
     const body = JSON.parse(JSON.stringify(u));
     lsSet(LS_USER, body);
-    if (this.mode === "claude" && this.me.id) {
-      await this.queue(() => this.db.doc("data/users/" + this.me.id + "/profile").set(body)).catch(e => console.warn("save user", e && e.code));
-    } else if (this.mode === "supabase") {
+    if (this.mode === "supabase") {
       const r = await this.supa.from("user_state").upsert({ user_id: this.me.id, state: body, updated_at: new Date().toISOString() });
       if (r.error) { console.warn("save user", r.error); if (!this._saveWarned) { this._saveWarned = true; toast(t("sync_failed")); } }
       else this._saveWarned = false;
@@ -299,20 +203,12 @@ const Store = {
   },
   async clearUser() {
     lsDel(LS_USER);
-    if (this.mode === "claude" && this.me.id) await this.queue(() => this.db.doc("data/users/" + this.me.id + "/profile").delete()).catch(() => {});
     if (this.mode === "supabase") await this.supa.from("user_state").delete().eq("user_id", this.me.id);
   },
 
   /* ----- solution tests S01–S10 ----- */
   subscribeTests(cb) {
     const local = () => lsGet(LS_TESTS) || {};
-    if (this.mode === "claude") {
-      return this.db.collection("tests").onSnapshot(snap => {
-        const o = Object.assign({}, local());
-        for (const d of snap.docs) if (/^S(0[1-9]|10)$/.test(d.id)) o[d.id] = Object.assign({ _shared: true }, d.data());
-        cb(o);
-      }, () => cb(local()));
-    }
     if (this.mode === "supabase") {
       const load = async () => {
         const key = lsGet(LS_TEAMKEY);
@@ -333,10 +229,6 @@ const Store = {
   },
   async saveTest(code, data) {
     const body = JSON.parse(JSON.stringify(data));
-    if (this.mode === "claude") {
-      try { await this.queue(() => this.db.doc("tests/" + code).set(body)); return "shared"; }
-      catch (e) { console.warn("save test", e && e.code); }
-    }
     if (this.mode === "supabase") {
       const key = lsGet(LS_TEAMKEY);
       if (key) {
@@ -371,17 +263,8 @@ function turnstileToken(sitekey) {
 }
 
 /* ---------- downloads & clipboard ---------- */
-let DL = null;
-async function initDownloads() {
-  try { if (window.claude && window.claude.use) DL = await window.claude.use("downloads"); } catch (e) { DL = null; }
-}
-function canDownload() { return !!DL || !window.claude; }
+function canDownload() { return true; }
 async function saveFile(filename, text, mime) {
-  if (DL) {
-    try { await DL.save({ filename, data: text }); return "saved"; }
-    catch (e) { if (e && e.code === "declined") return "declined"; console.warn("download", e && e.code); return "error"; }
-  }
-  if (window.claude) return "error";
   try {
     const blob = new Blob([text], { type: (mime || "text/plain") + ";charset=utf-8" });
     const a = document.createElement("a");

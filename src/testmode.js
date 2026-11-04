@@ -194,7 +194,7 @@ function TestResults({ done }) {
   const list = CODES.filter(c => all[c]);
   const avg = k => { const v = list.map(c => (all[c].ans || {})[k]).filter(x => x > 0); return v.length ? fmtNum(Math.round(sum(v) / v.length * 10) / 10) : "—"; };
   return html`<section class="stack">
-    <div><h3>${t("t_results")}</h3><p class="small muted">${t("t_results_sub", { n: done })} ${Store.mode === "claude" ? t("t_team_only") : ""}</p></div>
+    <div><h3>${t("t_results")}</h3><p class="small muted">${t("t_results_sub", { n: done })}</p></div>
     ${list.length ? html`<div class="tbl-wrap"><table class="tbl">
       <thead><tr><th>${t("t_code")}</th><th>${t("t_seg")}</th><th>PMV</th><th>${t("t_dur")}</th><th>${t("t_tasks_done")}</th><th>U</th><th>F</th><th>C</th><th>${t("q_use").split(" ")[0]}</th><th></th></tr></thead>
       <tbody>${list.map(c => { const r = all[c], a = r.ans || {}; const okN = (r.tasks || []).filter(x => x.status === "ok" || x.status === "help").length;

@@ -70,14 +70,12 @@ from user_state where state ? 'plus' order by updated_at desc;
 Un bloqueig fet només al navegador es pot saltar: serveix per mesurar l'interès, no per protegir res. Per cobrar de debò
 caldria un servei de pagament (per exemple Stripe) amb un servidor que comprovi qui ha pagat.
 
-## Dues versions, un sol codi
+## On és
 
-| | Artifact de Claude | Web a GitHub Pages |
-|---|---|---|
-| Enllaç | https://claude.ai/artifact/4fU8NevMmyCkJDCLxAryWZ | https://roger-perez-cardelus.github.io/PREUET/ |
-| Aportacions compartides (estoc, preus, comentaris, fitxes S01–S10) | Base de dades de l'artifact | Supabase (o només al navegador si no es configura) |
-| Qui hi entra | Les persones amb qui la comparteixis | Qualsevol persona amb l'enllaç |
-| S'instal·la al mòbil i obre sense connexió | No | Sí («Afegeix a la pantalla d'inici») |
+| | |
+|---|---|
+| App | https://roger-perez-cardelus.github.io/PREUET/ (GitHub Pages; s'instal·la al mòbil i obre sense connexió) |
+| Aportacions compartides (estoc, preus, comentaris, fitxes S01–S10) | Supabase (o només al navegador si no es configura) |
 
 ## Estructura
 
@@ -90,10 +88,9 @@ data/
   history.json       preu setmanal per kg o litre de cada producte i cadena (evolució de preus)
 tests/               tests amb node --test i prova de fum amb Playwright
 tools/
-  build.py           construeix dist/artifact i dist/web
+  build.py           construeix la web a dist/web
   update_data.py     actualització setmanal: aplica preus i ofertes nous i valida les dades
   UPDATE.md          procediment de l'actualització setmanal
-  page_body.html     capçalera de la versió artifact
 web/                 fitxers només de la versió web: config.js, manifest, service worker, fonts, llibreries, icones
 supabase/schema.sql  taules, polítiques de seguretat (RLS) i funcions de Supabase
 .github/workflows/   publicació automàtica a GitHub Pages, preus setmanals i fotos

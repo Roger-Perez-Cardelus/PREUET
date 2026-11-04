@@ -344,7 +344,7 @@ function SavingsSheet() {
 const INSTALL = { ev: null, done: false };
 function isStandalone() { try { return matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; } catch (e) { return false; } }
 function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent || ""); }
-function canOfferInstall() { return !window.claude && !isStandalone() && !INSTALL.done && (!!INSTALL.ev || isIOS()); }
+function canOfferInstall() { return !isStandalone() && !INSTALL.done && (!!INSTALL.ev || isIOS()); }
 async function installApp() {
   if (INSTALL.ev) { INSTALL.ev.prompt(); try { const r = await INSTALL.ev.userChoice; if (r && r.outcome === "accepted") INSTALL.done = true; } catch (e) { /* ignore */ } INSTALL.ev = null; set({}); return; }
   openSheet({ type: "install" });
