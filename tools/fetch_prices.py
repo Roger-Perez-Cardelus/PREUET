@@ -11,6 +11,7 @@ Only Mercadona (tienda.mercadona.es, its shop's public JSON) and Consum (tienda.
 Dia and Carrefour refuse automated reads (403). The tool waits between calls.
 """
 import gzip
+import collections
 import json
 import pathlib
 import sys
@@ -403,16 +404,28 @@ def cmd_pages():
     cut = time.strftime("%Y-%m-%d", time.gmtime(time.time() - 2 * 86400))
     urls = sorted({o["src"] for o in d["offerings"] if o["date"] < cut and str(o.get("src", "")).startswith("https://")})
     RAW.mkdir(exist_ok=True)
-    out = {}
+    out, refused = {}, collections.Counter()
+    started = time.time()
+    save = lambda: (RAW / "pages.json.gz").write_bytes(gzip.compress(json.dumps(out, ensure_ascii=False).encode()))
     for i, url in enumerate(urls):
+        host = urllib.parse.urlsplit(url).netloc
+        if refused[host] >= 3:  # this shop refuses automated reads (Carrefour, Dia: 403): do not try the rest
+            print(f"{i + 1}/{len(urls)} skip (refused) {url}", flush=True)
+            continue
+        if time.time() - started > 40 * 60:  # stay well inside the job's hour, and keep what was read
+            print("stopping: 40 minutes", flush=True)
+            break
         for attempt in range(3):  # Bonpreu answers 202 (still preparing) or times out now and then
             time.sleep(1.5 + 8 * attempt)
             st, ct, body = fetch(url)
-            if st == 200:
+            if st == 200 or st in (401, 403, 404, 410):  # a refusal or a missing page does not get better by asking again
                 break
+        refused[host] = refused[host] + 1 if st in (401, 403) else 0
         out[url] = {"status": st, "type": ct, "body": body[:3_000_000].decode("utf-8", "replace")}
         print(f"{i + 1}/{len(urls)} {st} {len(body):>8} {url}", flush=True)
-    (RAW / "pages.json.gz").write_bytes(gzip.compress(json.dumps(out, ensure_ascii=False).encode()))
+        if i % 10 == 9:
+            save()
+    save()
 
 
 def cmd_probe():
