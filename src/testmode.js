@@ -185,7 +185,9 @@ function TestSetupSheet() {
       ${m.consentP === false ? html`<div class="callout warn">${t("t_consent_need")}</div>` : null}
       <${Toggle} checked=${m.onb} onChange=${v => upd("onb", v)} label=${t("t_onboarding")} />
       <p class="xs faint">${t("t_begin_note")}</p>
-      ${Store.mode === "supabase" ? html`<div class="field"><label for="tf-key">Codi d'equip / Código de equipo</label><input id="tf-key" type="password" value=${key} onInput=${e => setKey(e.currentTarget.value)} onChange=${e => { lsSet(LS_TEAMKEY, e.currentTarget.value); if (Store._reloadTests) Store._reloadTests(); }} /></div>` : null}
+      ${Store.mode === "supabase" ? html`<div class="field"><label for="tf-key">Codi d'equip / Código de equipo</label><input id="tf-key" type="password" value=${key} onInput=${e => setKey(e.currentTarget.value)} onChange=${e => { lsSet(LS_TEAMKEY, e.currentTarget.value); if (Store._reloadTests) Store._reloadTests(); }} />
+        ${key.trim() ? null : html`<p class="callout warn small" role="status">${t("t_key_missing")}</p>`}</div>`
+        : html`<p class="callout warn small" role="status">${t("t_not_shared")}</p>`}
       <${TestResults} done=${done} />
     </div><//>`;
 }
@@ -314,7 +316,7 @@ function TestSummarySheet({ code }) {
     setState("saving");
     const res = await Store.saveTest(r.code, r);
     setState(res);
-    toast(res === "shared" ? t("t_saved", { c: r.code }) : t("t_saved_local", { c: r.code }));
+    toast(res === "shared" ? t("t_saved", { c: r.code }) : Store.mode === "supabase" ? t("t_saved_local_key", { c: r.code }) : t("t_saved_local", { c: r.code }));
   };
   const foot = live ? html`<div class="stack-s">
       <button type="button" class="btn primary block" disabled=${state === "saving" || state === "shared" || state === "local"} onClick=${save}><${Icon} n="check" />${state === "shared" || state === "local" ? t("saved") : t("t_save")}</button>

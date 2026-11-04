@@ -155,4 +155,7 @@ Object.assign(STR, {
   hl_none: ["No tenim cap canvi més sa per proposar per a aquesta cistella.", "No tenemos ningún cambio más sano que proponer para esta cesta."],
   hl_note: ["Valors de referència de cada tipus de producte; la marca concreta pot variar. No substitueix el consell d'un professional de la salut.", "Valores de referencia de cada tipo de producto; la marca concreta puede variar. No sustituye el consejo de un profesional de la salud."],
   plus_f_healthy: ["Cistella més sana", "Cesta más sana"], plus_d_healthy: ["Canvis per productes semblants amb menys sucre, sal o greix.", "Cambios por productos parecidos con menos azúcar, sal o grasa."],
+  t_key_missing: ["Sense el codi d'equip, la fitxa només es desarà en aquest mòbil i la resta de l'equip no la veurà.", "Sin el código de equipo, la ficha solo se guardará en este móvil y el resto del equipo no la verá."],
+  t_not_shared: ["Aquest mòbil no està connectat al servidor (Supabase): les fitxes només es desaran aquí.", "Este móvil no está conectado al servidor (Supabase): las fichas solo se guardarán aquí."],
+  t_saved_local_key: ["Fitxa {c} desada només en aquest mòbil: el codi d'equip no és correcte o no hi és.", "Ficha {c} guardada solo en este móvil: el código de equipo no es correcto o no está."],
 });
