@@ -2,7 +2,7 @@
 /* ---------- header & tabs ---------- */
 function Header() {
   return html`<header class="topbar"><div class="wrap">
-    <button type="button" class="logo" onClick=${() => go("inici")} aria-label=${"Preuet · " + t("tab_inici")}><${Logo} /><b>Preuet</b><${TeamBadge} /></button>
+    <button type="button" class="logo" onClick=${() => go("inici")} aria-label=${"Preuet" + (S.team ? " · " + t("tm_badge") : hasOwnPlus() ? " Plus" : "") + " · " + t("tab_inici")}><${Logo} /><b>Preuet</b>${S.team ? html`<${TeamBadge} />` : html`<${PlusLogoBadge} />`}</button>
     <span class="grow"></span>
     <button type="button" class="pill-btn" onClick=${() => openSheet({ type: "town" })} aria-label=${t("town_pill") + ": " + S.user.town}><${Icon} n="pin" s=${16} /><span>${S.user.town}</span></button>
     <div class="lang" role="group" aria-label=${t("lang_label")}>

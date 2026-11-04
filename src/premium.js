@@ -38,6 +38,11 @@ function needPlus(f) {
 }
 function plusName(f) { return t("plus_f_" + f); }
 
+/* the person said yes to Plus (not the team's phones, which have everything open anyway) */
+function hasOwnPlus() { return !!(S.user && S.user.plus && S.user.plus.on); }
+function PlusLogoBadge() {
+  return hasOwnPlus() ? html`<span class="plus-logo" aria-hidden="true"><${Icon} n="star" s=${10} fill=${true} />Plus</span>` : null;
+}
 function PlusTag() {
   return hasPlus() ? null : html`<span class="plus-badge"><${Icon} n="lock" s=${11} />Plus</span>`;
 }

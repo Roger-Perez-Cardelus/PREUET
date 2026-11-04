@@ -478,3 +478,9 @@ main:focus { outline: none; }
 .tm-name { font-size: var(--t-sm); overflow-wrap: anywhere; }
 .tm-track { height: 8px; background: var(--sunk); border-radius: 4px; overflow: hidden; }
 .tm-track span { display: block; height: 100%; background: var(--plum); border-radius: 4px; }
+.topbar .logo .plus-logo { display: inline-flex; align-items: center; gap: 3px; margin-left: 8px; border-radius: 6px; padding: 2px 7px;
+  font: 700 10px/1.4 var(--f-num); letter-spacing: .08em; text-transform: uppercase; background: var(--tag); color: var(--tag-ink);
+  box-shadow: inset 0 -2px 0 var(--tag-edge); flex: none; }
+.topbar .logo .plus-logo svg { width: 10px; height: 10px; }
+.topbar .logo { flex: none; }
+.topbar .pill-btn { min-width: 0; }
