@@ -8,14 +8,14 @@ Procediment que segueix la tasca programada cada dilluns, i que també pot fer q
 
 | Peça | On |
 |---|---|
-| App publicada (artifact de Claude) | https://claude.ai/artifact/4fU8NevMmyCkJDCLxAryWZ |
-| Codi i dades | El repositori de GitHub, si existeix (vegeu README). Si no, l'artifact mateix: el projecte hi és sencer a `source/…` i les dades a `data/preuet-data.json`. |
+| App publicada | https://roger-perez-cardelus.github.io/PREUET/ (GitHub Pages, es torna a publicar sola amb cada push a `main`) |
+| Codi i dades | El repositori https://github.com/Roger-Perez-Cardelus/PREUET, branca `main`. És l'única font: no es treballa sobre cap còpia antiga. |
 | Dades | `data/preuet-data.json` |
 | Eines | `tools/update_data.py` (aplica i valida) i `tools/build.py` (construeix l'app) |
 
 ## 1. Preparar
 
-1. Obtén el projecte: clona el repositori o, si no n'hi ha, llegeix l'artifact (`Artifact read` de l'URL), llista'n els fitxers (`Artifact list`, `scope: files`) i baixa'ls tots amb `Artifact read` i `paths`. Munta una carpeta amb `source/X` → `X` i `data/preuet-data.json` → `data/preuet-data.json`.
+1. Obtén el projecte al dia: clona el repositori o, si ja el tens, `git pull origin main`. Cada dilluns l'acció «Preus de productes nous» hi desa els preus de Mercadona i Consum, així que cal partir sempre de l'última versió de `main`.
 2. Comprova que les dades són bones abans de tocar res: `python3 tools/update_data.py check` (ha d'acabar sense problemes).
 3. Genera la llista de feina: `python3 tools/update_data.py worklist --out worklist.json`. Per a cada cadena hi ha les pàgines a llegir i, per a cada pàgina, els noms exactes dels productes que Preuet hi segueix (`track`).
 
@@ -99,15 +99,17 @@ Les acabades es descarten soles.
 
 ```bash
 python3 tools/update_data.py check --fix      # recalcula comptes, ordre d'opcions, fonts i data
-python3 tools/build.py                        # dist/artifact i dist/web
+python3 tools/build.py web                    # dist/web (comprova que l'app es construeix)
+node --test tests/*.test.mjs                  # proves (les mateixes que passa l'acció abans de publicar)
 ```
 
 `check` ha d'acabar sense problemes. Si les dades tenen més de 8 dies, `check` ho avisa (i l'acció de GitHub ho mostra com a avís), però no falla. Si una cadena amb estat «complet» o «parcial» no té cap preu dels últims 30 dies, l'eina ho avisa: canvia-li l'estat a `antic` a `chains` o torna a llegir-ne les pàgines.
 
 ## 5. Publicar
 
-1. **Artifact**: llegeix-lo primer (`Artifact read` de l'URL) i publica `dist/artifact/index.html` al mateix `url`, amb `files` = `{"data/preuet-data.json": "dist/artifact/data/preuet-data.json", "data/history.json": "dist/artifact/data/history.json"}` (les fotos de `dist/artifact/img/products/` només cal pujar-les quan canviïn). No passis `capabilities` (es conserven) ni toquis els fitxers de `source/` (es conserven sols).
-2. **GitHub** (si hi ha repositori): commit de `data/preuet-data.json` i `data/history.json` amb el missatge `Preus i ofertes del AAAA-MM-DD` i push a `main`. GitHub Pages es torna a publicar sol.
+Commit de `data/preuet-data.json` i `data/history.json` amb el missatge `Preus i ofertes del AAAA-MM-DD` i push a `main`. Si el push es rebutja perquè `main` ha canviat (per exemple, l'acció de Mercadona i Consum hi ha desat preus), fes `git pull --rebase origin main`, torna a passar `python3 tools/update_data.py check` i torna a fer push.
+
+L'acció «Publica Preuet a GitHub Pages» passa les proves i torna a publicar la web. Comprova a **Actions** que acaba en verd: si una prova falla, la web no es publica.
 
 ## 6. Informe
 
