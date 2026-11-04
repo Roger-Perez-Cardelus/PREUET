@@ -34,6 +34,7 @@ function cleanUser(u) {
   const a = o.a11y && typeof o.a11y === "object" ? o.a11y : {};
   o.a11y = { size: [0, 1, 2].includes(a.size) ? a.size : 0, contrast: a.contrast === true, motion: a.motion !== false };
   o.plus = cleanPlus(o.plus);
+  o.team = o.team === true;
   o.recent = Array.isArray(o.recent) ? o.recent.filter(x => typeof x === "string").map(x => x.slice(0, 40)).slice(0, 6) : [];
   return o;
 }
@@ -176,6 +177,21 @@ const Store = {
     this._localComm = this._localComm.filter(x => x.id !== id);
     lsSet(LS_COMM, this._localComm);
     this.refreshCommunity();
+  },
+
+  /* ----- team mode: the server says whether the team code is right ----- */
+  async teamCheck(key) { // true: right · false: wrong · null: cannot be checked now (no server)
+    if (this.mode !== "supabase" || !key) return null;
+    const r = await this.supa.rpc("list_tests", { team_key: key });
+    if (!r.error) return true;
+    return r.error.code === "28000" ? false : null;
+  },
+  async teamStats(key) {
+    if (this.mode !== "supabase") return { error: "offline" };
+    const r = await this.supa.rpc("team_stats", { team_key: key });
+    if (!r.error) return { data: r.data || {} };
+    const e = r.error;
+    return { error: e.code === "28000" ? "key" : e.code === "PGRST202" || /team_stats/.test(e.message || "") ? "schema" : "other" };
   },
 
   /* ----- per-viewer state ----- */

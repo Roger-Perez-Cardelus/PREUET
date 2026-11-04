@@ -15,5 +15,6 @@ photos.js
 features.js
 premium.js
 health.js
+team.js
 testmode.js
 main.js

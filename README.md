@@ -38,7 +38,7 @@ Què ha canviat des de la V1 i què queda pendent: [docs/TRASPAS.md](docs/TRASPA
 | Receptes ordenades pel cost per ració, amb els ingredients que afegeixes a la cistella | Receptes |
 | Compres periòdiques: la cistella que es repeteix cada setmana, quinzena o mes | Més → Compres periòdiques |
 | Ofertes vigents i properes de cada cadena | Ofertes |
-| Mode prova S01–S10 per a les proves de solució (fitxa Taula C en català i CSV) | Més → Mode prova |
+| Mode equip: mode prova S01–S10 (fitxa Taula C en català i CSV) i panell amb els resultats de Preuet Plus, la comunitat i les dades. Només amb el codi d'equip, que comprova el servidor | Enllaç `#equip`, o tocar 5 vegades la línia de la versió a Més → Sobre Preuet |
 
 Bilingüe (català i castellà), tema clar i fosc, pensada per al mòbil.
 
@@ -53,7 +53,8 @@ avisos d'ofertes, súpers a prop, escàner, cerca per veu i compartir o exportar
 Quan algú obre una funció Plus veu l'oferta (2,49 €/mes o 19,99 €/any) i la pregunta «Quant pagaries de debò cada mes?».
 L'app compta quantes vegades s'ha vist l'oferta per a cada funció. Si la persona toca «Vull Preuet Plus», es desa el pla
 triat i el preu que diu que pagaria. Només llavors se li explica que Preuet encara no cobra, i se li desbloqueja Plus.
-No es demana cap dada de pagament. El mode prova S01–S10 ho té tot desbloquejat.
+No es demana cap dada de pagament. El mode prova S01–S10 i els mòbils en mode equip ho tenen tot desbloquejat, i els mòbils de l'equip no compten als resultats.
+Els resultats de tots els mòbils es veuen al **panell d'equip** (sense dades de cap persona concreta).
 
 Les respostes es guarden al perfil de cada persona (`plus` dins de `user_state`). A Supabase, des de l'editor SQL:
 
@@ -137,7 +138,7 @@ L'acció de GitHub les executa totes abans de publicar: si alguna falla, la web 
 
 Per comprovar-ho: a l'app, **Més → Sobre Preuet → Mode de dades** ha de dir «Servidor propi (Supabase)».
 
-**Si ja havies executat una versió anterior de `schema.sql`**, torna-la a executar sencera: és la versió 2 i no esborra dades. Fins que no ho facis, l'app continua funcionant amb el sistema antic.
+**Si ja havies executat una versió anterior de `schema.sql`**, torna-la a executar sencera: és la versió 3 (afegeix el panell d'equip) i no esborra dades. Fins que no ho facis, l'app continua funcionant amb el sistema antic.
 
 ### CAPTCHA (recomanat si l'enllaç es fa públic)
 

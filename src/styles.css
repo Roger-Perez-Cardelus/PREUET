@@ -463,3 +463,18 @@ main:focus { outline: none; }
 .receipt .rsubtotal { color: var(--ink-2); font-weight: 600; border-bottom: 1px dashed var(--line); padding-bottom: 8px; }
 .healthy-ic { background: var(--leaf-soft); color: var(--leaf); }
 .healthy-li { align-items: center; }
+
+/* ---------- team mode ---------- */
+.team-badge { display: inline-flex; align-items: center; border-radius: 6px; padding: 2px 7px; font: 700 10px/1.4 var(--f-num); letter-spacing: .08em; text-transform: uppercase;
+  background: var(--ink); color: var(--paper); flex: none; }
+.topbar .logo .team-badge { margin-left: 8px; }
+.team-card .plus-ic { background: var(--ink); color: var(--paper); }
+.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-m); padding: 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.kpi-v { font-size: var(--t-xl); font-weight: 700; line-height: 1.1; }
+.kpi-l { font-size: var(--t-sm); font-weight: 600; }
+.kpi-s { font-size: var(--t-xs); color: var(--ink-2); }
+.tm-row { display: grid; grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.tm-name { font-size: var(--t-sm); overflow-wrap: anywhere; }
+.tm-track { height: 8px; background: var(--sunk); border-radius: 4px; overflow: hidden; }
+.tm-track span { display: block; height: 100%; background: var(--plum); border-radius: 4px; }

@@ -34,7 +34,7 @@ function AboutSheet() {
     <div class="prose">
       <div class="row"><span style="width:44px;height:44px;color:var(--ink)"><${Logo} /></span><div><b style="font-family:var(--f-display);font-size:var(--t-lg)">Preuet</b><p class="small muted">${t("app_tagline")}</p></div></div>
       <p>${t("about_body")}</p>
-      <p class="small muted">${t("about_version", { v: "V1", d: fmtDL(X.D.meta.updated) })} · ${X.D.meta.n_prices} preus · ${X.D.meta.n_products} productes</p>
+      <p class="small muted" onClick=${teamTap}>${t("about_version", { v: "V1", d: fmtDL(X.D.meta.updated) })} · ${X.D.meta.n_prices} preus · ${X.D.meta.n_products} productes</p>
       <p class="small">${t("ai_note")}</p>
       <p class="small">${t("disclaimer")}</p>
       <section class="stack-s"><h3>${t("privacy_t")}</h3>${t("privacy_body").split("\n").map((x, i) => html`<p class="small" key=${i}>${x}</p>`)}</section>
@@ -99,6 +99,8 @@ function SheetRouter({ s }) {
     case "scan": return html`<${ScanSheet} />`;
     case "install": return html`<${InstallSheet} />`;
     case "healthy": return html`<${HealthySheet} />`;
+    case "team": return html`<${TeamSheet} />`;
+    case "teamLogin": return html`<${TeamLoginSheet} s=${s} />`;
     case "plus": return html`<${PlusSheet} s=${s} />`;
     case "test": return html`<${TestSetupSheet} />`;
     case "testAfter": return html`<${TestAfterSheet} />`;

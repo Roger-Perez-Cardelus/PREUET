@@ -24,7 +24,7 @@ queda pendent.
    - Si té fitxes de proves S01–S10, que les exporti abans (Més → Mode prova → CSV). La web nova no les veu.
    - Després, o s'esborra o s'hi publica l'avís «Preuet s'ha mogut» de sota.
 6. **Informa la persona** de les tasques pendents de l'equip (apartat 5 de `docs/TRASPAS.md`). Les principals:
-   - tornar a executar `supabase/schema.sql`, activar els accessos anònims i definir la clau d'equip;
+   - tornar a executar `supabase/schema.sql` (versió 3), activar els accessos anònims i definir la clau d'equip;
    - posar preus de referència reals al Preuet Plus.
 
 ## Normes del projecte
@@ -36,6 +36,8 @@ queda pendent.
   amb WebFetch. Si el push et falla perquè `main` ha canviat, fes `git pull --rebase origin main`, torna a passar
   `check` i torna a fer push.
 - **Només hi ha la versió web.** No tornis a afegir la versió d'artifact ni dades dins la pàgina.
+- **Mode equip** (`src/team.js`): el mode prova i el panell d'equip només s'obren amb el codi d'equip, que comprova
+  el servidor. S'hi entra amb `#equip`. No el desactivis ni ensenyis el codi enlloc del repositori.
 - **Preuet Plus** (`src/premium.js`) és una prova de disposició a pagar decidida per l'equip. No canviïs què és gratis
   i què és Plus sense que l'equip ho demani.
 - Un mòdul nou de `src/` s'ha d'afegir a `src/_order.txt`. Els textos van en català i castellà a `src/i18n*.js`: la

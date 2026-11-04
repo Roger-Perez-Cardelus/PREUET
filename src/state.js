@@ -47,6 +47,7 @@ function go(tab) {
 /* each open sheet remembers what had the focus, so closing it puts the keyboard / screen reader back there */
 const FOCUS_STACK = [];
 function openSheet(s) {
+  if (s.type === "test" && !S.team) s = { type: "teamLogin", next: s }; // the test mode needs the team code
   if (PLUS_SHEETS[s.type] && !hasPlus()) s = { type: "plus", f: PLUS_SHEETS[s.type], next: s }; // Plus features show the offer first
   FOCUS_STACK.push(typeof document !== "undefined" ? document.activeElement : null);
   set({ sheets: S.sheets.concat([s]) }); emit("sheet", s);

@@ -2,7 +2,7 @@
 /* ---------- header & tabs ---------- */
 function Header() {
   return html`<header class="topbar"><div class="wrap">
-    <button type="button" class="logo" onClick=${() => go("inici")} aria-label=${"Preuet · " + t("tab_inici")}><${Logo} /><b>Preuet</b></button>
+    <button type="button" class="logo" onClick=${() => go("inici")} aria-label=${"Preuet · " + t("tab_inici")}><${Logo} /><b>Preuet</b><${TeamBadge} /></button>
     <span class="grow"></span>
     <button type="button" class="pill-btn" onClick=${() => openSheet({ type: "town" })} aria-label=${t("town_pill") + ": " + S.user.town}><${Icon} n="pin" s=${16} /><span>${S.user.town}</span></button>
     <div class="lang" role="group" aria-label=${t("lang_label")}>
@@ -535,8 +535,9 @@ function More() {
     <h2 style="font-size:var(--t-xl)">${t("more_title")}</h2>
     ${install ? html`<button type="button" class="card raised row" style="width:100%;text-align:left" onClick=${installApp}>
       <span class="install-ic"><${Logo} /></span><span class="grow stack-s" style="gap:2px"><b>${t("install_t")}</b><span class="small muted">${t("install_sub")}</span></span><${Icon} n="download" /></button>` : null}
+    <${TeamCard} />
     <${PlusCard} />
-    <div class="list">${items.map(([ic, k, sub, type]) => html`<button type="button" class="li" key=${type} onClick=${() => openSheet({ type })}>
+    <div class="list">${items.filter(x => x[3] !== "test" || S.team).map(([ic, k, sub, type]) => html`<button type="button" class="li" key=${type} onClick=${() => openSheet({ type })}>
       <span style="color:var(--plum)"><${Icon} n=${ic} s=${22} /></span>
       <span class="grow"><span class="t" style="display:block">${t(k)}</span><span class="s">${t(sub)}</span></span>
       ${PLUS_SHEETS[type] ? html`<${PlusTag} />` : null}

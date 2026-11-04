@@ -13,7 +13,7 @@ const PLUS_TABS = { ofertes: "offers", receptes: "recipes" };
 const PLUS_PLANS = { month: 2.49, year: 19.99 };
 const PLUS_WTP = [0, 1, 2, 3, 5];
 
-function hasPlus() { return !!S.test || !!(S.user && S.user.plus && S.user.plus.on); }
+function hasPlus() { return !!S.test || !!S.team || !!(S.user && S.user.plus && S.user.plus.on); }
 function cleanPlus(pl) {
   const p = pl && typeof pl === "object" ? pl : {};
   const views = {};
@@ -121,6 +121,6 @@ function PlusCard() {
   const on = hasPlus();
   return html`<button type="button" class="card raised row plus-card" style="width:100%;text-align:left" onClick=${() => openSheet({ type: "plus" })}>
     <span class="plus-ic" aria-hidden="true"><${Icon} n="star" s=${22} fill=${true} /></span>
-    <span class="grow stack-s" style="gap:2px"><b>Preuet Plus</b><span class="small muted">${S.test ? t("plus_in_test") : on ? t("plus_active_sub") : t("plus_card_sub")}</span></span>
+    <span class="grow stack-s" style="gap:2px"><b>Preuet Plus</b><span class="small muted">${S.team ? t("plus_in_team") : S.test ? t("plus_in_test") : on ? t("plus_active_sub") : t("plus_card_sub")}</span></span>
     <${Icon} n="chevR" /></button>`;
 }

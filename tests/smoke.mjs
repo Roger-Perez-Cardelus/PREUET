@@ -151,6 +151,48 @@ await step.call(null, "10-nearby", async () => {
 });
 await geo.close();
 
+// team mode against a stand-in Supabase: the server checks the code, then the team panel shows the totals
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, serviceWorkers: "block" });
+  const tp = await ctx.newPage();
+  tp.setDefaultTimeout(8000);
+  tp.on("pageerror", e => errors.push("page (team): " + e.message));
+  tp.on("console", m => { if (m.type() === "error" && !/status of 400/.test(m.text())) errors.push("console (team): " + m.text()); });
+  await tp.route("**/config.js", r => r.fulfill({ contentType: "text/javascript",
+    body: 'window.PREUET_CONFIG = { supabaseUrl: "https://test.supabase.co", supabaseAnonKey: "sb_publishable_test", supabaseJs: "vendor/supabase-js-2.117.1.umd.js" };' }));
+  const now = Math.floor(Date.now() / 1000);
+  const session = { access_token: "a.b.c", token_type: "bearer", expires_in: 3600, expires_at: now + 3600, refresh_token: "r",
+    user: { id: "11111111-1111-1111-1111-111111111111", aud: "authenticated", role: "authenticated", is_anonymous: true, app_metadata: {}, user_metadata: {}, created_at: new Date().toISOString() } };
+  const stats = { users: 47, active7: 31, seen: 29, joined: 9, no: 14, wtp_avg: 1.8, wtp: { 0: 6, 2: 9 }, plans: { month: 6, year: 3 }, views: { offers: 21, recipes: 12 }, from: { offers: 4 }, contrib: 128, contrib7: { stock: 12 }, tests: 6 };
+  await tp.route("https://test.supabase.co/**", r => {
+    const p = new URL(r.request().url()).pathname;
+    if (p === "/rest/v1/rpc/list_tests" && JSON.parse(r.request().postData() || "{}").team_key !== "codi-de-prova")
+      return r.fulfill({ status: 400, contentType: "application/json", body: JSON.stringify({ code: "28000", message: "Codi d'equip incorrecte" }) });
+    const body = p.startsWith("/auth/v1/") ? session : p === "/rest/v1/rpc/team_stats" ? stats : p === "/rest/v1/rpc/preuet_schema" ? 3
+      : p === "/rest/v1/rpc/is_admin" ? false : p.startsWith("/rest/v1/user_state") && r.request().method() === "GET" ? null : [];
+    return r.fulfill({ contentType: "application/json", body: JSON.stringify(body) });
+  });
+  await tp.routeWebSocket(/supabase\.co/, () => {});
+  await tp.addInitScript(() => { if (!sessionStorage.getItem("x")) { sessionStorage.setItem("x", "1"); localStorage.setItem("preuet:user:v1", JSON.stringify({ onboarded: true, updated: 1 })); } });
+  await step.call(null, "11-team", async () => {
+    await tp.goto(base + "#mes");
+    if (await tp.getByText(/^Mode prova/).count()) throw new Error("test mode listed without the team code");
+    await tp.goto(base + "#equip");
+    await tp.locator("#tm-code").fill("un-altre-codi");
+    await tp.getByRole("button", { name: "Entra" }).click();
+    await tp.getByText("Aquest codi no és correcte.").waitFor();
+    await tp.locator("#tm-code").fill("codi-de-prova");
+    await tp.getByRole("button", { name: "Entra" }).click();
+    await tp.locator(".kpi", { hasText: "Persones" }).getByText("47").waitFor();
+    if (SHOTS) await tp.screenshot({ path: path.join(SHOTS, "11-team.png") });
+    await tp.keyboard.press("Escape");
+    await tp.getByText(/^Mode prova/).first().waitFor();
+    await tp.getByRole("button", { name: /^Ofertes|^Ofertas/ }).click();
+    await tp.locator("article.offer-card").first().waitFor(); // Plus is open on a team phone
+  });
+  await ctx.close();
+}
+
 if (process.env.AXE) {
   const axePath = require.resolve("axe-core/axe.min.js", { paths: [process.cwd(), ROOT] });
   const ax = await browser.newPage({ viewport: { width: 390, height: 844 }, serviceWorkers: "block", bypassCSP: true });

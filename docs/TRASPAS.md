@@ -71,7 +71,7 @@ nou, quines decisions s'han pres i què queda pendent.
 - Cerca per veu i lectura en veu de la llista.
 
 **Supabase**
-- Esquema v2 a `supabase/schema.sql`:
+- Esquema v3 a `supabase/schema.sql` (la v3 afegeix `team_stats`, el panell d'equip, i fa que un codi d'equip equivocat tardi un segon):
   - autors no visibles al feed;
   - valoració única per persona;
   - neteja d'aportacions velles;
@@ -89,6 +89,11 @@ Continuen a les dades i tornaran a sortir soles quan tinguin preus (`indexData` 
 **Sense versió d'artifact**: l'app només es publica a GitHub Pages. S'ha tret la versió d'artifact de Claude (la V1
 de https://claude.ai/artifact/… s'ha quedat antiga i no s'actualitza), el mode de dades de Claude de `src/store.js` i
 `tools/page_body.html` i `tools/cdn.txt`. Les dades compartides només van a Supabase.
+
+**Mode equip** (`src/team.js`): el codi d'equip, comprovat pel servidor, obre el mode prova S01–S10 (ja no surt a Més
+per a la resta) i un panell amb els resultats de Preuet Plus de tots els mòbils, la comunitat i la data dels preus de
+cada súper. S'hi entra amb l'enllaç `#equip` o tocant 5 vegades la línia de la versió a Més → Sobre Preuet. Als mòbils
+en mode equip el Plus està obert i no compta.
 
 **GitHub**: README amb captures (`docs/img/`), estat de les accions i formularis d'incidències.
 
@@ -124,7 +129,7 @@ de https://claude.ai/artifact/… s'ha quedat antiga i no s'actualitza), el mode
 
 **Ho ha de fer l'equip (fora del codi)**
 1. **Supabase:**
-   - tornar a executar `supabase/schema.sql` (v2);
+   - tornar a executar `supabase/schema.sql` (v3);
    - activar *Anonymous sign-ins*;
    - definir la clau d'equip.
 

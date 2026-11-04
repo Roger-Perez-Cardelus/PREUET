@@ -68,6 +68,7 @@ async function boot() {
   LANG = S.user.lang; document.documentElement.lang = LANG;
   const h = (location.hash || "").slice(1);
   if (TABS.some(x => x[0] === h)) S.tab = h;
+  S.team = !!lsGet(LS_TEAM) && !!lsGet(LS_TEAMKEY);
   S.ready = true;
   applyTheme(S.user.theme);
   applyA11y(S.user.a11y);
@@ -89,8 +90,9 @@ async function boot() {
     }
   } catch (e) { console.warn("user", e); }
   set({});
-  if (!openSharedBasket() && !openSharedProduct()) announceWatched();
-  window.addEventListener("hashchange", () => { if (/^#c=/.test(location.hash)) openSharedBasket(); else if (/^#p=/.test(location.hash)) openSharedProduct(); });
+  if (location.hash === "#equip") openTeam();
+  else if (!openSharedBasket() && !openSharedProduct()) announceWatched();
+  window.addEventListener("hashchange", () => { if (/^#c=/.test(location.hash)) openSharedBasket(); else if (/^#p=/.test(location.hash)) openSharedProduct(); else if (location.hash === "#equip") openTeam(); });
   try { Store.subscribeCommunity(list => set({ community: list || [] })); } catch (e) { console.warn("community", e); }
   try { Store.subscribeTests(o => set({ tests: o || {} })); } catch (e) { console.warn("tests", e); }
 }

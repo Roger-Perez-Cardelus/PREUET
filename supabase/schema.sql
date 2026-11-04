@@ -12,6 +12,8 @@
 --   5. (Opcional) Neteja automàtica: Database → Extensions → activa «pg_cron» i torna a executar aquest fitxer.
 --      Cada nit esborra les aportacions de més de 120 dies i els usuaris anònims sense activitat en 180 dies.
 --
+-- Versió 3: panell d'equip (team_stats) amb les xifres de Preuet Plus, la comunitat i les proves, només amb el codi
+-- d'equip; un codi equivocat tarda un segon a respondre.
 -- Versió 2 (novembre de 2026): ningú no pot llegir directament la taula d'aportacions. L'app les llegeix, n'afegeix
 -- i n'esborra amb funcions que no revelen qui ha escrit cada cosa; les novetats arriben per Realtime (broadcast).
 -- Una persona només té una valoració per cosa valorada: la nova substitueix l'anterior.
@@ -107,7 +109,7 @@ create or replace function public.preuet_schema()
 returns integer
 language sql
 immutable
-as $$ select 2 $$;
+as $$ select 3 $$;
 grant execute on function public.preuet_schema() to anon, authenticated;
 
 create or replace function public.list_contributions(p_since timestamptz default now() - interval '120 days', p_limit integer default 3000)
@@ -256,17 +258,23 @@ end;
 $$;
 revoke all on function public.set_team_key(text) from public, anon, authenticated;
 
+-- a wrong code waits a second before answering, so trying codes one after another is slow
 create or replace function public.team_key_ok(team_key text)
 returns boolean
-language sql
+language plpgsql
 stable
 security definer
 set search_path = ''
 as $$
+declare ok boolean;
+begin
   select exists (
     select 1 from public.team_secret s
     where s.key_hash = extensions.crypt(coalesce(team_key, ''), s.key_hash)
-  );
+  ) into ok;
+  if not ok then perform pg_sleep(1); end if;
+  return ok;
+end;
 $$;
 revoke all on function public.team_key_ok(text) from public, anon, authenticated;
 
@@ -305,6 +313,49 @@ end;
 $$;
 revoke all on function public.list_tests(text) from public, anon;
 grant execute on function public.list_tests(text) to authenticated;
+
+-- ---------- panell d'equip (versió 3): només xifres agregades, mai dades d'una persona ----------
+-- Les persones de l'equip (state.team = true) no compten: el seu mòbil no mostra l'oferta de Preuet Plus.
+create or replace function public.team_stats(team_key text)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+declare r jsonb;
+begin
+  if not public.team_key_ok(team_key) then
+    raise exception 'Codi d''equip incorrecte' using errcode = '28000';
+  end if;
+  with u as (
+    select state, updated_at from public.user_state where coalesce(state->>'team', '') <> 'true'
+  ), p as (
+    select state->'plus' as pl from u where jsonb_typeof(state->'plus') = 'object'
+  ), pv as (
+    select v.key, v.value from p, jsonb_each_text(case when jsonb_typeof(p.pl->'views') = 'object' then p.pl->'views' else '{}'::jsonb end) v
+    where v.value ~ '^[0-9]+$'
+  )
+  select jsonb_build_object(
+    'users',    (select count(*) from u),
+    'active7',  (select count(*) from u where updated_at > now() - interval '7 days'),
+    'seen',     (select count(*) from p where jsonb_typeof(pl->'views') = 'object' and pl->'views' <> '{}'::jsonb),
+    'joined',   (select count(*) from p where pl->>'at' is not null),
+    'no',       (select coalesce(sum((pl->>'no')::int), 0) from p where pl->>'no' ~ '^[0-9]+$'),
+    'wtp_avg',  (select round(avg((pl->>'wtp')::numeric), 2) from p where pl->>'wtp' ~ '^[0-9]+$'),
+    'wtp',      (select coalesce(jsonb_object_agg(w, n), '{}'::jsonb) from (select pl->>'wtp' as w, count(*) as n from p where pl->>'wtp' ~ '^[0-9]+$' group by 1) x),
+    'plans',    (select coalesce(jsonb_object_agg(k, n), '{}'::jsonb) from (select pl->>'plan' as k, count(*) as n from p where pl->>'at' is not null and pl->>'plan' is not null group by 1) x),
+    'views',    (select coalesce(jsonb_object_agg(key, n), '{}'::jsonb) from (select key, sum(value::int) as n from pv group by 1) x),
+    'from',     (select coalesce(jsonb_object_agg(k, n), '{}'::jsonb) from (select pl->>'from' as k, count(*) as n from p where pl->>'at' is not null and pl->>'from' is not null group by 1) x),
+    'contrib',  (select count(*) from public.contributions),
+    'contrib7', (select coalesce(jsonb_object_agg(type, n), '{}'::jsonb) from (select type, count(*) as n from public.contributions where created_at > now() - interval '7 days' group by 1) x),
+    'tests',    (select count(*) from public.solution_tests)
+  ) into r;
+  return r;
+end;
+$$;
+revoke all on function public.team_stats(text) from public, anon;
+grant execute on function public.team_stats(text) to authenticated;
 
 -- ---------- neteja (cada nit amb pg_cron, si està activat) ----------
 create or replace function public.cleanup_old()
