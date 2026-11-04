@@ -23,7 +23,7 @@ Bilingüe (català i castellà), tema clar i fosc, pensada per al mòbil.
 Gratis per a tothom: on és més barata la cistella (comparador i tiquet), el rànquing qualitat-preu, la fitxa del producte
 (preus per cadena, al·lèrgens, nutrició, origen), les aportacions de la comunitat i l'accessibilitat.
 
-Marcat com a Plus: ofertes, receptes, llista de la compra, compres periòdiques, compres i estalvi, evolució del preu,
+Marcat com a Plus: ofertes, receptes, llista de la compra, cistella més sana, compres periòdiques, compres i estalvi, evolució del preu,
 avisos d'ofertes, súpers a prop, escàner, cerca per veu i compartir o exportar.
 
 Quan algú obre una funció Plus veu l'oferta (2,49 €/mes o 19,99 €/any) i la pregunta «Quant pagaries de debò cada mes?».

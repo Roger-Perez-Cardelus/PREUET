@@ -38,3 +38,12 @@ test("savings and ticket accuracy", () => {
   assert.equal(st.nChecked, 1);
   assert.equal(Math.round(st.acc), 5);
 });
+
+test("healthier swaps only when the data says so", () => {
+  const app = loadApp();
+  const sw = app.healthySwaps([{ p: "llet-sencera", n: 2 }, { p: "coca-cola", n: 1 }, { p: "arros-rodo", n: 1 }, { p: "corn-flakes", n: 1 }]);
+  assert.deepEqual(JSON.parse(JSON.stringify(sw.map(s => [s.from, s.to, s.n]))), [["llet-sencera", "llet-semi", 2], ["coca-cola", "aigua-gas", 2], ["corn-flakes", "flocs-civada", 1]]);
+  assert.equal(sw[0].gains[0].k, "sat");
+  // nothing to offer when the healthier product is already in the basket
+  assert.equal(app.healthySwaps([{ p: "llet-sencera", n: 1 }, { p: "llet-semi", n: 1 }]).length, 0);
+});

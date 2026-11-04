@@ -98,6 +98,7 @@ function SheetRouter({ s }) {
     case "savings": return html`<${SavingsSheet} />`;
     case "scan": return html`<${ScanSheet} />`;
     case "install": return html`<${InstallSheet} />`;
+    case "healthy": return html`<${HealthySheet} />`;
     case "plus": return html`<${PlusSheet} s=${s} />`;
     case "test": return html`<${TestSetupSheet} />`;
     case "testAfter": return html`<${TestAfterSheet} />`;

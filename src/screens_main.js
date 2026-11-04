@@ -195,6 +195,7 @@ function Basket() {
         ? html`<div class="grow"><${ConfirmInline} text=${t("confirm_clear", { n: u.basket.length })} yes=${t("confirm_clear_yes")} onYes=${() => { updUser({ basket: [] }); setConfirm(false); }} onNo=${() => setConfirm(false)} /></div>`
         : html`<button type="button" class="link-btn" style="color:var(--ink-2)" onClick=${() => setConfirm(true)}>${t("clear_basket")}</button>`}</div>
     </section>
+    <${HealthyTeaser} />
     <${StaleBanner} compact=${true} />
     <${CompareOptions} />
     ${chains.length ? html`<${CompareResults} cmp=${cmp} />` : html`<div class="callout warn">${t("chains_none")}</div>`}

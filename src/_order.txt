@@ -14,5 +14,6 @@ history.js
 photos.js
 features.js
 premium.js
+health.js
 testmode.js
 main.js

@@ -461,3 +461,5 @@ main:focus { outline: none; }
 .plus-mini { display: inline-flex; vertical-align: -1px; margin-left: 3px; color: var(--plum); }
 .receipt .rsub { margin: 10px 0 2px; font-family: var(--f-body, inherit); }
 .receipt .rsubtotal { color: var(--ink-2); font-weight: 600; border-bottom: 1px dashed var(--line); padding-bottom: 8px; }
+.healthy-ic { background: var(--leaf-soft); color: var(--leaf); }
+.healthy-li { align-items: center; }

@@ -6,9 +6,9 @@
    really pay (S.user.plus, saved with the profile). Only then does it say that Preuet does not charge yet, and it unlocks Plus.
    The solution tests (S01–S10) always have everything. */
 const PLUS_FEATURES = [["offers", "tag"], ["recipes", "pot"], ["shoplist", "check"], ["periodic", "calendar"], ["savings", "receipt"],
-  ["history", "chart"], ["alerts", "star"], ["nearby", "pin"], ["scan", "barcode"], ["voice", "mic"], ["share", "share"]];
+  ["history", "chart"], ["alerts", "star"], ["nearby", "pin"], ["scan", "barcode"], ["voice", "mic"], ["share", "share"], ["healthy", "leaf"]];
 const PLUS_FREE = ["plus_free_cheapest", "plus_free_qp", "plus_free_facts", "plus_free_community", "plus_free_a11y"];
-const PLUS_SHEETS = { recipe: "recipes", schedules: "periodic", schedNew: "periodic", shoplist: "shoplist", purchase: "savings", savings: "savings", scan: "scan" };
+const PLUS_SHEETS = { recipe: "recipes", schedules: "periodic", schedNew: "periodic", shoplist: "shoplist", purchase: "savings", savings: "savings", scan: "scan", healthy: "healthy" };
 const PLUS_TABS = { ofertes: "offers", receptes: "recipes" };
 const PLUS_PLANS = { month: 2.49, year: 19.99 };
 const PLUS_WTP = [0, 1, 2, 3, 5];
