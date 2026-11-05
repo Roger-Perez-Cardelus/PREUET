@@ -25,7 +25,7 @@
 
 Producte mínim viable (PMV) de l'equip AT2 · Grup F (Empresa, EETAC–UPC, curs 2026–2027).
 
-Què ha canviat des de la V1 i què queda pendent: [docs/TRASPAS.md](docs/TRASPAS.md). Instruccions per a Claude: [CLAUDE.md](CLAUDE.md).
+Què ha canviat des de la V1 i què queda pendent: [docs/TRASPAS.md](docs/TRASPAS.md). Instruccions per a Claude: [CLAUDE.md](CLAUDE.md). Manual d'ús per a l'equip (PDF): [docs/Manual-Preuet.pdf](docs/Manual-Preuet.pdf).
 
 ## Què fa
 
