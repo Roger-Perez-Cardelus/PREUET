@@ -93,12 +93,140 @@ def cmd_collect():
         consum[p["id"]] = items
         print(f"consum {p['id']}: {len(items)}", flush=True)
     (RAW / "consum.json.gz").write_bytes(gzip.compress(json.dumps(consum, ensure_ascii=False).encode()))
+    d = json.loads(DATA.read_text(encoding="utf-8"))
+    bonpreu = {}
+    for pid, qca in bonpreu_queries(d).items():
+        items = bonpreu_search(qca)
+        bonpreu[pid] = items
+        print(f"bonpreu {pid}: {len(items)}", flush=True)
+    (RAW / "bonpreu.json.gz").write_bytes(gzip.compress(json.dumps(bonpreu, ensure_ascii=False).encode()))
     # more shops to try next time
     for name, url in {"bonpreu-ocado": "https://www.compraonline.bonpreuesclat.cat/api/webproductpagews/v5/product-pages/search?includeAdditionalPageInfo=true&maxPageSize=3&q=llet",
                       "bonpreu-v6": "https://www.compraonline.bonpreuesclat.cat/api/v6/products/search?term=llet&limit=3",
                       "ametller": "https://www.ametllerorigen.com/ca/catalogsearch/result/?q=llet"}.items():
         st, ct, body = fetch(url)
         print(f"== {name}: {st} {ct} {len(body)}: {body[:300]!r}")
+
+
+# ---------------------------------------------------------------- Bonpreu (its own search page, read like Consum's)
+BONPREU = "https://www.compraonline.bonpreuesclat.cat"
+CA_STOP = {"de", "del", "d", "la", "el", "les", "els", "l", "a", "al", "amb", "en", "per", "i", "o", "tipus", "u", "pack", "llauna", "pot", "bossa", "bossetes"}
+
+
+def ca_query(name):
+    """Catalan search words from a product's Catalan name, without what is in brackets."""
+    return re.sub(r"\s+", " ", re.sub(r"\([^)]*\)", " ", name)).strip().lower()
+
+
+def bonpreu_queries(d):
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+    from new_products import PRODUCTS
+    q = {p["id"]: ca_query(p["ca"]) for p in d["products"]}
+    for p in PRODUCTS:
+        q[p["id"]] = p.get("qca") or ca_query(p["ca"])
+    return q
+
+
+def bonpreu_search(qca):
+    """Every product on Bonpreu's search page for these words: name, brand, price and price per kg/L/unit."""
+    time.sleep(1.5)
+    st, ct, body = fetch(BONPREU + "/products/search?" + urllib.parse.urlencode({"q": qca}))
+    if st != 200:
+        print("  !", st, qca)
+        return []
+    t = body.decode("utf-8", "replace")
+    i = t.find('"productEntities":')
+    if i < 0:
+        return []
+    try:
+        ents, _ = json.JSONDecoder().raw_decode(t, i + len('"productEntities":'))
+    except ValueError:
+        return []
+    out = []
+    for e in ents.values():
+        pr = e.get("price") or {}
+        unit = pr.get("unit") or {}
+        try:
+            price = float((pr.get("current") or {}).get("amount"))
+        except (TypeError, ValueError):
+            continue
+        try:
+            per = float((unit.get("current") or {}).get("amount"))
+        except (TypeError, ValueError):
+            per = None
+        out.append({"id": e.get("retailerProductId"), "name": e.get("name") or "", "brand": e.get("brand") or "", "price": price,
+                    "per": per, "label": unit.get("label") or "", "cat": " / ".join(e.get("categoryPath") or []),
+                    "ok": e.get("available", True)})
+    return out
+
+
+CA_WORDS = {  # the usual exclusions, in Catalan too
+    "chocolate": "xocolata", "fresa": "maduixa", "limon": "llimona", "platano": "platan", "melocoton": "pressec", "frutas": "fruites",
+    "cacao": "cacau", "canela": "canyella", "miel": "mel", "sin lactosa": "sense lactosa", "sin gluten": "sense gluten",
+    "sin azucar": "sense sucre", "griego": "grec", "proteina": "proteina", "congelad": "congelat", "ultracongelad": "congelat",
+    "lonchas": "llesques", "loncha": "llesca", "rallado": "ratllat", "rallada": "ratllada", "jamon": "pernil", "pollo": "pollastre",
+    "pavo": "gall dindi", "cerdo": "porc", "atun": "tonyina", "tomate": "tomaquet", "picante": "picant", "cebolla": "ceba",
+    "vegano": "vega", "ecologico": "ecologic", "semillas": "llavors", "avena": "civada", "arroz": "arros", "lata": "llauna",
+    "polvo": "pols", "bebida": "beguda", "zumo": "suc", "yogur": "iogurt", "galleta": "galeta", "galletas": "galetes",
+    "helado": "gelat", "queso": "formatge", "huevo": "ou", "nata": "nata", "relleno": "farcit", "rellenos": "farcits",
+    "rellenas": "farcides", "salsa": "salsa", "desnatado": "desnatat", "almendra": "ametlla", "nueces": "nous",
+    "cabra": "cabra", "oveja": "ovella", "ahumado": "fumat", "ahumada": "fumada", "cocido": "cuit", "cocida": "cuita",
+    "cocidos": "cuits", "frito": "fregit", "fritos": "fregits", "asado": "rostit", "adobad": "adobat", "rebozad": "arrebossat",
+    "empanad": "arrebossat", "barbacoa": "barbacoa", "hierbas": "herbes", "ajo": "all", "setas": "bolets", "espinacas": "espinacs",
+    "verduras": "verdures", "pescado": "peix", "bacalao": "bacalla", "salmon": "salmo", "gambas": "gambes", "conserva": "conserva",
+    "frasco": "flascó", "bote": "pot", "integral": "integral", "light": "light", "mini": "mini", "sobres": "sobres", "capsulas": "capsules",
+}
+
+
+def ca_rules(p):
+    """must: every Catalan search word (stemmed: "galetes" finds "galeta"); avoid: the Spanish ones and their Catalan words."""
+    words = [w for w in norm(p.get("qca") or ca_query(p["ca"])).split() if w not in CA_STOP]
+    must = [[(w[:max(3, len(w) - 2)] if len(w) >= 6 else w if len(w) > 2 else " " + w + " ")] for w in words]
+    avoid = list(p.get("avoid", []))
+    avoid += [CA_WORDS[norm(a).strip()] for a in p.get("avoid", []) if norm(a).strip() in CA_WORDS and norm(CA_WORDS[norm(a).strip()]).strip() not in words]
+    return must, avoid
+
+
+def bonpreu_items(raw, p, ref_up=None):
+    """Bonpreu's packs for a product: the shelf name (without the brand) must begin with the product, and when the other
+    shops give a price per kg or litre, Bonpreu's must be within 0.4–2.5 times it (a wrong match is usually far off)."""
+    must, avoid = ca_rules(p)
+    rule = {"must": must, "avoid": avoid}
+    out = []
+    for it in raw:
+        name, brand = it["name"], it.get("brand") or ""
+        bare = name[len(brand):].strip() if brand and name.upper().startswith(brand.upper()) else name
+        if not it.get("ok", True) or not matches(rule, bare) or not starts_with_product(rule, bare):
+            continue
+        label, per, price = it.get("label", ""), it.get("per"), it["price"]
+        if p["unit"] in ("kg", "l"):
+            lab = label.lower()
+            is_kg = "kilo" in lab or lab.endswith(".kg") or lab.endswith("per.kg")
+            is_l = "litre" in lab or "liter" in lab or lab.endswith(".l") or lab.endswith(".ltr")
+            if not per or not (is_kg if p["unit"] == "kg" else is_l):
+                continue
+            size = round(price / per, 3)
+        elif p["unit"] == "ud" and p["ref"] == 1:
+            size = 1
+        else:
+            m = COUNT.search(norm(name)) or re.search(r"(\d+)\s*(?:u|ud|unitats|bossetes|rotlles|capsules|pastilles|rentats)\b", norm(name))
+            if m:
+                size = int(m.group(1))
+            elif per and "each" in label and per > 0:
+                size = round(price / per)
+            else:
+                continue
+            if p["unit"] == "dotzena":
+                size = round(size / 12, 3)
+        if not size:
+            continue
+        up = price / size
+        if ref_up and not (ref_up * 0.4 <= up <= ref_up * 2.5):
+            continue
+        slug = re.sub(r"[^a-z0-9]+", "-", norm(name).strip()).strip("-")
+        out.append({"c": "bonpreu", "name": name, "price": round(price, 2), "size": size, "src": f"{BONPREU}/products/{slug}/{it['id']}",
+                    "own": brand.upper() in ("BONPREU", "ESCLAT", "BONPREU ESCLAT")})
+    return out
 
 
 # ---------------------------------------------------------------- build
@@ -138,7 +266,7 @@ def mercadona_items(raw, p, day):
     for it in raw:
         pi = it.get("pi") or {}
         text = (it.get("name") or "") + " " + (it.get("packaging") or "")
-        if not matches(p, text):
+        if not matches(p, text) or (p.get("start") and not starts_with_product(p, it.get("name") or "")):
             continue
         try:
             price = float(pi.get("unit_price"))
@@ -185,7 +313,7 @@ def consum_pool(raw):
 
 CROSS_KG_L = {"maionesa"}
 LEAD = {"porciones", "porcion", "lomito", "lomitos", "lomo", "lomos", "filete", "filetes", "rodaja", "rodajas", "suprema", "supremas",
-        "cereales", "de", "del", "la", "el", "pack", "bolsa", "malla", "bandeja"}
+        "cereales", "de", "del", "la", "el", "pack", "bolsa", "malla", "bandeja", "medio", "media", "preparado", "maxi"}
 
 
 def starts_with_product(p, text):
@@ -352,12 +480,56 @@ def refresh_existing(d, merc, cons, day, report):
             d["offerings"].append(keep_photo(prev, o))
 
 
+def refresh_bonpreu(d, bon, day, report, done):
+    """The products not in new_products.py (the original ones): Bonpreu's packs from its search page, checked against the
+    price per kg or litre the other shops have for the same product."""
+    if not bon:
+        return
+    from existing_rules import RULES
+    hit = 0
+    for prod in d["products"]:
+        pid = prod["id"]
+        if pid in done or pid not in bon:
+            continue
+        others = [o for o in d["offerings"] if o["p"] == pid and o["c"] != "bonpreu" and o.get("up")]
+        if not others:
+            continue
+        ref_up = statistics.median(o["up"] for o in others)
+        sizes = [o["size"] for o in others]
+        rule = RULES.get(pid)
+        p = dict(prod, avoid=rule[2] if rule else [], qca=ca_query(prod["ca"]))
+        lo, hi = rule[3] if rule else (min(sizes) * 0.5, max(sizes) * 2)
+        found = [x for x in bonpreu_items(bon[pid], p, ref_up) if lo <= x["size"] <= hi and x["price"] > 0]
+        for x in found:
+            x["up"] = round(x["price"] / x["size"], 4)
+        seen, uniq = set(), []
+        for x in sorted(found, key=lambda x: x["up"]):
+            if (x["price"], x["size"]) not in seen:
+                seen.add((x["price"], x["size"]))
+                uniq.append(x)
+        keep = [x for x in uniq if x["own"]][:2] + [x for x in uniq if not x["own"]][:2]
+        if not keep:
+            continue
+        hit += 1
+        report.append(("b" + pid, keep))
+        prev = {(o["p"], o["c"], o["name"]): o for o in d["offerings"] if o["p"] == pid}
+        d["offerings"] = [o for o in d["offerings"] if not (o["p"] == pid and o["c"] == "bonpreu")]
+        fresh = prod["cat"] == "fruita"
+        for x in keep:
+            d["offerings"].append(keep_photo(prev, {"p": pid, "c": "bonpreu", "name": x["name"][:120], "price": x["price"], "size": x["size"], "up": x["up"],
+                                                    "promo": "", "src": x["src"], "date": day, "st": "web", "desde": False,
+                                                    "bk": "fresc" if fresh and not x["own"] else ("mb" if x["own"] else "fab"), "rank": 0}))
+    print(f"bonpreu: {hit} of the original products found on its search page")
+
+
 def cmd_build():
     sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
     from new_products import PRODUCTS
     day = sys.argv[2] if len(sys.argv) > 2 else time.strftime("%Y-%m-%d")
     merc = json.loads(gzip.decompress((RAW / "mercadona.json.gz").read_bytes()))
     cons = consum_pool(json.loads(gzip.decompress((RAW / "consum.json.gz").read_bytes())))
+    bon_file = RAW / "bonpreu.json.gz"
+    bon = json.loads(gzip.decompress(bon_file.read_bytes())) if bon_file.exists() else {}
     d = json.loads(DATA.read_text(encoding="utf-8"))
     have = {p["id"] for p in d["products"]}
     report = []
@@ -365,11 +537,16 @@ def cmd_build():
         found = [x for x in mercadona_items(merc, p, day) + consum_items(cons, p, day) if p["size"][0] <= x["size"] <= p["size"][1] and x["price"] > 0]
         for x in found:
             x["up"] = round(x["price"] / x["size"], 4)
+        ref_up = statistics.median(x["up"] for x in found) if found else None
+        for x in bonpreu_items(bon.get(p["id"], []), p, ref_up):
+            if p["size"][0] <= x["size"] <= p["size"][1] and x["price"] > 0:
+                x["up"] = round(x["price"] / x["size"], 4)
+                found.append(x)
         if found:  # drop unit prices far from the rest (a wrong size read from the name)
             med = statistics.median(x["up"] for x in found)
             found = [x for x in found if med / 3 <= x["up"] <= med * 3]
         keep = []
-        for c in ("mercadona", "consum"):
+        for c in ("mercadona", "consum", "bonpreu"):
             mine = sorted((x for x in found if x["c"] == c), key=lambda x: x["up"])
             seen, uniq = set(), []
             for x in mine:  # the same pack in another scent or colour: once is enough
@@ -379,6 +556,9 @@ def cmd_build():
             own = [x for x in uniq if x["own"]][:2]
             other = [x for x in uniq if not x["own"]][:2]
             keep += own + other
+        if p["id"] not in have and len({x["c"] for x in keep}) < 2:  # a new product needs two shops to be compared
+            report.append((p["id"] + " (1 shop: left out)", keep))
+            continue
         report.append((p["id"], keep))
         if not keep:
             continue
@@ -389,7 +569,8 @@ def cmd_build():
             prod["img"] = old_prod["img"]
         d["products"] = [x if x["id"] != p["id"] else prod for x in d["products"]] if old_prod else d["products"] + [prod]
         prev = {(o["p"], o["c"], o["name"]): o for o in d["offerings"] if o["p"] == p["id"]}
-        d["offerings"] = [o for o in d["offerings"] if o["p"] != p["id"]]
+        shops = {x["c"] for x in keep}  # a shop not read today keeps what Preuet had there
+        d["offerings"] = [o for o in d["offerings"] if o["p"] != p["id"] or o["c"] not in shops]
         fresh = p["cat"] == "fruita"
         for x in keep:
             o = {"p": p["id"], "c": x["c"], "name": x["name"][:120], "price": x["price"], "size": x["size"], "up": x["up"], "promo": x.get("promo", ""),
@@ -398,6 +579,7 @@ def cmd_build():
                 o["ean"] = x["ean"]
             d["offerings"].append(keep_photo(prev, o))
     refresh_existing(d, merc, cons, day, report)
+    refresh_bonpreu(d, bon, day, report, {p["id"] for p in PRODUCTS})
     sys.path.insert(0, str(ROOT / "tools"))
     import update_data
     update_data.fix(d, d["meta"]["updated"])

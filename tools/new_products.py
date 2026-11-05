@@ -96,3 +96,8 @@ PRODUCTS = [
     dict(id="tovalloletes", ca="Tovalloletes humides per a nadó", es="Toallitas húmedas para bebé", cat="higiene", unit="ud", ref=80, ref_ca="80 tovalloletes", ref_es="80 toallitas", tags=[],
          nut=None, q="toallitas bebe", must=[["toallitas"], ["bebe", "infantiles", "sensitive", "pure", "water"]], avoid=["desmaquillantes", "wc", "intimas", "limpieza", "gafas", "mascotas", "suelo"], size=(40, 400)),
 ]
+
+# second batch (tools/more_products.py): added only when two supermarkets or more sell it
+from more_products import MORE  # noqa: E402
+
+PRODUCTS = PRODUCTS + MORE
