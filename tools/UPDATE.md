@@ -62,6 +62,15 @@ python3 tools/update_data.py apply-prices captures.json
 
 L'informe diu, per cadena, quants preus han canviat, quants són iguals i quants tenen més de 30 dies. Els canvis de preu unitari de més del 50 % es retenen: torna a mirar la pàgina i, només si el preu nou és correcte (per exemple, ha canviat el format del paquet amb el mateix nom), torna a executar amb `--accept-big`. Els productes nous que no segueix Preuet s'ignoren.
 
+### Dia: llegit de la pàgina
+
+Les pàgines de Dia porten els productes i els preus dins de la mateixa pàgina, i `tools/parse_pages.py` els llegeix
+(lector `dia`). Una lectura normal respon des d'una sessió de Claude que tingui `www.dia.es` a la xarxa permesa, però no
+des de GitHub Actions (403). Per això, a la tasca setmanal, baixa cada pàgina de Dia de `worklist.json` amb una lectura
+normal i sense fer-te passar per un navegador, amb una pausa de 2 segons entre pàgines, i passa-la pel lector. Si la
+botiga respon 403 o una pàgina de bloqueig, respecta-ho i deixa aquells preus com estan. Carrefour respon 403 a tot:
+els seus preus només es poden posar al dia a mà.
+
 ### Mercadona i Consum: llegits directament
 
 Mercadona (tots els paquets que Preuet segueix) i Consum (tots els productes) no cal llegir-los amb WebFetch: l'acció **Preus de productes nous** s'executa sola cada dilluns a les 4:23 (UTC) i torna a publicar la web. També es pot llançar a mà: **Actions → Preus de productes nous → Run workflow** (mode `update`, branca `main`). Cada execució torna a llegir la botiga en línia de Mercadona i el cercador de Consum, en refà els preus i els desa amb la data del dia. Les regles de Consum dels productes originals són a `tools/existing_rules.py`; per afegir productes nous, a `tools/new_products.py` (noms, unitat, paraules obligatòries i excloses, mides) i es torna a executar.

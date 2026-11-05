@@ -5,8 +5,8 @@
     python3 tools/parse_pages.py [OUT.json]
 
 Readers: Ametller Origen (schema.org JSON-LD), Bonpreu (the shop's page state), bonÀrea (HTML), supersupers.com
-(Mercadona packs the shop's own catalogue no longer lists under the same name) and radarsuper.com (only prices it marks
-as current; "Último precio conocido" ones are old and left out). Carrefour and Dia refuse automated reads (403).
+(Mercadona packs the shop's own catalogue no longer lists under the same name), Dia (the page state) and radarsuper.com (only prices it marks
+as current; "Último precio conocido" ones are old and left out). Carrefour refuses automated reads (403); Dia answers from some networks and not from others.
 """
 import gzip
 import html
@@ -74,7 +74,37 @@ def radarsuper(body):
     return out
 
 
-READERS = {"ametllerorigen.com": ametller, "bonpreuesclat.cat": bonpreu, "bonarea-online.com": bonarea,
+def dia(body):
+    """Dia: the page state (vike_pageContext) carries every product of the page with its price."""
+    m = re.search(r'<script id="vike_pageContext"[^>]*>(.*?)</script>', body, re.S)
+    if not m:
+        return []
+    try:
+        j = json.loads(m.group(1))
+    except ValueError:
+        return []
+    out, seen = [], set()
+
+    def walk(o):
+        if isinstance(o, dict):
+            pr = o.get("prices")
+            if o.get("display_name") and isinstance(pr, dict) and pr.get("price") is not None and o["display_name"] not in seen:
+                seen.add(o["display_name"])
+                was = pr.get("strikethrough_price")
+                promo = f"Abans {was:.2f}€".replace(".", ",") if pr.get("is_promo_price") and was and was > pr["price"] else ""
+                if pr.get("is_club_price"):
+                    promo = (promo + " · " if promo else "") + "Preu Club Dia"
+                out.append({"name": o["display_name"], "price": float(pr["price"]), "promo": promo})
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    walk(j)
+    return out
+
+
+READERS = {"dia.es": dia, "ametllerorigen.com": ametller, "bonpreuesclat.cat": bonpreu, "bonarea-online.com": bonarea,
            "supersupers.com": supersupers, "radarsuper.com": radarsuper}
 
 
