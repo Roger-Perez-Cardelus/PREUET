@@ -441,6 +441,11 @@ def cmd_probe():
         st, ct, body = fetch(url)
         print(f"== {name}: {st} {ct} {len(body)} bytes")
         print(body[:900].decode("utf-8", "replace").replace("\n", " "))
+        if name == "bonpreu-page":  # what one product looks like in the page state
+            t = body.decode("utf-8", "replace")
+            i = t.find('"price":{"current"')
+            print("-- bonpreu product sample --")
+            print(t[max(0, i - 2500):i + 1500] if i >= 0 else "(no price block found)")
         time.sleep(1.5)
 
 
