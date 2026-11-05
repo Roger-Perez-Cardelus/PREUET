@@ -71,6 +71,16 @@ normal i sense fer-te passar per un navegador, amb una pausa de 2 segons entre p
 botiga respon 403 o una pàgina de bloqueig, respecta-ho i deixa aquells preus com estan. Carrefour respon 403 a tot:
 els seus preus només es poden posar al dia a mà.
 
+Prova del 5/11/2026 amb lectures normals des d'una sessió de Claude (2 s entre pàgines):
+
+| Botiga | Resultat |
+|---|---|
+| Dia, Ametller Origen, bonÀrea, supersupers.com, radarsuper.com | Responen (200) i `tools/parse_pages.py` en llegeix els preus |
+| Bonpreu | 403 des de la sessió; des de GitHub Actions (mode `pages`) respon una part de les pàgines |
+| Carrefour | 403 des de tot arreu: només a mà |
+
+Lidl i Aldi no tenen preus de producte a la seva web: radarsuper.com només en té 2 d'actuals, la resta queden antics.
+
 ### Mercadona i Consum: llegits directament
 
 Mercadona (tots els paquets que Preuet segueix) i Consum (tots els productes) no cal llegir-los amb WebFetch: l'acció **Preus de productes nous** s'executa sola cada dilluns a les 4:23 (UTC) i torna a publicar la web. També es pot llançar a mà: **Actions → Preus de productes nous → Run workflow** (mode `update`, branca `main`). Cada execució torna a llegir la botiga en línia de Mercadona i el cercador de Consum, en refà els preus i els desa amb la data del dia. Les regles de Consum dels productes originals són a `tools/existing_rules.py`; per afegir productes nous, a `tools/new_products.py` (noms, unitat, paraules obligatòries i excloses, mides) i es torna a executar.
