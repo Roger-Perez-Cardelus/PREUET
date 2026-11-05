@@ -1356,6 +1356,12 @@
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
+ "consum | A.MERCIER Vino Blanco Verdejo Tierra de Castilla 0,75 L": {
+  "code": "8437011515186",
+  "match": "Verdejo",
+  "quantity": null,
+  "score": "barcode"
+ },
  "consum | ADLERBRAU Cerveza Lata 0,33 L": {
   "code": "8413681300116",
   "match": "Cerveza",
@@ -1373,6 +1379,11 @@
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
+ "consum | ALBAL Film Transparente 30 M": {
+  "code": "4008871201683",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | ALBO Sardinas en Aceite de Oliva 85 Gr": {
   "code": "8410032004907",
   "match": "Sardinas en aceite de oliva",
@@ -1385,11 +1396,51 @@
   "quantity": "1 l",
   "score": "barcode"
  },
+ "consum | ALVALLE Gazpacho Original 1 L": {
+  "code": "8422174010029",
+  "match": "Gazpacho",
+  "quantity": "1 l",
+  "score": "barcode"
+ },
+ "consum | ALVALLE Gazpacho Original 500 ml": {
+  "code": "8422174500025",
+  "match": "Gazpacho original",
+  "quantity": "500 ml",
+  "score": "barcode"
+ },
+ "consum | AQUAREL Agua Mineral Natural Garrafa 5 L": {
+  "code": "3700123300175",
+  "match": "Agua mineral de manantial garrafa",
+  "quantity": "5 l",
+  "score": "barcode"
+ },
+ "consum | AQUARIUS Bebida Isotónica Limón Botella 1,5 L": {
+  "code": "5449000164957",
+  "match": "Aquarius limón",
+  "quantity": "1,5 l",
+  "score": "barcode"
+ },
  "consum | ARENAS Magdalena Concha 300 Gr": {
   "code": "8412997002097",
   "match": "Magdalenas concha",
   "quantity": "300 g",
   "score": "barcode"
+ },
+ "consum | ARTIACH Galleta Dinosaurus Chocolate con Leche 255 Gr": {
+  "code": "8436048963861",
+  "match": "Dinosaurus Choco Leche",
+  "quantity": "255 g",
+  "score": "barcode"
+ },
+ "consum | ASEVI Friegasuelos Mascotas 1 L": {
+  "code": "8411582211449",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | ASEVI Friegasuelos Vinagre Limon 1 L": {
+  "code": "8411582241231",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
  },
  "consum | ASEVI Limpiador Multiusos Oxy Active 1 L": {
   "code": "8411582243525",
@@ -1442,10 +1493,28 @@
   "quantity": "500 ml",
   "score": "barcode"
  },
+ "consum | ASTURIANA Queso Crema Con fermento de Kéfir 200 Gr": {
+  "code": "8437008383996",
+  "match": "Queso crema kéfir",
+  "quantity": "150 g",
+  "score": "barcode"
+ },
  "consum | AZUCARERA Azúcar Blanco Paquete 1 Kg": {
   "code": "8410714102129",
   "match": "Azúcar Blanco",
   "quantity": "1kg",
+  "score": "barcode"
+ },
+ "consum | AZUCARERA Azúcar Moreno Paquete 1 Kg": {
+  "code": "8410714110919",
+  "match": "Azúcar moreno de caña",
+  "quantity": "1 kg",
+  "score": "barcode"
+ },
+ "consum | BARILLA Salsa Pesto Genovese 190 Gr": {
+  "code": "8076809579346",
+  "match": "Pesto alla genovese",
+  "quantity": "190 g",
   "score": "barcode"
  },
  "consum | BERNAL Aceituna Manzanilla Rellena de Anchoa 250 Gr": {
@@ -1489,6 +1558,12 @@
   "quantity": "250 g",
   "score": "barcode"
  },
+ "consum | BORGES Nuez Grano Selección Paquete 130 Gr": {
+  "code": "8410148501833",
+  "match": "Nueces de California en grano",
+  "quantity": "130g",
+  "score": "barcode"
+ },
  "consum | Barra Espiga Tradición 250 Gr": {
   "code": "8436022137127",
   "match": null,
@@ -1498,6 +1573,12 @@
   "code": "8425514015104",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | C.NAVARRA Arándanos 300 Gr": {
+  "code": "8435434349579",
+  "match": "Arándanos",
+  "quantity": "300 g",
+  "score": "barcode"
  },
  "consum | CALVO Atún Claro Aceite Girasol Pack 3+1 4 x 52 Gr": {
   "code": "8410090051363",
@@ -1514,16 +1595,73 @@
   "quantity": null,
   "score": 1.1
  },
+ "consum | CALVO Atún Claro al Natural + PRO 3 x 56 Gr": {
+  "code": "8410090030344",
+  "match": "Atún Claro al Natural + PRO",
+  "quantity": "168 g",
+  "score": "barcode"
+ },
+ "consum | CALVO Sardinas en Aceite Oliva Lata 84 Gr": {
+  "code": "8410090441270",
+  "match": "Sardinas en aceite de oliva",
+  "quantity": "120g",
+  "score": "barcode"
+ },
+ "consum | CAMPOFRÍO Salchichas Frankfurt 4 Unidades 4 x 140 Gr": {
+  "code": "8410320127363",
+  "match": "Frankfurt original",
+  "quantity": "140 g",
+  "score": "barcode"
+ },
  "consum | CAMPOS Atún Claro Aceite Girasol 104 Gr": {
   "code": "8410967001873",
   "match": "Atún claro en aceite de girasol",
   "quantity": "160 g",
   "score": "barcode"
  },
+ "consum | CAMPOS Atún Claro Natural 112 Gr": {
+  "code": "8410967002214",
+  "match": "Atun claro",
+  "quantity": "160 g",
+  "score": "barcode"
+ },
+ "consum | CAPRIMAR Anchoas en Aceite de Girasol 3 x 23 Gr": {
+  "code": "8410628459920",
+  "match": "anchoas en aceite de girasol",
+  "quantity": null,
+  "score": "barcode"
+ },
  "consum | CATALA Arroz Redondo Paquete 1 Kg": {
   "code": "8412305000005",
   "match": "Arroz",
   "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CELORRIO Tomate Entero Pelado Lata 480 Gr": {
+  "code": "8411916100012",
+  "match": "Tomate Celorrio Entero Pelado",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CETI Servilletas 2 Capas Exclusive 60 U": {
+  "code": "8424088311414",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CETI Servilletas 2 Capas Quicknap Exclusive 150 U": {
+  "code": "8424088011048",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CHELINO Pañal Bebé Talla 4 de 9 a 15 Kg 34 U": {
+  "code": "8410520065342",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CHOLECK Batido de Cacao Botella 1 L": {
+  "code": "84116154",
+  "match": "Batido al cacao",
+  "quantity": "1 l",
   "score": "barcode"
  },
  "consum | CHOVI Mayonesa Pet 400 ml": {
@@ -1604,9 +1742,21 @@
   "quantity": "1450g",
   "score": "barcode"
  },
+ "consum | CONSUM Agua Mineral  Natural Garrafa 8 L": {
+  "code": "8414807510365",
+  "match": "Chóvar agua mineral natural",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | CONSUM Agua Mineral Natural Botella 1 L": {
   "code": "8414807543288",
   "match": "Agua Chóvar",
+  "quantity": null,
+  "score": "barcode"
+ },
+ "consum | CONSUM Agua Mineral Natural Garrafa 5 L": {
+  "code": "8414807510358",
+  "match": "Agua mineral natural",
   "quantity": null,
   "score": "barcode"
  },
@@ -1622,11 +1772,48 @@
   "quantity": "0.5L",
   "score": "barcode"
  },
+ "consum | CONSUM Alas Partidas de Pollo": {
+  "code": "8436041980810",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Alas de Pollo": {
+  "code": "8436041980414",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Almendra Tostada con Cáscara 250 Gr": {
+  "code": "8414807560346",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Almendras con Piel Tostadas Sal Bolsa 200 Gr": {
+  "code": "8414807525895",
+  "match": "Almendras tostadas",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | CONSUM Alubia Blanca Cocida Frasco 400 Gr": {
   "code": "8414807502339",
   "match": "Alubias blancas",
   "quantity": "570g",
   "score": "barcode"
+ },
+ "consum | CONSUM Anchoas del Cantábrico en Aceite de Oliva 50 Gr": {
+  "code": "8414807559012",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Arroz Basmati 1 Kg": {
+  "code": "8414807516336",
+  "match": "Arroz basmati",
+  "quantity": "1 kg",
+  "score": "barcode"
+ },
+ "consum | CONSUM Arroz Integral Origen España 1 Kg": {
+  "code": "8414807556677",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
  },
  "consum | CONSUM Arroz Largo 1 Kg": {
   "code": "8414807500038",
@@ -1638,6 +1825,12 @@
   "code": "8414807500014",
   "match": "Arroz redondo",
   "quantity": "1 kg",
+  "score": "barcode"
+ },
+ "consum | CONSUM Arroz con Leche Pack de 4 Unidades 4 x 125 Gr": {
+  "code": "8414807527943",
+  "match": "Arroz con leche",
+  "quantity": "",
   "score": "barcode"
  },
  "consum | CONSUM Atún Claro  Aceite Oliva Pack de 6 6 x 52 Gr": {
@@ -1652,10 +1845,34 @@
   "quantity": "420g",
   "score": "barcode"
  },
+ "consum | CONSUM Atún Claro Natural Pack de 3 3 x 56 Gr": {
+  "code": "8414807501462",
+  "match": "Atún claro al natural",
+  "quantity": "240g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Atún Claro Natural Pack de 6 6 x 56 Gr": {
+  "code": "8414807550293",
+  "match": "Atún claro al natural",
+  "quantity": "480g",
+  "score": "barcode"
+ },
  "consum | CONSUM Bacón en Lonchas 200 Gr": {
   "code": "8414807520517",
   "match": "Bacon Ahumado",
   "quantity": null,
+  "score": "barcode"
+ },
+ "consum | CONSUM Batido de Cacao Botella 1 L": {
+  "code": "8414807300157",
+  "match": "Batido Cacao",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Batido de Chocolate Minibrik Pack de 6 6 x 200 ml": {
+  "code": "8414807517685",
+  "match": "Batido Cacao",
+  "quantity": "",
   "score": "barcode"
  },
  "consum | CONSUM Bebida de Almendra con Calcio Brik 1 L": {
@@ -1686,10 +1903,28 @@
   "quantity": "",
   "score": "barcode"
  },
+ "consum | CONSUM Brócoli Microondas 225 Gr": {
+  "code": "8414807543561",
+  "match": "Brócoli Al Vapor",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | CONSUM Burger de Vacuno 4 Unidades 360 Gr": {
   "code": "8414807552471",
   "match": "Preparado de carne burguer meat de vacuno",
   "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Cacahuete Repelado Frito Paquete 250 Gr": {
+  "code": "8414807551368",
+  "match": "Cacahuetes fritos",
+  "quantity": "250g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Cacahuetes Fritos Piel Bolsa 250 Gr": {
+  "code": "8414807503602",
+  "match": "Cacahuetes fritos piel",
+  "quantity": "250 g",
   "score": "barcode"
  },
  "consum | CONSUM Cacao Instantáneo 1 Kg": {
@@ -1716,6 +1951,30 @@
   "quantity": "250 g",
   "score": "barcode"
  },
+ "consum | CONSUM Café Soluble Natural 100 Gr": {
+  "code": "8414807515094",
+  "match": "Café soluble",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Café Soluble Natural 200 Gr": {
+  "code": "8414807515100",
+  "match": "Café soluble natural",
+  "quantity": "200 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Caldo Líquido Pescado Brik 1 L": {
+  "code": "8414807512192",
+  "match": "Caldo de pescado",
+  "quantity": "1 l",
+  "score": "barcode"
+ },
+ "consum | CONSUM Caldo Verduras Brick 1 L": {
+  "code": "8414807527127",
+  "match": "Caldo de verduras",
+  "quantity": "1 l",
+  "score": "barcode"
+ },
  "consum | CONSUM Caldo de Pollo 100% Natural 1 L": {
   "code": "8414807558367",
   "match": "",
@@ -1740,6 +1999,12 @@
   "quantity": "100 g",
   "score": "barcode"
  },
+ "consum | CONSUM Chorizo Extra Lonchas 4 x 60 Gr": {
+  "code": "8414807513373",
+  "match": "Chorizo Dulce Extra",
+  "quantity": "225 g",
+  "score": "barcode"
+ },
  "consum | CONSUM Copos de Avena 500 Gr": {
   "code": "8414807558305",
   "match": "Copos de avena integral",
@@ -1752,10 +2017,39 @@
   "quantity": "500 g",
   "score": "barcode"
  },
+ "consum | CONSUM Costilla de Cerdo": {
+  "code": "8421706140470",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Crema de Cacao 1 Sabor. Bote 500 Gr": {
+  "code": "8414807519603",
+  "match": "Crema de cacao",
+  "quantity": "500 g",
+  "score": "barcode"
+ },
  "consum | CONSUM Crema de Cacao 2 Sabores Bote 500 Gr": {
   "code": "8414807519849",
   "match": "Crema de cacao, avellanas y leche",
   "quantity": "500 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Croissants Bolsa 350 Gr": {
+  "code": "8414807513083",
+  "match": "Croissants",
+  "quantity": "350 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Croqueta de Jamón 500 Gr": {
+  "code": "8414807554376",
+  "match": "Croquetas Jamón",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Cuajada Natural Pack de 4 Unidades 4 x 125 Gr": {
+  "code": "8414807531117",
+  "match": "Cuajada",
+  "quantity": null,
   "score": "barcode"
  },
  "consum | CONSUM Detergente Liquido Color 60 Lv": {
@@ -1807,6 +2101,28 @@
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
+ "consum | CONSUM Espinacas Cortadas 400 Gr": {
+  "code": "8414807533685",
+  "match": "Espinacas cortadas",
+  "quantity": "400 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Espinacas Frasco 425 Gr": {
+  "code": "8414807502360",
+  "match": "Espinacas",
+  "quantity": "660 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Estropajo Fibra Verde 4 U": {
+  "code": "8414807538833",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Estropajo Salvauñas Superficies Delicadas 3 U": {
+  "code": "8414807547064",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | CONSUM Fideuá Paquete 500 Gr": {
   "code": "8414807503695",
   "match": "Fideuá",
@@ -1823,8 +2139,23 @@
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
+ "consum | CONSUM Filete Merluza Cabo MSC Sin piel 400 Gr": {
+  "code": "8414807557100",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Filetes Pechuga de Pavo Extra Tiernos": {
+  "code": "8414807560636",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | CONSUM Filetes Pechuga de Pollo": {
   "code": "8436041980377",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Film Transparente 80 M": {
+  "code": "8414807548108",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
@@ -1832,6 +2163,29 @@
   "code": "8414807531520",
   "match": "Flan de huevo al baño maría",
   "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Friegasuelos Aroma a Limón 1,5 L": {
+  "code": "8414807800923",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Fumet de Pescado Botella 950 ml": {
+  "code": "8414807557964",
+  "match": "Fumet de pescado",
+  "quantity": "950ml",
+  "score": "barcode"
+ },
+ "consum | CONSUM Galleta Digestive Chocolate con Leche 300 Gr": {
+  "code": "8414807541079",
+  "match": "Digestive chocolate con leche",
+  "quantity": "300 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Galletas Chococream 5 packs de 4 unidades 220 Gr": {
+  "code": "8414807558725",
+  "match": "Galletas choco cream  oreo",
+  "quantity": null,
   "score": "barcode"
  },
  "consum | CONSUM Galletas Digestive 800 Gr": {
@@ -1850,6 +2204,30 @@
   "code": "8414807502292",
   "match": "Garbanzos",
   "quantity": "570g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Garbanzo Lechoso Paquete 1 Kg": {
+  "code": "8414807544704",
+  "match": "Garbanzos lechosos",
+  "quantity": "1 kg",
+  "score": "barcode"
+ },
+ "consum | CONSUM Garbanzo Selecto Paquete 1 Kg": {
+  "code": "8414807544711",
+  "match": "Garbanzos",
+  "quantity": "1kg",
+  "score": "barcode"
+ },
+ "consum | CONSUM Gazpacho Suave 1 L": {
+  "code": "8414807520128",
+  "match": "Gazpacho suave",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Gazpacho Tradicional 1 L": {
+  "code": "8414807520111",
+  "match": "Gazpacho",
+  "quantity": "1 l",
   "score": "barcode"
  },
  "consum | CONSUM Guisantes Finos 1 Kg": {
@@ -1878,6 +2256,18 @@
   "code": "8414807525383",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Hummus Clásico 220 Gr": {
+  "code": "8414807563057",
+  "match": "Hummus clásico",
+  "quantity": "220g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Hummus con aceitunas 200 Gr": {
+  "code": "8414807556783",
+  "match": "Hummus con aceitunas",
+  "quantity": "200 g",
+  "score": "barcode"
  },
  "consum | CONSUM Jamón Cocido Braseado Finas Lonchas 160 Gr": {
   "code": "8414807542298",
@@ -1908,6 +2298,12 @@
   "quantity": "500g",
   "score": "barcode"
  },
+ "consum | CONSUM Lasaña Boloñesa con Bechamel 300 Gr": {
+  "code": "8414807534125",
+  "match": "Lasaña boloñesa",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | CONSUM Lavavajillas Concentrado Ultra 1 L": {
   "code": "8414807555762",
   "match": null,
@@ -1917,6 +2313,18 @@
   "code": "8414807555755",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Leche Condensada Entera Lata 1 Kg": {
+  "code": "8414807529053",
+  "match": "Leche Condensada",
+  "quantity": "1 kg",
+  "score": "barcode"
+ },
+ "consum | CONSUM Leche Condensada Entera Sirvefácil 450 Gr": {
+  "code": "8414807540287",
+  "match": "Leche condensada",
+  "quantity": "450 g",
+  "score": "barcode"
  },
  "consum | CONSUM Leche Desnatada Botella 1,5 L": {
   "code": "8414807548511",
@@ -1982,6 +2390,11 @@
   "quantity": "1kg",
   "score": "barcode"
  },
+ "consum | CONSUM Limpiacristales Multiusos 1 L": {
+  "code": "8414807553980",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | CONSUM Limpiador Multiusos Alcohol 1 L": {
   "code": "8414807553973",
   "match": null,
@@ -1989,6 +2402,11 @@
  },
  "consum | CONSUM Limpiador Multiusos Desinfectante 0,75 L": {
   "code": "8414807550750",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Limpiahogar Multiusos Pino Alcohol 1,5 L": {
+  "code": "8414807553997",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
@@ -2012,11 +2430,22 @@
   "quantity": "1 kg",
   "score": "barcode"
  },
+ "consum | CONSUM Macarrones Paquete 500 Gr": {
+  "code": "8414807503664",
+  "match": "Macarrones",
+  "quantity": "500 g",
+  "score": "barcode"
+ },
  "consum | CONSUM Macarrones Rayados Paquete 500 Gr": {
   "code": "8414807503688",
   "match": "Macarrones rayados",
   "quantity": "500 g",
   "score": "barcode"
+ },
+ "consum | CONSUM Macarrón Integral 500 Gr": {
+  "code": "8414807558527",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
  },
  "consum | CONSUM Magdalenas Redondas 350 Gr": {
   "code": "8414807512260",
@@ -2033,6 +2462,18 @@
   "code": "8414807517869",
   "match": "Consum Mantequilla",
   "quantity": "250gr",
+  "score": "barcode"
+ },
+ "consum | CONSUM Manzanilla 20 Bolsitas 20 U": {
+  "code": "8414807548047",
+  "match": "Manzanilla consum",
+  "quantity": "27 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Margarina Vegetal Tarrina 500 Gr": {
+  "code": "8414807547125",
+  "match": "Margarina vegetal",
+  "quantity": "500 g",
   "score": "barcode"
  },
  "consum | CONSUM Mayonesa Pet 500 ml": {
@@ -2071,6 +2512,24 @@
   "quantity": "410 g",
   "score": "barcode"
  },
+ "consum | CONSUM Mortadela Finas Lonchas 250 Gr": {
+  "code": "8414807552372",
+  "match": "Mortadela",
+  "quantity": null,
+  "score": "barcode"
+ },
+ "consum | CONSUM Mostaza 300 Gr": {
+  "code": "8414807544018",
+  "match": "Mostaza",
+  "quantity": "300 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Muesli Fruta y Fibra 450 Gr": {
+  "code": "8414807501844",
+  "match": "Muesli crujiente con frutas",
+  "quantity": "450 g",
+  "score": "barcode"
+ },
  "consum | CONSUM Muslo de Pollo Deshuesado": {
   "code": "8436041985815",
   "match": null,
@@ -2106,6 +2565,41 @@
   "quantity": "500g",
   "score": "barcode"
  },
+ "consum | CONSUM Nuez Grano Doypack 200 Gr": {
+  "code": "8414807552150",
+  "match": "Nuez mondada natural",
+  "quantity": "200g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Nuez Troceada Doypack 150 Gr": {
+  "code": "8414807560681",
+  "match": "Nueces Troceadas Natural",
+  "quantity": null,
+  "score": "barcode"
+ },
+ "consum | CONSUM Nuggets de Pollo 255 Gr": {
+  "code": "8414807556035",
+  "match": "Nuggets de pollo",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Nuggets de Pollo 400 Gr": {
+  "code": "8414807557674",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Palitos de Surimi 450 Gr": {
+  "code": "8414807556202",
+  "match": "Palitos de Surimi",
+  "quantity": "450g (6x75g)",
+  "score": "barcode"
+ },
+ "consum | CONSUM Pan Maxi Burger 4 Unidades 300 Gr": {
+  "code": "8414807512352",
+  "match": "Maxi burger",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | CONSUM Pan Molde 100% Integral 0% Azúcares Añadidos 460 Gr": {
   "code": "8414807512314",
   "match": "Pan de molde integral",
@@ -2135,6 +2629,12 @@
   "quantity": "500g",
   "score": "barcode"
  },
+ "consum | CONSUM Pan Tostado Clásico 45 Rebanadas 405 Gr": {
+  "code": "8414807558077",
+  "match": "Pan tostado consum",
+  "quantity": null,
+  "score": "barcode"
+ },
  "consum | CONSUM Pan de Molde Clasico 16 Rebanadas. 460 Gr": {
   "code": "8414807512307",
   "match": "Pan de molde Clásico",
@@ -2153,6 +2653,12 @@
   "quantity": "350 g",
   "score": "barcode"
  },
+ "consum | CONSUM Panecillos Tostados Bolsa 200 Gr": {
+  "code": "8414807518675",
+  "match": "Clásicos Clàssics",
+  "quantity": null,
+  "score": "barcode"
+ },
  "consum | CONSUM Papel Cocina Blanco 4 U": {
   "code": "8414807527042",
   "match": null,
@@ -2160,6 +2666,41 @@
  },
  "consum | CONSUM Papel Cocina Decorado 3 Capas 3 U": {
   "code": "8414807539724",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Patatas Fritas Lisas Bolsa Papel 2 x 150 Gr": {
+  "code": "8414807503374",
+  "match": "Patatas fritas estilo tradicional",
+  "quantity": "300g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Patatas Lisas Bolsa 150 Gr": {
+  "code": "8414807558800",
+  "match": "Patatas Al Punto De Sal",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Patatas Prefritas Corte Fino 1 Kg": {
+  "code": "8414807510037",
+  "match": "Patatas fritas corte fino",
+  "quantity": "1 kg",
+  "score": "barcode"
+ },
+ "consum | CONSUM Patatas Prefritas Corte Grueso 1 Kg": {
+  "code": "8414807100184",
+  "match": "Patatas corte grueso",
+  "quantity": "1 kg",
+  "score": "barcode"
+ },
+ "consum | CONSUM Pañuelo Compacto Aloe Cuatro Capas 10 U": {
+  "code": "8414807541789",
+  "match": "Tomate triturado con cebolla",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Pañuelo Compacto Cuatro Capas 10 U": {
+  "code": "8414807541765",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
@@ -2175,6 +2716,11 @@
   "quantity": "200 g",
   "score": "barcode"
  },
+ "consum | CONSUM Pechugas de  Pollo Origen España": {
+  "code": "8436041980322",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | CONSUM Pimienta Negra Molida 65 Gr": {
   "code": "8414807559395",
   "match": null,
@@ -2184,6 +2730,12 @@
   "code": "8414807559326",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Preparado Picada de Vacuno 400 Gr": {
+  "code": "8414807552525",
+  "match": "Carne de Vacuno",
+  "quantity": null,
+  "score": "barcode"
  },
  "consum | CONSUM Queso Curado Mezcla Cuña": {
   "code": "8414807560759",
@@ -2220,10 +2772,28 @@
   "quantity": "",
   "score": "barcode"
  },
+ "consum | CONSUM Queso Semicurado Precortado 250 Gr": {
+  "code": "8414807526397",
+  "match": "Queso semicurado",
+  "quantity": null,
+  "score": "barcode"
+ },
  "consum | CONSUM Queso Tierno Mezcla Lonchas 200 Gr": {
   "code": "8414807519757",
   "match": "Queso mezcla tierno",
   "quantity": "200 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Queso Untar Natural Tarrina 250 Gr": {
+  "code": "8414807537973",
+  "match": "Queso de untar Clasico",
+  "quantity": null,
+  "score": "barcode"
+ },
+ "consum | CONSUM Refresco Limón Botella 2 L": {
+  "code": "8414807544506",
+  "match": "Limón con gas",
+  "quantity": null,
   "score": "barcode"
  },
  "consum | CONSUM Refresco Naranja Botella 2 L": {
@@ -2237,6 +2807,23 @@
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
+ "consum | CONSUM Rulo de Cabra 180 Gr": {
+  "code": "8414807560339",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | CONSUM Salchichas Frankfurt sabor Ahumado 3 x 165 Gr": {
+  "code": "8414807555557",
+  "match": "Salchichas cocidas de pollo y cerdo ahumado",
+  "quantity": "3 x 165 g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Salchichas Viena 2 Unidades 2 x 175 Gr": {
+  "code": "8414807539656",
+  "match": "Salchicha Viena",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | CONSUM Salmón Ahumado Noruego 100 Gr": {
   "code": "8414807561176",
   "match": "Salmón Ahumado Noruego",
@@ -2247,6 +2834,12 @@
   "code": "8414807561190",
   "match": "Salmón Ahumado",
   "quantity": null,
+  "score": "barcode"
+ },
+ "consum | CONSUM Salsa Pesto 185 Gr": {
+  "code": "8414807541086",
+  "match": "Pesto",
+  "quantity": "185 g",
   "score": "barcode"
  },
  "consum | CONSUM Sardina en Aceite Girasol Lata 84 Gr": {
@@ -2260,6 +2853,17 @@
   "match": "Sardinillas en aceite de oliva",
   "quantity": "180g",
   "score": "barcode"
+ },
+ "consum | CONSUM Servilleta 1 Capa Blanca 30x30 200unidad. 200 U": {
+  "code": "8414807526861",
+  "match": "Servilletas 1 capa",
+  "quantity": null,
+  "score": "barcode"
+ },
+ "consum | CONSUM Servilletas 2 Capas Blanca 30x30 100 U": {
+  "code": "8414807526847",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
  },
  "consum | CONSUM Spaghetti Paquete 1 Kg": {
   "code": "8414807532893",
@@ -2302,6 +2906,18 @@
   "quantity": "800 g",
   "score": "barcode"
  },
+ "consum | CONSUM Tortilla de Patata Fresca con Cebolla 600 Gr": {
+  "code": "8414807548184",
+  "match": "truita de patata",
+  "quantity": "600g",
+  "score": "barcode"
+ },
+ "consum | CONSUM Tortillas Wrap de Trigo 6 Unidades 360 Gr": {
+  "code": "8414807553867",
+  "match": "tortillas de harina de trigo",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | CONSUM Té Negro 20 Bolsitas 20 U": {
   "code": "8414807548085",
   "match": "Té negro",
@@ -2318,6 +2934,18 @@
   "code": "8414807534187",
   "match": "Vinagre vino tinto",
   "quantity": "500 ml",
+  "score": "barcode"
+ },
+ "consum | CONSUM Yogur 00% Natural Pack de 4 Unidades 4 x 125 Gr": {
+  "code": "8414807547842",
+  "match": "Yogur natural 0%grasa 0%azúcares",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CONSUM Yogur 00% Sabor Fresa Pack de 4 Unidades 4 x 125 Gr": {
+  "code": "8414807547859",
+  "match": "Yogur",
+  "quantity": "125g",
   "score": "barcode"
  },
  "consum | CONSUM Yogur Griego Natural 1 Kg": {
@@ -2337,6 +2965,12 @@
   "quantity": "250",
   "score": "barcode"
  },
+ "consum | CONSUM Yogur Sabor Fresa Pack 4 Unidades 4 x 125 Gr": {
+  "code": "8414807547897",
+  "match": "Yogur Sabor Fresa",
+  "quantity": "500 g (4x125g)",
+  "score": "barcode"
+ },
  "consum | CONSUM Zumo Exprimido Naranja Sin pulpa - Brik 1 L": {
   "code": "8414807532121",
   "match": "Zumo naranja",
@@ -2349,9 +2983,21 @@
   "quantity": "",
   "score": "barcode"
  },
+ "consum | CONSUM Zumo de Piña Costa Rica Refrigerado 1 L": {
+  "code": "8414807544377",
+  "match": "Zumo de piña Costa Rica",
+  "quantity": "1 l",
+  "score": "barcode"
+ },
  "consum | COOSUR Aceite de Oliva Virgen Extra 5 L": {
   "code": "8411190101057",
   "match": "Aceite de oliva virgen extra bidón",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | CRISTASOL Limpiacristales Clásico 1,25 L": {
+  "code": "8437014689006",
+  "match": "Limpia Cristales",
   "quantity": "",
   "score": "barcode"
  },
@@ -2365,6 +3011,12 @@
   "code": "8434165611047",
   "match": "María oro",
   "quantity": "",
+  "score": "barcode"
+ },
+ "consum | DACSA Arroz Integral D.O. Valencia Paquete 1 Kg": {
+  "code": "8410324227410",
+  "match": "Arroz integral",
+  "quantity": "1 kg",
   "score": "barcode"
  },
  "consum | DACSA Arroz Largo 1 Kg": {
@@ -2395,6 +3047,22 @@
   "quantity": "960 g",
   "score": "barcode"
  },
+ "consum | DANONE Yogur Sabor Fresa Pack de 4 Unidades 4 x 120 Gr": {
+  "code": "8410500006105",
+  "match": "Yogur de Fresa",
+  "quantity": "480 g",
+  "score": "barcode"
+ },
+ "consum | DELITUSS Hummus Boniato 175 Gr": {
+  "code": "8710378861241",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | DELITUSS Hummus Trío 210 Gr": {
+  "code": "8710378860824",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | DIXAN Detergente Líquido 55 Lv": {
   "match": null,
   "why": "brand"
@@ -2422,6 +3090,40 @@
   "quantity": "1 l",
   "score": "barcode"
  },
+ "consum | DON SIMON Zumo Exprimido Naranja Sin pulpa - Brik 1 L": {
+  "code": "8410261608402",
+  "match": "Zumo naranja sin pulpa",
+  "quantity": "1 l",
+  "score": "barcode"
+ },
+ "consum | DON SIMON Zumo Exprimido Piña Brik 1 L": {
+  "code": "8410261611341",
+  "match": "Zumo 100% exprimido",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | DULCESOL Pan Burger 4 Unidades 200 Gr": {
+  "code": "8410087036076",
+  "match": "Burguer",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | DULCESOL Pan Rustic Burger 4 Unidades 300 Gr": {
+  "code": "8410087366166",
+  "match": "Rustic Burger",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | DUNANY Lasaña Boloñesa 700 Gr": {
+  "code": "5600230001317",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | EL GARABATO Vino Blanco Verdejo Reg. Castilla La Mancha 0,75 L": {
+  "code": "8410702065283",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | EL PASTOR Queso Tapas Cortaditas Mezcla Curado Santtum 165 Gr": {
   "code": "8413376037327",
   "match": "Santtum - Queso curado cortado en tapas",
@@ -2432,6 +3134,12 @@
   "code": "8410843142201",
   "match": "Bacon en lonchas",
   "quantity": "110 g",
+  "score": "barcode"
+ },
+ "consum | ELPOZO Mortadela Siciliana Fina 500 Gr": {
+  "code": "8410843035565",
+  "match": "Mortadela siciliana",
+  "quantity": "",
   "score": "barcode"
  },
  "consum | ELPOZO Pechuga de Pavo Lonchas Finas 115 Gr": {
@@ -2457,6 +3165,18 @@
   "quantity": "400 g",
   "score": "barcode"
  },
+ "consum | FAM.BISCUITS Galleta Tostada Petit Choco 380 Gr": {
+  "code": "8437022182773",
+  "match": "",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | FANTA Refresco Limón Botella 2 L": {
+  "code": "5449000006011",
+  "match": "Fanta Lemon 2ltr",
+  "quantity": "2 L",
+  "score": "barcode"
+ },
  "consum | FANTA Refresco Naranja Botella 2 L": {
   "code": "5449000004840",
   "match": "Fanta Naranja",
@@ -2468,6 +3188,17 @@
   "match": "Jamón cocido",
   "quantity": "",
   "score": "barcode"
+ },
+ "consum | FERRARINI Parmigiano Reggiano Cuña 180 Gr": {
+  "code": "8008706608225",
+  "match": "PARMIGIANO REGGIANO",
+  "quantity": "180 g",
+  "score": "barcode"
+ },
+ "consum | FINDUS Espinacas Hoja 1 Kg": {
+  "code": "8434702003649",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
  },
  "consum | FINDUS Guisantes Finos 800 Gr": {
   "code": "8434702001812",
@@ -2481,6 +3212,12 @@
   "quantity": "550 g",
   "score": "barcode"
  },
+ "consum | FINDUS Menestra de la Huerta 650 Gr": {
+  "code": "8434702003267",
+  "match": "Menestra de la huerta",
+  "quantity": null,
+  "score": "barcode"
+ },
  "consum | FINISH Pastillas Lavavajillas Power 25+25 50 U": {
   "code": "8410104893576",
   "match": null,
@@ -2490,6 +3227,24 @@
   "code": "8411126025723",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | FLORETTE Ensalada Gourmet Completa 175 Gr": {
+  "code": "8414516103476",
+  "match": "Ensalada Gourmet con Nueces y Queso de Cabra",
+  "quantity": "175 g.",
+  "score": "barcode"
+ },
+ "consum | FLORETTE Ensalada Gourmet Primeros Brotes 100 Gr": {
+  "code": "8414516090615",
+  "match": "Gourmet primeros brotes",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | FLORETTE Espinaca Maxi Bolsa 450 Gr": {
+  "code": "8414516057397",
+  "match": "Espinaca",
+  "quantity": null,
+  "score": "barcode"
  },
  "consum | FLOTA Detergente Líquido Esencia 42 Lv": {
   "code": "8410046661530",
@@ -2519,6 +3274,18 @@
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
+ "consum | FRIPOZO Nuggets de Pollo 300 Gr": {
+  "code": "8420321033358",
+  "match": "Nuggets de pollo",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | FRISCOS Mejillón Escabeche Girasol 8/12 Piezas 69 Gr": {
+  "code": "8410315193007",
+  "match": "Mejillón en escabeche",
+  "quantity": "111g",
+  "score": "barcode"
+ },
  "consum | FRUMEN Pan Rallado Crujiente Paquete 380 Gr": {
   "code": "8410294200178",
   "match": "Frumen pan rallado crujiente",
@@ -2542,16 +3309,57 @@
   "quantity": "",
   "score": "barcode"
  },
+ "consum | G.BAQUERO Queso Semicurado Barra Le.Mezcla Pasteurizada": {
+  "code": "8412289000909",
+  "match": "Queso semicurado barra",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | G.BLANCA Caldo Casero Pescado Brik 1 L": {
+  "code": "8410300349020",
+  "match": "Caldo casero de pescado",
+  "quantity": "1 L",
+  "score": "barcode"
+ },
  "consum | G.BLANCA Caldo Casero Pollo Bajo en Sal Brik 1 L": {
   "code": "8410300348993",
   "match": "Caldo casero de pollo bajo en sal30/4",
   "quantity": "1 l",
   "score": "barcode"
  },
+ "consum | G.BLANCA Caldo Casero Verduras Brik 1 L": {
+  "code": "8410300349013",
+  "match": "Caldo casero de verduras",
+  "quantity": "1 l",
+  "score": "barcode"
+ },
+ "consum | G.BLANCA Caldo de Pescado con Bogavante Gourmet 1 L": {
+  "code": "8410300370130",
+  "match": "Caldo gourmet de pescado con bogavante",
+  "quantity": null,
+  "score": "barcode"
+ },
  "consum | G.BLANCA Caldo de Pollo Pack de 2 2 x 1 L": {
   "code": "8410300349129",
   "match": "Caldo casero de pollo",
   "quantity": "1 l",
+  "score": "barcode"
+ },
+ "consum | G.BLANCA Caldo de Verduras Gourmet 1 L": {
+  "code": "8410300375227",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | G.BLANCA Crema Verduras Brik 500 ml": {
+  "code": "8410300357551",
+  "match": "Crema casera 7 verduras con emmental",
+  "quantity": "500ml",
+  "score": "barcode"
+ },
+ "consum | GALLO Cous Cous Mediano Caja 500 Gr": {
+  "code": "8410069000019",
+  "match": "Cous cous",
+  "quantity": "500 g",
   "score": "barcode"
  },
  "consum | GALLO Fideo 0 400 Gr": {
@@ -2578,6 +3386,12 @@
   "quantity": null,
   "score": "barcode"
  },
+ "consum | GALLO Salsa Pesto Tarro 190 Gr": {
+  "code": "8410069014382",
+  "match": "Pesto a base de albahaca",
+  "quantity": "190 g",
+  "score": "barcode"
+ },
  "consum | GALLO Spaghetti sin Gluten Paquete 450 Gr": {
   "code": "8410069018540",
   "match": "Spaghetti sin gluten",
@@ -2599,6 +3413,12 @@
   "code": "4008871222329",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | HEINZ Mostaza Amarilla Bote 240 Gr": {
+  "code": "87157451",
+  "match": "Mostarda Heinz Yellow Top Down 220 ml",
+  "quantity": "220 ml",
+  "score": "barcode"
  },
  "consum | HELIOS Confitura Fresa Pack de 10 10 x 25 Gr": {
   "code": "8410095040331",
@@ -2623,16 +3443,45 @@
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
+ "consum | ITALPIZZA Pizza Margarita 410 Gr": {
+  "code": "8015673029861",
+  "match": "",
+  "quantity": "435g",
+  "score": "barcode"
+ },
  "consum | JOLCA Aceituna Rellena Anchoa Lata 130 Gr": {
   "code": "8410667005706",
   "match": "Aceituna manzanilla fina relleno anchoa",
   "quantity": "300g",
   "score": "barcode"
  },
+ "consum | JUVER Zumo Piña 100% Free 1 L": {
+  "code": "8410707005017",
+  "match": "Juver 100% free piña",
+  "quantity": "1 l",
+  "score": "barcode"
+ },
  "consum | KELLOGG'S Cereales Corn Flakes Caja 500 Gr": {
   "code": "8410188012092",
   "match": "Kelloggs corn flakes the original",
   "quantity": "500 g",
+  "score": "barcode"
+ },
+ "consum | KELLOGG'S Cereales Krave Chocolate-Avellana 410 Gr": {
+  "code": "5059319002323",
+  "match": "Krave choco nut flavour",
+  "quantity": "30 g",
+  "score": "barcode"
+ },
+ "consum | KLEENEX Pañuelo Bolsillo Collection 15 U": {
+  "code": "5029053028620",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | KNORR Crema de Verduras Mediterráneas 0,5 L": {
+  "code": "8717163889107",
+  "match": "Crema de verduras mediterráneas",
+  "quantity": "500 ml",
   "score": "barcode"
  },
  "consum | KOIPESOL Aceite de Girasol Botella 1 L": {
@@ -2647,8 +3496,23 @@
   "quantity": "",
   "score": "barcode"
  },
+ "consum | KYREY Bastoncillos Algodón 200 U": {
+  "code": "8414807551450",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | KYREY Champú Argán 400 ml": {
   "code": "8414807555113",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | KYREY Compresa Clásica Normal 20 U": {
+  "code": "8414807549877",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | KYREY Compresa Normal Alas  Dry 16 U": {
+  "code": "8414807553362",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
@@ -2696,16 +3560,76 @@
   "quantity": "",
   "score": "barcode"
  },
+ "consum | LA LAREDANA Filete Anchoa Cantábrico en Aceite Oliva MSC 30 Gr": {
+  "code": "8414738002021",
+  "match": "Filetes de anchoas en aceite de oliva",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | LA LECHERA Leche Condensada Entera Lata 740 Gr": {
+  "code": "8410100000152",
+  "match": "La Lechera leche condensada",
+  "quantity": "740g",
+  "score": "barcode"
+ },
+ "consum | LA LECHERA Leche Condensada Entera Sirvefácil 450 Gr": {
+  "code": "8410100002002",
+  "match": "Leche condensada",
+  "quantity": "450 g",
+  "score": "barcode"
+ },
+ "consum | LA MOSQUERA Cous Cous 1 Kg": {
+  "code": "8420404000017",
+  "match": "Couscous",
+  "quantity": "1 kg",
+  "score": "barcode"
+ },
+ "consum | LACASA Naranja Choco Negro 125 Gr": {
+  "code": "8410740910583",
+  "match": "chocolate naranja",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | LAY'S Patatas Fritas Lisas al Punto de Sal 248 Gr": {
+  "code": "8410199026828",
+  "match": "Lay's - Patatas Fritas al Punto de Sal",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | LEGADO Mortadela Ibérica Finas Lonchas 150 Gr": {
+  "code": "8410843123453",
+  "match": "Mortadela Ibérica",
+  "quantity": "150 g",
+  "score": "barcode"
+ },
+ "consum | LOLITA Patatas Fritas Lisas Bolsa 140 Gr": {
+  "code": "8414126012335",
+  "match": "Papas Lolita 150 G",
+  "quantity": "150 g",
+  "score": "barcode"
+ },
  "consum | LORIENTE Jamón Serrano Lonchas Sin Aditivos  18 Meses 100 Gr": {
   "code": "8421384127848",
   "match": "Jamón Serano Lonchas",
   "quantity": null,
   "score": "barcode"
  },
+ "consum | LOS CAMEROS Queso Semicurado Mezcl Leche Pasteurizada": {
+  "code": "8421392028014",
+  "match": "Queso mezcla semicurado",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | LUENGO Alubia Blanca Cocida Frasco 400 Gr": {
   "code": "8410505271010",
   "match": "Alubias",
   "quantity": "570 g",
+  "score": "barcode"
+ },
+ "consum | LUENGO Alubia Roja Cocida Frasco 400 Gr": {
+  "code": "8410505274011",
+  "match": "Alubia roja",
+  "quantity": "400  g",
   "score": "barcode"
  },
  "consum | LUENGO Garbanzo Cocido Frasco 400 Gr": {
@@ -2720,6 +3644,12 @@
   "quantity": "570g",
   "score": "barcode"
  },
+ "consum | LUENGO Garbanzo Pedrosillano Paquete 500 Gr": {
+  "code": "8410505261066",
+  "match": "Garbanzo Pedrosillano",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | LUENGO Lenteja Cocida Pardina Frasco 400 Gr": {
   "code": "8410505273014",
   "match": "Lentejas",
@@ -2730,6 +3660,22 @@
   "code": "8410505191110",
   "match": "Lenteja pardina",
   "quantity": "500 g",
+  "score": "barcode"
+ },
+ "consum | LUMINIA Limpiacristales Spray 750 ml": {
+  "code": "8410931014144",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | M.MONTE MERU Cava Brut D.O. Cava 0,75 L": {
+  "code": "8410744015055",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | MAHESO Lasaña Boloñesa con Bechamel 1 Kg": {
+  "code": "8410705023426",
+  "match": "Lasaña",
+  "quantity": null,
   "score": "barcode"
  },
  "consum | MARGUI Kéfir Natural 4 x 125 Gr": {
@@ -2765,6 +3711,11 @@
   "quantity": "150 g",
   "score": "barcode"
  },
+ "consum | MONTECASINO Cava Brut D.O. Cava 0,75 L": {
+  "code": "8411277210207",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | MONTERDE Huevos L Grandes 1/2 Docena 0,5 Dc": {
   "code": "8437004036537",
   "match": "Huevos frescos",
@@ -2789,16 +3740,45 @@
   "quantity": "24 pcs",
   "score": "barcode"
  },
+ "consum | MUTTI Tomate Entero Pelado Lata 400 Gr": {
+  "code": "8005110060007",
+  "match": "Tomaten geschält",
+  "quantity": "400g",
+  "score": "barcode"
+ },
  "consum | Magdalenas Caseras 360 Gr": {
   "code": "8436018961811",
   "match": "Magdalenas Caseras",
   "quantity": "",
   "score": "barcode"
  },
+ "consum | NAVAL Mejillón en Escabeche 6/8 Piezas 65 Gr": {
+  "code": "8428626013396",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | NESCAFE Café Soluble Natural Tarro 200 Gr": {
+  "code": "8410100020549",
+  "match": "Nescafé classic natural",
+  "quantity": "200 g",
+  "score": "barcode"
+ },
+ "consum | NESCAFE Café Soluble Natural Vitalissimo 200 Gr": {
+  "code": "7613035278721",
+  "match": "Nescafé Vitalíssimo natural",
+  "quantity": "200 g",
+  "score": "barcode"
+ },
  "consum | NESQUIK Cacao Instantáneo Bolsa 900 Gr": {
   "code": "8445293020588",
   "match": "Cacao nesquik polvo 1.2 k",
   "quantity": null,
+  "score": "barcode"
+ },
+ "consum | NESTLE Cereales Nesquik Chocolate 375 Gr": {
+  "code": "3387390335859",
+  "match": "Nesquik",
+  "quantity": "375 g",
   "score": "barcode"
  },
  "consum | NESTLE Kéfir 0% Natural 500 Gr": {
@@ -2843,6 +3823,18 @@
   "quantity": "500g",
   "score": "barcode"
  },
+ "consum | OLD EL PASO Tortillas Wraps de Trigo Paquete 6 Unidades 350 Gr": {
+  "code": "8410076471604",
+  "match": "Tortillas Wraps Trigo Old El Paso",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | OLD EL PASO Tortillas de Trigo Paquete 8 Unidades 326 Gr": {
+  "code": "46000283265",
+  "match": "Tortillas de trigo",
+  "quantity": "326g",
+  "score": "barcode"
+ },
  "consum | ORLANDO Kétchup 300 Gr": {
   "code": "8410066070060",
   "match": "Ketchup",
@@ -2861,14 +3853,38 @@
   "quantity": "400 g",
   "score": "barcode"
  },
+ "consum | ORTIZ Pan Tostado Tradicional 36 Unidades 320 Gr": {
+  "code": "8412600037355",
+  "match": "Pan Tostado Estilo Tradicional",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | OSCAR MAYER Bacón en Lonchas + 10gr gratis 150 Gr": {
   "match": null,
   "why": "variant ['lonchas'] / []"
+ },
+ "consum | PALACIOS Tortilla Fresca Patatas con Cebolla 650 Gr": {
+  "code": "8420878590991",
+  "match": "Tortilla de patata con cebolla y huevos camperos",
+  "quantity": "650 g",
+  "score": "barcode"
  },
  "consum | PAN MILAGROS Pan de Molde Rebanada Gruesa 820 Gr": {
   "code": "8437003469480",
   "match": "Pan Milagros especial rebanada gruesa",
   "quantity": null,
+  "score": "barcode"
+ },
+ "consum | PEDRO LUIS Alubia Roja Frasco 500 Gr": {
+  "code": "8425205013693",
+  "match": "Alubia Roja",
+  "quantity": "660g",
+  "score": "barcode"
+ },
+ "consum | PEDRO LUIS Garbanzo Frasco 500 Gr": {
+  "code": "8425205013648",
+  "match": "Garbanzos",
+  "quantity": "",
   "score": "barcode"
  },
  "consum | PESCANOVA Filete de Merluza Argentina 400 Gr": {
@@ -2882,6 +3898,23 @@
   "quantity": "400g",
   "score": "barcode"
  },
+ "consum | PESCANOVA Langostino Cocido Congelado 500 Gr": {
+  "code": "8410063094366",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | PICKEN Salchicha Frankfurt 300 Gr": {
+  "code": "8411763828749",
+  "match": "Frankfurt",
+  "quantity": "",
+  "score": "barcode"
+ },
+ "consum | POMPADOUR Manzanilla 25 Bolsitas 25 U": {
+  "code": "8412900402037",
+  "match": "Manzanilla",
+  "quantity": "",
+  "score": "barcode"
+ },
  "consum | POMPADOUR Té NEGRO BREAKFAST 25 Bolsitas 25 U": {
   "code": "8412900713218",
   "match": null,
@@ -2893,10 +3926,28 @@
   "quantity": "250g",
   "score": "barcode"
  },
+ "consum | PRESIDENT Queso Cabra Rulo Unidad 180 Gr": {
+  "code": "3228021180137",
+  "match": "Rulo de Cabra",
+  "quantity": "180 g",
+  "score": "barcode"
+ },
  "consum | PRIMA Kétchup Pet Más 20% 540 Gr": {
   "code": "8410118050149",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | PRIMA Mostaza Original Bote 265+35G 300 Gr": {
+  "code": "8410118050361",
+  "match": "Mostaza Original",
+  "quantity": null,
+  "score": "barcode"
+ },
+ "consum | PULEVA Batido de Chocolate Minibrik Pack de 6 6 x 200 ml": {
+  "code": "8411700005837",
+  "match": "Puleva chocolate",
+  "quantity": "1200ml",
+  "score": "barcode"
  },
  "consum | PULEVA Leche Desnatada Brik 1 L": {
   "code": "8411700004359",
@@ -2975,6 +4026,11 @@
   "quantity": "200 g",
   "score": "barcode"
  },
+ "consum | S.BRITE Estropajo Fibra Verde Classic 4 U": {
+  "code": "8410001124971",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | S.PELLEGRINO Agua Mineral  con Gas Botella Pet 1 L": {
   "match": null,
   "why": "rejected by hand (photo)"
@@ -2983,6 +4039,12 @@
   "code": "8410800068667",
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | SAN MILLAN Queso Untar Natural 200 Gr": {
+  "code": "8413100062106",
+  "match": "Queso Para Untar y Cocinar, Natural",
+  "quantity": "200 g",
+  "score": "barcode"
  },
  "consum | SANABRIA Queso Cheddar Rallado 150 Gr": {
   "code": "8436034671374",
@@ -2994,6 +4056,17 @@
   "code": "8436034671305",
   "match": "Queso cheddar",
   "quantity": "200 g",
+  "score": "barcode"
+ },
+ "consum | SCHWEPPES Refresco Limón Pet 1,5 L": {
+  "code": "8414100382072",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
+ "consum | SCHWEPPES Tónica Botella 1 L": {
+  "code": "8414100301141",
+  "match": "Tónica original",
+  "quantity": "1 L",
   "score": "barcode"
  },
  "consum | SCHÄR Pan de Molde Cereales sin Gluten 300 Gr": {
@@ -3017,6 +4090,11 @@
   "match": null,
   "why": "barcode not on Open Food Facts or no photo"
  },
+ "consum | SCOTTEX Pañuelos de Bolsillo 12 U": {
+  "code": "5029053018638",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
+ },
  "consum | SEÑOR.LLANOS Vino Tinto Joven D.O. Valdepeñas 0,75 L": {
   "code": "8410415340721",
   "match": "Vino Tinto Do Valdepeñas Varietal Tempranillo",
@@ -3034,6 +4112,17 @@
   "match": "Tomate frito",
   "quantity": "350 g",
   "score": "barcode"
+ },
+ "consum | SPIGA Queso Grana Padano D.O.P. 180 Gr": {
+  "code": "8006663006467",
+  "match": "Grana Padano",
+  "quantity": "180g",
+  "score": "barcode"
+ },
+ "consum | SPONTEX Estropajo Salvauñas 4 Más 4 Regalo 8 U": {
+  "code": "3384124200049",
+  "match": null,
+  "why": "barcode not on Open Food Facts or no photo"
  },
  "consum | Supremas Salmón Plateado 250 Gr": {
   "code": "8435274110766",
@@ -3056,6 +4145,30 @@
   "code": "8437000663935",
   "match": "Agua de mineralización muy débil",
   "quantity": "1,5 L.",
+  "score": "barcode"
+ },
+ "consum | TILDA Arroz Basmati Paquete 1 Kg": {
+  "code": "8410184027878",
+  "match": "Basmati original Arroz",
+  "quantity": "1 kg",
+  "score": "barcode"
+ },
+ "consum | TULIPAN Margarina Vegetal Tarrina 400 Gr": {
+  "code": "8719200265806",
+  "match": "Tulipán Margarina",
+  "quantity": "400 g",
+  "score": "barcode"
+ },
+ "consum | TULIPAN Margarina con Sal Tarrina 400 Gr": {
+  "code": "8719200265837",
+  "match": "Margarina con sal",
+  "quantity": "400 g",
+  "score": "barcode"
+ },
+ "consum | UPGRADE Isotónico Azul Botella 1,5 L": {
+  "code": "8429359002237",
+  "match": "UpGrade",
+  "quantity": "",
   "score": "barcode"
  },
  "consum | VALIENTE Café Molido Natural 250 Gr": {
@@ -3431,6 +4544,15 @@
   "match": null,
   "why": "rejected by hand (photo)"
  },
+ "mercadona | Aceitunas verdes rellenas de anchoa Hacendado Bote": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8402001000867",
+  "match": "Aceitunas rellenas anchoa",
+  "quantity": null,
+  "score": 0.6
+ },
  "mercadona | Agua mineral Font Agudes Garrafa 8 L": {
   "brands": [
    "Font Agudes"
@@ -3472,11 +4594,67 @@
   "match": "Agua mineral con gas",
   "why": "no front photo"
  },
+ "mercadona | Agua mineral grande Font Agudes Garrafa": {
+  "brands": [
+   "Font Agudes"
+  ],
+  "code": "8413334015060",
+  "match": "Agua mineral natural",
+  "quantity": "6 l",
+  "score": 1.3
+ },
+ "mercadona | Alas de pollo Bandeja": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8402001011337",
+  "match": "Alas de pollo congeladas",
+  "quantity": "1 kg",
+  "score": 1.3
+ },
+ "mercadona | Alas partidas de pollo Bandeja": {
+  "code": "00636130801119002265",
+  "match": "Alas partidas Pollo",
+  "why": "no front photo"
+ },
+ "mercadona | Almendra tostada Hacendado 0% sal añadida pelada Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Almendra tostada y salada Hacendado con piel Paquete": {
+  "match": null,
+  "why": "brand"
+ },
  "mercadona | Alubia cocida blanca Hacendado Tarro 0.295 kg": {
   "match": null,
   "why": "brand"
  },
  "mercadona | Alubia cocida blanca Hacendado Tarro 0.57 kg": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Alubia cocida pinta Hacendado Tarro": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Alubia cocida roja Hacendado Tarro": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Arroz basmati aromático Hacendado Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000050021",
+  "match": "Arroz basmati",
+  "quantity": "1 kg",
+  "score": 0.97
+ },
+ "mercadona | Arroz con leche Hacendado Pack-4": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Arroz integral largo Hacendado Paquete": {
   "match": null,
   "why": "brand"
  },
@@ -3492,6 +4670,10 @@
   "match": "Arroz redondo",
   "quantity": "1 kg",
   "score": 1.3
+ },
+ "mercadona | Atún claro al natural Hacendado": {
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Atún claro en aceite de girasol Hacendado 3 latas X 0.056 kg": {
   "brands": [
@@ -3515,11 +4697,19 @@
   "match": null,
   "why": "brand"
  },
+ "mercadona | Atún listado al natural Hacendado Lata": {
+  "match": null,
+  "why": "brand"
+ },
  "mercadona | Avena molida Hacendado Paquete 0.5 kg": {
   "match": null,
   "why": "brand"
  },
  "mercadona | Azúcar blanco Hacendado Paquete 1 kg": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Azúcar moreno de caña Hacendado Paquete": {
   "match": null,
   "why": "brand"
  },
@@ -3549,6 +4739,41 @@
   "match": null,
   "why": "words"
  },
+ "mercadona | Bastoncillos de algodón 100% Deliplus Caja": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Batido de cacao Cacaolat Botella": {
+  "brands": [
+   "Margui"
+  ],
+  "code": "8432022001079",
+  "match": "Batido cacao",
+  "quantity": null,
+  "score": 0.77
+ },
+ "mercadona | Batido de chocolate ColaCao Energy Pack-4": {
+  "match": null,
+  "why": "variant ['chocolate'] / []"
+ },
+ "mercadona | Batido de chocolate Hacendado Botella": {
+  "brands": [
+   "Bofrost"
+  ],
+  "code": "10055",
+  "match": "Batido sabor chocolate  hacendado",
+  "quantity": null,
+  "score": 1.0
+ },
+ "mercadona | Batido de chocolate Hacendado Pack-6": {
+  "brands": [
+   "Bofrost"
+  ],
+  "code": "10055",
+  "match": "Batido sabor chocolate  hacendado",
+  "quantity": null,
+  "score": 1.0
+ },
  "mercadona | Bebida de almendras Hacendado 6 bricks X 1 L": {
   "match": null,
   "why": "brand"
@@ -3569,6 +4794,18 @@
   "match": "Bebida de soja 0% azúcares",
   "quantity": "1 l",
   "score": 1.05
+ },
+ "mercadona | Bebida isotónica Iso On blue Hacendado Botella": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Bebida isotónica sabor cítrico Iso drink": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Bebida isotónica sabor cítrico Iso drink Botella": {
+  "match": null,
+  "why": "words"
  },
  "mercadona | Bolsas de basura cubo alto 30L Bosque Verde Paquete": {
   "match": null,
@@ -3598,6 +4835,14 @@
   "match": "Burger vacuno gruesa",
   "quantity": "2 x 180 g",
   "score": 0.97
+ },
+ "mercadona | Cacahuete frito con sal Hacendado pelado Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Cacahuete tostado Hacendado 0% sal añadida Paquete": {
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Cacao soluble ColaCao original Bote 0.76 kg": {
   "match": null,
@@ -3633,6 +4878,37 @@
   "match": null,
   "why": "brand"
  },
+ "mercadona | Café soluble Classic Hacendado Bote": {
+  "brands": [
+   "hacendado"
+  ],
+  "code": "8480000110879",
+  "match": "Cafe Soluble",
+  "quantity": null,
+  "score": 0.77
+ },
+ "mercadona | Café soluble natural Nescafé classic Tarro": {
+  "brands": [
+   "Bonarea"
+  ],
+  "code": "8413585090052",
+  "match": "Cafe soluble natural",
+  "quantity": "100 g",
+  "score": 1.05
+ },
+ "mercadona | Caldo de pescado Hacendado Brik": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Caldo de pescado con bogavante Gourmet Gallina blanca Brik": {
+  "brands": [
+   "Gallina Blanca"
+  ],
+  "code": "8410300300885",
+  "match": "Caldo pescado Gallina Blanca",
+  "quantity": "1LT",
+  "score": 0.7
+ },
  "mercadona | Caldo de pollo Hacendado Brick 1 L": {
   "brands": [
    "Hacendado"
@@ -3645,6 +4921,10 @@
  "mercadona | Caldo de pollo Hacendado bajo en sal Brick 1 L": {
   "match": null,
   "why": "brand"
+ },
+ "mercadona | Caldo de verduras casero Gallina blanca Brik": {
+  "match": null,
+  "why": "words"
  },
  "mercadona | Carne picada de vacuno y cerdo Bandeja 0.5 kg": {
   "brands": [
@@ -3664,7 +4944,29 @@
   "quantity": "1 kg",
   "score": 1.3
  },
+ "mercadona | Cava brut Cabré & Sabaté Botella": {
+  "brands": [
+   "Cabré & Sabaté"
+  ],
+  "code": "8480000289216",
+  "match": "Cava Brut",
+  "quantity": "750 ml",
+  "score": 1.3
+ },
+ "mercadona | Cava brut nature Jaume Serra Botella": {
+  "brands": [
+   "Jaume Serra"
+  ],
+  "code": "8411277350415",
+  "match": "Cava Brut Nature Reserva 2018",
+  "quantity": "75 cl",
+  "score": 1.3
+ },
  "mercadona | Cereales copos de maíz Corn Flakes Hacendado 0% azúcares añadidos Caja 0.5 kg": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Cereales copos de trigo Chocodays Hacendado con chocolate Caja": {
   "match": null,
   "why": "brand"
  },
@@ -3718,6 +5020,26 @@
   "quantity": null,
   "score": 0.85
  },
+ "mercadona | Chorizo Pamplona extra Hacendado lonchas": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Chorizo extra pimienta Hacendado finas lonchas Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Compresa classic normal Deliplus sin alas Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Compresa normal Evax Cottonlike con alas Paquete": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Compresa normal Evax Cottonlike sin alas Paquete": {
+  "match": null,
+  "why": "words"
+ },
  "mercadona | Contramuslos de pollo sin piel Bandeja 0.9 kg": {
   "brands": [
    "consum"
@@ -3731,11 +5053,82 @@
   "match": null,
   "why": "brand"
  },
+ "mercadona | Costilla de cerdo churrasco Pieza": {
+  "brands": null,
+  "code": "2303491003924",
+  "match": "Costilla Churrasco cerdo",
+  "quantity": null,
+  "score": 0.85
+ },
+ "mercadona | Costillas de cerdo carnosas a tacos Bandeja": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Cous cous mediano Hacendado Caja": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Crema de verduras Hacendado Brik": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000087225",
+  "match": "Crema verduras",
+  "quantity": null,
+  "score": 1.1
+ },
+ "mercadona | Croissant Hacendado Paquete": {
+  "match": null,
+  "why": "no words"
+ },
+ "mercadona | Croquetas caprichos de jamón Hacendado ultracongeladas Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000634009",
+  "match": "Croquetas de Jamón Ultracongeladas",
+  "quantity": "500gr",
+  "score": 1.05
+ },
+ "mercadona | Croquetas de jamón Hacendado ultracongeladas Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000634009",
+  "match": "Croquetas de Jamón Ultracongeladas",
+  "quantity": "500gr",
+  "score": 1.3
+ },
+ "mercadona | Cuajada Hacendado Pack-4": {
+  "match": null,
+  "why": "brand"
+ },
  "mercadona | Dentífrico 3 action Deliplus Tubo 100 ml": {
   "match": null,
   "why": "brand"
  },
  "mercadona | Dentífrico Anticaries Deliplus Tubo 100 ml": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Espinaca en porciones Hacendado ultracongelada Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8402001021657",
+  "match": "Espinaca en porciones",
+  "quantity": null,
+  "score": 0.77
+ },
+ "mercadona | Espinacas en porciones Hacendado ultracongeladas Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Estropajo salvauñas suciedad resistente Bosque Verde Paquete": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Estropajo suciedad resistente Bosque Verde Paquete": {
   "match": null,
   "why": "words"
  },
@@ -3755,6 +5148,50 @@
   "quantity": null,
   "score": 0.77
  },
+ "mercadona | Filetes de anchoa en aceite de oliva Hacendado Lata": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000184337",
+  "match": "Semiconserva. Filetes De Anchoa En Aceite De Oliva",
+  "quantity": "42 g",
+  "score": 1.3
+ },
+ "mercadona | Filetes de anchoa en aceite de oliva Hacendado Pack-3": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Filetes de merluza  grandes del Cabo sin piel Hacendado ultracongelados Paquete": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Filetes de merluza del Cabo sin piel Hacendado ultracongelados Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000621887",
+  "match": "Filetes Merluza del Cabo",
+  "quantity": null,
+  "score": 0.7
+ },
+ "mercadona | Filetes pechuga de pavo Bandeja": {
+  "brands": [
+   "Coren"
+  ],
+  "code": "2632864004122",
+  "match": "Filete pechuga pavo",
+  "quantity": null,
+  "score": 1.1
+ },
+ "mercadona | Filetes pechuga de pavo marinados extra tiernos Bandeja": {
+  "brands": [
+   "mercadona"
+  ],
+  "code": "2304376003800",
+  "match": "Filetes de pechuga de pavo",
+  "quantity": "584 g",
+  "score": 0.9
+ },
  "mercadona | Filetes pechuga de pollo Bandeja 0.65 kg": {
   "brands": [
    "mercadona"
@@ -3773,11 +5210,27 @@
   "quantity": "570 g",
   "score": 0.97
  },
+ "mercadona | Film transparente Bosque Verde con sierra deslizante Caja": {
+  "match": null,
+  "why": "words"
+ },
  "mercadona | Flan de huevo Hacendado Pack-4": {
   "match": null,
   "why": "brand"
  },
  "mercadona | Flan de huevo Hacendado Pack-9": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Friegasuelos Pino Bosque Verde líquido Botella": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Friegasuelos Poetic Bosque Verde concentrado Botella": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Galletas Chocominis sabor chocolate Hacendado Caja": {
   "match": null,
   "why": "brand"
  },
@@ -3788,6 +5241,11 @@
  "mercadona | Galletas Digestive Hacendado Paquete": {
   "match": null,
   "why": "brand"
+ },
+ "mercadona | Galletas Digestive chocolate con leche Hacendado Paquete": {
+  "code": "0450660144383",
+  "match": "Galleta chocolate y leche",
+  "why": "no front photo"
  },
  "mercadona | Galletas María Hacendado Paquete 0.8 kg": {
   "match": null,
@@ -3805,6 +5263,10 @@
   "match": null,
   "why": "brand"
  },
+ "mercadona | Garbanzo Hacendado Paquete": {
+  "match": null,
+  "why": "brand"
+ },
  "mercadona | Garbanzo cocido Hacendado Tarro 0.295 kg": {
   "match": null,
   "why": "brand"
@@ -3812,6 +5274,33 @@
  "mercadona | Garbanzo cocido Hacendado Tarro 0.57 kg": {
   "match": null,
   "why": "brand"
+ },
+ "mercadona | Garbanzo pedrosillano Hacendado Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000052193",
+  "match": "Garbanzo pedrosillano",
+  "quantity": "1 kg",
+  "score": 1.3
+ },
+ "mercadona | Gazpacho tradicional Hacendado Botella": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000156044",
+  "match": "Gazpacho Tradicional",
+  "quantity": null,
+  "score": 1.1
+ },
+ "mercadona | Gazpacho tradicional Hacendado Pack-3": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000156044",
+  "match": "Gazpacho Tradicional",
+  "quantity": null,
+  "score": 1.1
  },
  "mercadona | Gel de baño avena Deliplus piel sensible Botella 750 ml": {
   "match": null,
@@ -3868,6 +5357,19 @@
   "quantity": null,
   "score": 1.1
  },
+ "mercadona | Hummus de garbanzos Hacendado receta clásica Tarrina": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000808585",
+  "match": "Hummus de garbanzos receta clásica",
+  "quantity": "240 g",
+  "score": 1.1
+ },
+ "mercadona | Infusión Manzanilla Hacendado Caja": {
+  "match": null,
+  "why": "brand"
+ },
  "mercadona | Jamoncitos de pollo Bandeja 0.92 kg": {
   "brands": [
    "mercadona"
@@ -3906,6 +5408,23 @@
   "quantity": "500 g",
   "score": 0.97
  },
+ "mercadona | Langostino cocido Bandeja": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000872722",
+  "match": "Langostino Cocido Vannamei",
+  "quantity": "600 g",
+  "score": 1.3
+ },
+ "mercadona | Lasaña a la boloñesa Hacendado ultracongelada Caja": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Lasaña boloñesa familiar Hacendado ultracongelada Bandeja": {
+  "match": null,
+  "why": "words"
+ },
  "mercadona | Lavavajillas Classic limón Finish en pastillas Caja": {
   "match": null,
   "why": "variant ['limon'] / []"
@@ -3939,6 +5458,10 @@
  "mercadona | Lavavajillas a mano Bosque Verde Botella 1.3 L": {
   "match": null,
   "why": "words"
+ },
+ "mercadona | Leche condensada Hacendado Bote": {
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Leche desnatada Hacendado Brick 1 L": {
   "brands": [
@@ -4000,6 +5523,14 @@
   "match": null,
   "why": "brand"
  },
+ "mercadona | Limpiacristales Bosque Verde Spray": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Limpiacristales y multiusos Bosque Verde Botella": {
+  "match": null,
+  "why": "words"
+ },
  "mercadona | Limpiahogar Multiusos Pino Bosque Verde líquido Botella": {
   "match": null,
   "why": "words"
@@ -4028,6 +5559,10 @@
   "code": "8084000062505",
   "match": "Macarrones",
   "why": "no front photo"
+ },
+ "mercadona | Macarrón rayado integral Hacendado Paquete": {
+  "match": null,
+  "why": "variant ['integral', 'rallado'] / []"
  },
  "mercadona | Magdalenas Hacendado Paquete": {
   "brands": [
@@ -4064,6 +5599,41 @@
   "quantity": null,
   "score": 0.7
  },
+ "mercadona | Margarina 100% vegetal Hacendado Tarrina": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000201966",
+  "match": "Margarina 100% vegetal",
+  "quantity": "250 g",
+  "score": 0.97
+ },
+ "mercadona | Margarina Flora Original Tarrina": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Margarina Hacendado Tarrina": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Margarina Tulipán Original Tarrina": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Maxi pan de burger Hacendado Paquete": {
+  "code": "9409801000577",
+  "match": "Maxi burger",
+  "why": "no front photo"
+ },
+ "mercadona | Maxi tortillas de trigo Hacendado Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000808707",
+  "match": "6 Maxi Tortillas Trigo Wraps",
+  "quantity": "360 g (6 x 60 g)",
+  "score": 1.3
+ },
  "mercadona | Maíz dulce Hacendado Pack-3": {
   "match": null,
   "why": "brand"
@@ -4071,6 +5641,37 @@
  "mercadona | Maíz dulce Hacendado ultracongelado Paquete": {
   "match": null,
   "why": "brand"
+ },
+ "mercadona | Media tortilla de patata con cebolla Listo para Comer": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Mejillones en escabeche Hacendado medianos Lata": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "0400440186188",
+  "match": "mejillones Escabeche",
+  "quantity": "111g",
+  "score": 0.87
+ },
+ "mercadona | Mejillones en escabeche Hacendado pequeños Lata": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "0400440186188",
+  "match": "mejillones Escabeche",
+  "quantity": "111g",
+  "score": 0.87
+ },
+ "mercadona | Menestra de verduras Hacendado ultracongelada Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000677877",
+  "match": "Menestra de verduras",
+  "quantity": null,
+  "score": 0.77
  },
  "mercadona | Mermelada de fresa Hacendado Tarro 0.4 kg": {
   "match": null,
@@ -4089,9 +5690,44 @@
   "quantity": "1 kg",
   "score": 1.3
  },
+ "mercadona | Mortadela Hacendado lonchas Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000593344",
+  "match": "Mortadela-lonchas Rosada",
+  "quantity": null,
+  "score": 1.1
+ },
+ "mercadona | Mortadela italiana Hacendado finas lonchas Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Mostaza clásica Hacendado Bote": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000234100",
+  "match": "Mostaza clásica",
+  "quantity": "388 g",
+  "score": 0.97
+ },
+ "mercadona | Mostaza de Dijon Hacendado Tarro": {
+  "match": null,
+  "why": "brand"
+ },
  "mercadona | Mozzarella fresca de vaca Hacendado Paquete": {
   "match": null,
   "why": "brand"
+ },
+ "mercadona | Muesli Crunchy Hacendado con frutos secos Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Muesli Hacendado con frutas Paquete": {
+  "code": "01794205",
+  "match": "Muesli frutas",
+  "why": "no front photo"
  },
  "mercadona | Nata fresca para cocinar Hacendado Tarrina 200 ml": {
   "brands": [
@@ -4147,6 +5783,44 @@
   "quantity": "500g",
   "score": 1.3
  },
+ "mercadona | Nuez natural Hacendado Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Nuez troceada pelada Hacendado Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Nuggets de pavo Hacendado ultracongelados Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Nuggets de pollo Hacendado ultracongelados Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000633231",
+  "match": "Nuggets de pollo",
+  "quantity": "500 g",
+  "score": 0.97
+ },
+ "mercadona | Palitos de surimi Hacendado Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000625021",
+  "match": "Palitos delicias - Surimi",
+  "quantity": "460g",
+  "score": 1.3
+ },
+ "mercadona | Palitos de surimi Hacendado ultracongelados Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Pan de burger Hacendado Rústico Paquete": {
+  "match": null,
+  "why": "no words"
+ },
  "mercadona | Pan de molde 100% integral familiar Hacendado Paquete 0.82 kg": {
   "match": null,
   "why": "brand"
@@ -4185,11 +5859,58 @@
   "quantity": "500g (16/09/22)",
   "score": 1.3
  },
+ "mercadona | Pan tostado classic Hacendado Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000822871",
+  "match": "Pan tostado clásico",
+  "quantity": "550g",
+  "score": 1.3
+ },
+ "mercadona | Panecillo tostado classic Hacendado Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000822772",
+  "match": "Panecillo tostado atinin",
+  "quantity": "300g",
+  "score": 1.3
+ },
  "mercadona | Papel hogar compacto absorbente Bosque Verde Paquete 3 ud": {
   "match": null,
   "why": "rejected by hand (photo)"
  },
+ "mercadona | Patatas fritas clásicas Hacendado Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Patatas fritas onduladas Hacendado Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Patatas prefritas corte fino Hacendado ultracongeladas Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000614278",
+  "match": "Patatas corte fino",
+  "quantity": "1kg",
+  "score": 0.9
+ },
+ "mercadona | Patatas prefritas corte grueso Hacendado ultracongeladas Paquete": {
+  "match": null,
+  "why": "brand"
+ },
  "mercadona | Pañales bebé talla 4 de 9-14 kg Dodot Paquete 58 ud": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Pañuelos de papel Aloe Vera Bosque Verde Paquete": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Pañuelos de papel Extra Suaves Bosque Verde Paquete": {
   "match": null,
   "why": "words"
  },
@@ -4218,6 +5939,14 @@
   "quantity": "70 g",
   "score": 1.05
  },
+ "mercadona | Pizza 4 quesos Hacendado": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Pizza 4 quesos Hacendado Pack-2": {
+  "match": null,
+  "why": "brand"
+ },
  "mercadona | Porciones de chocolate negro 72% cacao extrafino Hacendado Paquete": {
   "brands": [
    "Hacendado"
@@ -4235,6 +5964,13 @@
   "match": "Porciones de merluza",
   "quantity": null,
   "score": 0.77
+ },
+ "mercadona | Preparado de carne picada vacuno Bandeja": {
+  "brands": null,
+  "code": "8432095067583",
+  "match": "Preparado carne picada vacuno",
+  "quantity": null,
+  "score": 1.1
  },
  "mercadona | Queso Emmental Hacendado lonchas Paquete 0.2 kg": {
   "match": null,
@@ -4256,6 +5992,15 @@
   "match": null,
   "why": "brand"
  },
+ "mercadona | Queso grana padano Zanetti Pieza": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Queso precortado de cabra Hacendado Paquete": {
+  "code": "0414440511642",
+  "match": "Queso Fresco Cabra",
+  "why": "no front photo"
+ },
  "mercadona | Queso rallado emmental gratinar Hacendado Paquete 0.2 kg": {
   "match": null,
   "why": "brand"
@@ -4273,6 +6018,10 @@
   "match": null,
   "why": "variant ['mozzarella', 'rallado'] / []"
  },
+ "mercadona | Queso rulo de cabra Hacendado Paquete": {
+  "match": null,
+  "why": "brand"
+ },
  "mercadona | Queso semicurado Entrepinares lonchas Paquete 0.21 kg": {
   "brands": [
    "Entrepinares"
@@ -4281,6 +6030,23 @@
   "match": "Queso semicurado lonchas",
   "quantity": "200 g",
   "score": 1.05
+ },
+ "mercadona | Queso semicurado mezcla Hacendado Pieza": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Queso untar original Philadelphia Tarrina": {
+  "brands": [
+   "President"
+  ],
+  "code": "3228022040195",
+  "match": "Crema de queso semicurado para untar tarrina",
+  "quantity": null,
+  "score": 0.85
+ },
+ "mercadona | Queso untar suave de vaca Hacendado Tarrina": {
+  "match": null,
+  "why": "brand"
  },
  "mercadona | Refresco Coca-Cola 12 latas X 330 ml": {
   "match": null,
@@ -4299,9 +6065,34 @@
   "match": null,
   "why": "words"
  },
+ "mercadona | Refresco Fanta limón Botella": {
+  "brands": null,
+  "code": "8410470189198",
+  "match": "Refresco de Limón",
+  "quantity": null,
+  "score": 0.77
+ },
  "mercadona | Refresco Fanta naranja Botella": {
   "match": null,
   "why": "rejected by hand (photo)"
+ },
+ "mercadona | Refresco de limón Hacendado fresh gas Botella": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000290779",
+  "match": "Fresh gas limón",
+  "quantity": "2 l",
+  "score": 1.05
+ },
+ "mercadona | Refresco de limón Hacendado fresh gas Pack-6": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000290779",
+  "match": "Fresh gas limón",
+  "quantity": "2 l",
+  "score": 1.05
  },
  "mercadona | Sal yodada fina Hacendado Paquete 1 kg": {
   "brands": [
@@ -4311,6 +6102,22 @@
   "match": "Sal Yodada Fina",
   "quantity": "1kg  (16/09/22)",
   "score": 1.3
+ },
+ "mercadona | Salchichas cocidas Frankfurt La Selva Tarro": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Salchichas cocidas bocata Hacendado": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Salchichas cocidas bocata gourmet Hacendado de cerdo sabor ahumado": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Salchichas cocidas estilo Frankfurt Campofrío sabor ahumado": {
+  "match": null,
+  "why": "words"
  },
  "mercadona | Salmón ahumado Hacendado Pack-2": {
   "brands": [
@@ -4330,6 +6137,29 @@
   "quantity": null,
   "score": 1.1
  },
+ "mercadona | Salsa Pesto con albahaca Hacendado Tarro": {
+  "code": "47718593",
+  "match": "Salsa fresca Pesto Hacendado",
+  "why": "no front photo"
+ },
+ "mercadona | Salsa fresca Pesto con albahaca Hacendado Tarrina": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000174192",
+  "match": "Pesto salsa fresca",
+  "quantity": "150g",
+  "score": 0.9
+ },
+ "mercadona | Salteado de verduras Hacendado ultracongelado Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000610102",
+  "match": "Salteado de verduras",
+  "quantity": "600 g",
+  "score": 0.97
+ },
  "mercadona | Sardinas en aceite de oliva Hacendado Pack-2": {
   "match": null,
   "why": "brand"
@@ -4342,6 +6172,14 @@
   "match": "Sardinillas en aceite de oliva",
   "quantity": "2 x 90 g",
   "score": 1.3
+ },
+ "mercadona | Servilleta papel Bosque Verde Paquete": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Servilleta papel suave Bosque Verde Paquete": {
+  "match": null,
+  "why": "variant ['suave'] / []"
  },
  "mercadona | Spaghetti Hacendado Paquete 0.5 kg": {
   "match": null,
@@ -4364,6 +6202,10 @@
   "match": "toallitas frescas/perfumadas",
   "why": "no front photo"
  },
+ "mercadona | Tomate entero pelado Hacendado Bote": {
+  "match": null,
+  "why": "words"
+ },
  "mercadona | Tomate triturado Hacendado Bote 0.4 kg": {
   "match": null,
   "why": "brand"
@@ -4371,6 +6213,28 @@
  "mercadona | Tomate triturado Hacendado Bote 0.8 kg": {
   "match": null,
   "why": "brand"
+ },
+ "mercadona | Tortilla de patata y cebolla Hacendado Bandeja": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000808950",
+  "match": "Tortilla con cebolla",
+  "quantity": "600 g",
+  "score": 0.97
+ },
+ "mercadona | Tortillas de trigo Delibreads 30 cm Paquete": {
+  "match": null,
+  "why": "words"
+ },
+ "mercadona | Tortillas de trigo Hacendado Paquete": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000809421",
+  "match": "Tortillas de trigo integrales",
+  "quantity": "360 g",
+  "score": 1.3
  },
  "mercadona | Té negro Hacendado Caja": {
   "match": null,
@@ -4385,6 +6249,24 @@
   "quantity": "40 bags/sachets,  116 g",
   "score": 1.1
  },
+ "mercadona | Tónica Hacendado": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Tónica original Schweppes Botella": {
+  "brands": null,
+  "code": "7790895004667",
+  "match": "Schweppes tónica",
+  "quantity": "2.25",
+  "score": 1.1
+ },
+ "mercadona | Tónica original Schweppes Pack-6": {
+  "brands": null,
+  "code": "7790895004667",
+  "match": "Schweppes tónica",
+  "quantity": "2.25",
+  "score": 1.1
+ },
  "mercadona | Vinagre de vino blanco Hacendado Botella": {
   "match": null,
   "why": "brand"
@@ -4392,6 +6274,24 @@
  "mercadona | Vinagre de vino tinto Hacendado Botella": {
   "match": null,
   "why": "rejected by hand (photo)"
+ },
+ "mercadona | Vino blanco Don Simón chardonnay airén Pack-3": {
+  "brands": [
+   "Don Simón"
+  ],
+  "code": "8410261206189",
+  "match": "Vino blanco chardonnay airén",
+  "quantity": "250 ml (3 X 250ml)",
+  "score": 1.3
+ },
+ "mercadona | Vino blanco verdejo Arribeño DO Rueda Botella": {
+  "brands": [
+   "Viña espolón"
+  ],
+  "code": "8431876262957",
+  "match": "Vino do rueda viña espolon blanco verdejo",
+  "quantity": "75 cl",
+  "score": 1.13
  },
  "mercadona | Vino tinto Merlot Mar de Uvas Botella": {
   "brands": null,
@@ -4421,6 +6321,10 @@
   "quantity": null,
   "score": 0.67
  },
+ "mercadona | Yogur natural Hacendado 0% MG 0% azúcares añadidos": {
+  "match": null,
+  "why": "no words"
+ },
  "mercadona | Yogur natural Hacendado 6 ud. X 0.125 kg": {
   "match": null,
   "why": "words"
@@ -4428,6 +6332,36 @@
  "mercadona | Yogur natural La Fageda 4 ud. X 0.125 kg": {
   "match": null,
   "why": "brand"
+ },
+ "mercadona | Yogur sabor fresa Danone Pack-4": {
+  "brands": [
+   "Danone"
+  ],
+  "code": "8410500018054",
+  "match": "Yogur Líquido Fresa",
+  "quantity": "550 g.",
+  "score": 0.97
+ },
+ "mercadona | Yogur sabor fresa Hacendado 0% MG 0% azúcares añadidos": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Yogur sabor fresa Hacendado Pack-4": {
+  "brands": [
+   "Hacendado"
+  ],
+  "code": "8480000200402",
+  "match": "Yogur sabor fresa",
+  "quantity": "500 g (4x125g)",
+  "score": 1.3
+ },
+ "mercadona | Zumo de piña Hacendado Brik": {
+  "match": null,
+  "why": "brand"
+ },
+ "mercadona | Zumo de piña selección Hacendado Brik": {
+  "match": null,
+  "why": "words"
  },
  "mercadona | Zumo pura naranja Hacendado Brick 1 L": {
   "brands": [
