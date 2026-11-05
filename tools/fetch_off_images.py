@@ -78,6 +78,12 @@ VARIANT = {"entera", "semidesnatada", "desnatada", "sinlactosa", "integral", "li
            "espinacas", "bomba", "marinadas", "tiras", "propoleo"}
 # matches checked by hand and found wrong (shelf name as in data/off-matches.json): never use them
 REJECT = {
+    # November 2026, second batch: wrong product (tomato box for tissues, integral wraps) or unusable photo
+    "mercadona | Tortillas de trigo Hacendado Paquete",
+    "consum | CONSUM Croissants Bolsa 350 Gr",
+    "consum | SCHWEPPES Tónica Botella 1 L",
+    "consum | CONSUM Servilleta 1 Capa Blanca 30x30 200unidad. 200 U",
+    "consum | CONSUM Pañuelo Compacto Aloe Cuatro Capas 10 U",
     "mercadona | Jamón cocido extra Hacendado finas lonchas Paquete 0.2 kg", "lidl | Arroz largo Campo Largo 1 kg",
     "carrefour | Garbanzos cocidos categoría extra Classic Carrefour 400 g.", "dia | Jamoncitos de pollo Selección de Dia 1 Kg aprox.",
     "bonpreu | REINA APICOLA Mel de mil flors 1 kg", "bonpreu | REINA APICOLA Mel de mil flors 500 g",
