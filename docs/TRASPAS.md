@@ -95,6 +95,11 @@ per a la resta) i un panell amb els resultats de Preuet Plus de tots els mòbils
 cada súper. S'hi entra amb l'enllaç `#equip` o tocant 5 vegades la línia de la versió a Més → Sobre Preuet. Als mòbils
 en mode equip el Plus està obert i no compta.
 
+**213 productes** (5/11/2026): `tools/more_products.py` defineix 97 productes més, i `fetch_prices.py build` només n'afegeix
+un si el troba a dos supermercats o més (82 hi han entrat; 15 només eren a un súper). Bonpreu no es pot llegir
+automàticament: el seu cercador respon 202 (control anti-robots) i no s'intenta esquivar; el codi hi és però només
+s'executa amb `PREUET_BONPREU=1`.
+
 **Supabase keep-alive** (`.github/workflows/supabase-keepalive.yml`, d'una altra sessió): cada 3 dies fa una lectura
 real (`rpc/list_contributions`, amb la clau pública) perquè el projecte gratuït no es pausi per inactivitat.
 

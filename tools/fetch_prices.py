@@ -13,6 +13,7 @@ Dia and Carrefour refuse automated reads (403). The tool waits between calls.
 import gzip
 import collections
 import json
+import os
 import pathlib
 import sys
 import time
@@ -93,6 +94,8 @@ def cmd_collect():
         consum[p["id"]] = items
         print(f"consum {p['id']}: {len(items)}", flush=True)
     (RAW / "consum.json.gz").write_bytes(gzip.compress(json.dumps(consum, ensure_ascii=False).encode()))
+    if os.environ.get("PREUET_BONPREU") != "1":  # Bonpreu answers 202 (its bot check) to automated searches: not asked by default
+        return
     d = json.loads(DATA.read_text(encoding="utf-8"))
     bonpreu = {}
     for pid, qca in bonpreu_queries(d).items():
