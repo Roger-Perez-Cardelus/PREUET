@@ -15,7 +15,14 @@ function cleanUser(u) {
   if (!u || typeof u !== "object") return d;
   const o = Object.assign(d, u);
   o.basket = Array.isArray(o.basket) ? o.basket.filter(x => x && X.P.has(x.p)).map(x => ({ p: x.p, n: clamp(Math.round(Number(x.n) || 1), 1, 99) })) : [];
-  o.schedules = Array.isArray(o.schedules) ? o.schedules.filter(s => s && s.id && Array.isArray(s.items)) : [];
+  const isoDay = v => typeof v === "string" && /^\d{4}-\d\d-\d\d$/.test(v);
+  o.schedules = Array.isArray(o.schedules) ? o.schedules.filter(s => s && s.id && Array.isArray(s.items)).map(s => Object.assign({}, s, {
+    freq: ["w", "2w", "m"].includes(s.freq) ? s.freq : "w",
+    dow: Number.isInteger(s.dow) && s.dow >= 0 && s.dow <= 6 ? s.dow : 1,
+    dom: Number.isInteger(s.dom) && s.dom >= 1 && s.dom <= 28 ? s.dom : 1,
+    start: isoDay(s.start) ? s.start : isoToday(),
+    lastDone: isoDay(s.lastDone) ? s.lastDone : null,
+  })) : [];
   o.diets = Array.isArray(o.diets) ? o.diets.filter(x => DIET_TAGS.includes(x)) : [];
   o.avoid = Array.isArray(o.avoid) ? o.avoid.filter(x => ALLERGENS.includes(x)) : [];
   if (o.chains && !Array.isArray(o.chains)) o.chains = null;

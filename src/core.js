@@ -382,7 +382,7 @@ function nextFrom(s, fromIso) {
   }
   const step = s.freq === "2w" ? 14 : 7;
   const first = parseISO(s.start);
-  while (first.getDay() !== s.dow) first.setDate(first.getDate() + 1);
+  for (let i = 0; i < 7 && first.getDay() !== s.dow; i++) first.setDate(first.getDate() + 1); // a bad weekday must not hang the app
   if (from <= first) return isoOf(first);
   const k = Math.ceil((from - first) / DAY / step - 1e-9);
   const d = new Date(first); d.setDate(d.getDate() + k * step);

@@ -55,3 +55,12 @@ test("shops without any product price are hidden, with their promotions", () => 
   assert.ok(app.X.D.offers.every(o => ids.includes(o.c)));
   assert.ok(app.X.C.has("condis")); // still known, for old community reports
 });
+
+test("a periodic purchase with bad fields is repaired instead of hanging the app", () => {
+  const app = loadApp({ today: "2026-11-05" });
+  const u = app.cleanUser({ schedules: [{ id: "s1", name: "x", items: [{ p: "llet-semi", n: 1 }], freq: "week", start: "ahir" }] });
+  const s = u.schedules[0];
+  assert.equal(s.freq, "w");
+  assert.equal(s.dow, 1);
+  assert.equal(s.start, "2026-11-05");
+});
