@@ -29,6 +29,14 @@ PROBES = {
     "bonpreu": "https://www.compraonline.bonpreuesclat.cat/api/v5/products/search?term=llet&limit=3",
     "bonarea": "https://www.bonarea-online.com/ca/shop/search?query=llet",
     "openprices": "https://prices.openfoodfacts.org/api/v1/prices?size=3&location_osm_address_country=Espa%C3%B1a&order_by=-date",
+    "openprices-es-count": "https://prices.openfoodfacts.org/api/v1/prices?size=1&location_osm_address_country=Espa%C3%B1a&date__gte=2026-09-01",
+    "openprices-locations-es": "https://prices.openfoodfacts.org/api/v1/locations?size=20&osm_address_country=Espa%C3%B1a&order_by=-price_count",
+    "caprabo": "https://www.capraboacasa.com/",
+    "condis": "https://www.condisline.com/",
+    "lidl": "https://www.lidl.es/q/search?q=leche",
+    "aldi": "https://www.aldi.es/",
+    "ametller-search": "https://www.ametllerorigen.com/ca/cerca?q=llet",
+    "bonpreu-page": "https://www.compraonline.bonpreuesclat.cat/products/search?q=llet",
 }
 
 
