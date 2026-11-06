@@ -114,6 +114,9 @@ def chain_of_url(d, url):
 
 
 # ---------------------------------------------------------------- worklist
+AUTO_HOSTS = ("tienda.mercadona.es", "tienda.consum.es")  # tools/fetch_prices.py reads these shops whole every Monday
+
+
 def cmd_worklist(args):
     d = load()
     by_url = collections.OrderedDict()
@@ -122,13 +125,18 @@ def cmd_worklist(args):
     for o in d["offerings"]:
         by_url.setdefault(o["src"], {"chain": o["c"], "type": o["st"], "names": []})["names"].append(o["name"])
     chains = collections.OrderedDict()
+    skipped = 0
     for url, w in by_url.items():
+        if not args.all and any(h in url for h in AUTO_HOSTS):  # read every Monday by fetch_prices.py: not by hand
+            skipped += 1
+            continue
         chains.setdefault(w["chain"], []).append({"url": url, "type": w["type"], "track": sorted(set(w["names"]))})
     out = {"data_date": d["meta"]["updated"], "pages": sum(len(v) for v in chains.values()), "chains": chains}
     txt = json.dumps(out, ensure_ascii=False, indent=1)
     if args.out:
         pathlib.Path(args.out).write_text(txt, encoding="utf-8")
-        print(f"worklist: {out['pages']} pages in {len(chains)} chains -> {args.out}")
+        print(f"worklist: {out['pages']} pages in {len(chains)} chains -> {args.out}"
+              + (f" ({skipped} pages of Mercadona's and Consum's own shops left out: the Monday action reads them)" if skipped else ""))
     else:
         print(txt)
 
@@ -414,7 +422,7 @@ def cmd_check(args):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
-    w = sub.add_parser("worklist"); w.add_argument("--out")
+    w = sub.add_parser("worklist"); w.add_argument("--out"); w.add_argument("--all", action="store_true", help="also Mercadona's and Consum's own shops")
     p = sub.add_parser("apply-prices"); p.add_argument("captures"); p.add_argument("--date"); p.add_argument("--accept-big", action="store_true"); p.add_argument("--dry-run", action="store_true")
     o = sub.add_parser("apply-offers"); o.add_argument("offers"); o.add_argument("--date"); o.add_argument("--dry-run", action="store_true")
     c = sub.add_parser("check"); c.add_argument("--fix", action="store_true"); c.add_argument("--date")

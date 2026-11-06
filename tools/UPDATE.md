@@ -17,7 +17,7 @@ Procediment que segueix la tasca programada cada dilluns, i que també pot fer q
 
 1. Obtén el projecte al dia: clona el repositori o, si ja el tens, `git pull origin main`. Cada dilluns l'acció «Preus de productes nous» hi desa els preus de Mercadona i Consum, així que cal partir sempre de l'última versió de `main`.
 2. Comprova que les dades són bones abans de tocar res: `python3 tools/update_data.py check` (ha d'acabar sense problemes).
-3. Genera la llista de feina: `python3 tools/update_data.py worklist --out worklist.json`. Per a cada cadena hi ha les pàgines a llegir i, per a cada pàgina, els noms exactes dels productes que Preuet hi segueix (`track`).
+3. Genera la llista de feina: `python3 tools/update_data.py worklist --out worklist.json`. Ja no hi surten les pàgines de les botigues en línia de Mercadona i Consum (les llegeix l'acció de cada dilluns); `--all` les hi torna a posar. Per a cada cadena hi ha les pàgines a llegir i, per a cada pàgina, els noms exactes dels productes que Preuet hi segueix (`track`).
 
 ## 2. Llegir els preus (`captures.json`)
 
@@ -78,6 +78,8 @@ Prova del 5/11/2026 amb lectures normals des d'una sessió de Claude (2 s entre 
 | Dia, Ametller Origen, bonÀrea, supersupers.com, radarsuper.com | Responen (200) i `tools/parse_pages.py` en llegeix els preus |
 | Bonpreu | 403 des de la sessió; des de GitHub Actions (mode `pages`) respon una part de les pàgines |
 | Carrefour | 403 des de tot arreu: només a mà |
+
+Fullet de Lidl: la pàgina de radarsuper carrega els fullets després d'obrir-se i l'enllaç al PDF no hi apareix; obre la pàgina del fullet concret («Ver sus N páginas») i l'enllaç hi és.
 
 Lidl i Aldi no tenen preus de producte a la seva web: radarsuper.com només en té 2 d'actuals, la resta queden antics.
 
