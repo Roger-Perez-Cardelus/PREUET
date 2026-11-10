@@ -16,8 +16,11 @@ import collections
 import json
 import os
 import pathlib
+import re
+import statistics
 import sys
 import time
+import unicodedata
 import urllib.parse
 import urllib.request
 
@@ -183,6 +186,9 @@ def bonarea_shelves(limit=160):
 
 SIZE_RX = re.compile(r"(?:(\d+)\s*x\s*)?(\d+(?:[.,]\d+)?)\s*(kg|g|gr|ml|cl|l|litres|litre)\b")
 OWN_CA = re.compile(r"\b(ametller origen|essencials|bonarea)\b")
+BRAND_CA = re.compile(r"\b(ametller origen|essencials|bonarea)\b", re.I)  # "Ametller" must not count as "ametlla"
+SKIP_CA = {("bonarea", "pit-gall-dindi"),  # sliced deli turkey at Preuet, fresh fillets on this shelf
+           ("ametller", "cigrons-secs"), ("ametller", "llenties-seques")}  # the 570 g packs are cooked jars
 
 
 def name_size(name, unit):
@@ -206,14 +212,24 @@ def name_size(name, unit):
 def catalan_items(raw, p, chain, ref_up):
     """A Catalan-named shop's packs for a product: every word of the product's Catalan name in the shelf name, the name
     beginning with the product, a size readable from the name, and a price per unit within 0.4–2.5 times the other shops'."""
+    if (chain, p["id"]) in SKIP_CA:
+        return []
     must, avoid = ca_rules(p)
     rule = {"must": must, "avoid": avoid}
+    first = must[0][0].strip() if must else ""
     out = []
     for it in raw:
-        bare = it.get("bare") or it["name"]
-        if not matches(rule, bare) or not starts_with_product(rule, bare):
+        bare = unicodedata.normalize("NFC", it.get("bare") or it["name"])
+        bare = re.sub(r"bon.rea", " ", BRAND_CA.sub(" ", bare), flags=re.I)
+        words = norm(bare).split()
+        while words and words[0] in LEAD:
+            words = words[1:]
+        if not matches(rule, bare) or not words or not words[0].startswith(first):  # the name begins with the product itself
             continue
-        size = 1 if p["unit"] == "ud" and p["ref"] == 1 else name_size(it["name"], p["unit"])
+        whole = p["unit"] == "ud" and p["ref"] == 1
+        if whole and SIZE_RX.search(norm(it["name"]).replace(",", ".")):  # a piece is a piece: not a 250 g bag or a cut tray
+            continue
+        size = 1 if whole else name_size(it["name"], p["unit"])
         if not size or not it["price"]:
             continue
         up = it["price"] / size
@@ -348,14 +364,18 @@ CA_WORDS = {  # the usual exclusions, in Catalan too
     "cocidos": "cuits", "frito": "fregit", "fritos": "fregits", "asado": "rostit", "adobad": "adobat", "rebozad": "arrebossat",
     "empanad": "arrebossat", "barbacoa": "barbacoa", "hierbas": "herbes", "ajo": "all", "setas": "bolets", "espinacas": "espinacs",
     "verduras": "verdures", "pescado": "peix", "bacalao": "bacalla", "salmon": "salmo", "gambas": "gambes", "conserva": "conserva",
-    "frasco": "flascó", "bote": "pot", "integral": "integral", "light": "light", "mini": "mini", "sobres": "sobres", "capsulas": "capsules",
+    "frasco": "flascó", "semicurado": "semi", "rodajas": "rodanxes", "trozos": "trossos", "partida": "meitat", "media": "mitja",
+    "cortada": "tallada", "deshidratad": "deshidrat", "desecad": "dessec", "calabacin": "carbasso", "rojo": "vermell", "rosso": "vermell",
+    "antigua": "ancienne", "tierno": "tendre", "curado": "curat", "untar": "untar", "tacos": "daus", "dados": "daus", "sin sal": "sense sal",
+    "naranja": "taronja", "manzana": "poma", "pina": "pinya", "leche": "llet", "blanco": "blanc", "negra": "negra", "tostada": "torrada", "bote": "pot", "integral": "integral", "light": "light", "mini": "mini", "sobres": "sobres", "capsulas": "capsules",
 }
 
 
 def ca_rules(p):
     """must: every Catalan search word (stemmed: "galetes" finds "galeta"); avoid: the Spanish ones and their Catalan words."""
     words = [w for w in norm(p.get("qca") or ca_query(p["ca"])).split() if w not in CA_STOP]
-    must = [[(w[:max(3, len(w) - 2)] if len(w) >= 6 else w if len(w) > 2 else " " + w + " ")] for w in words]
+    # long words by their stem ("galetes" finds "galeta"); short ones whole ("oli" must not find "oliva")
+    must = [[(w[:max(3, len(w) - 2)] if len(w) >= 6 else " " + w + " ")] for w in words]
     avoid = list(p.get("avoid", []))
     avoid += [CA_WORDS[norm(a).strip()] for a in p.get("avoid", []) if norm(a).strip() in CA_WORDS and norm(CA_WORDS[norm(a).strip()]).strip() not in words]
     return must, avoid
@@ -404,9 +424,6 @@ def bonpreu_items(raw, p, ref_up=None):
 
 
 # ---------------------------------------------------------------- build
-import re  # noqa: E402
-import statistics  # noqa: E402
-import unicodedata  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "preuet-data.json"

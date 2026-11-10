@@ -100,6 +100,11 @@ un si el troba a dos supermercats o més (82 hi han entrat; 15 només eren a un 
 automàticament: el seu cercador respon 202 (control anti-robots) i no s'intenta esquivar; el codi hi és però només
 s'executa amb `PREUET_BONPREU=1`.
 
+**Ametller Origen i bonÀrea automàtics** (10/11/2026): l'acció dels dilluns en llegeix els catàlegs sencers
+(`ametller_shelves`, `bonarea_shelves` i `refresh_catalan` a `tools/fetch_prices.py`). 1.419 preus; 138 dels 213
+productes tenen preu a tres súpers o més. Els súpers amb preus de més de 15 dies no entren a la comparació per defecte
+(`oldChains` a `src/state.js`).
+
 **Supabase keep-alive** (`.github/workflows/supabase-keepalive.yml`, d'una altra sessió): cada 3 dies fa una lectura
 real (`rpc/list_contributions`, amb la clau pública) perquè el projecte gratuït no es pausi per inactivitat.
 

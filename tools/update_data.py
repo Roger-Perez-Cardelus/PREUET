@@ -114,7 +114,7 @@ def chain_of_url(d, url):
 
 
 # ---------------------------------------------------------------- worklist
-AUTO_HOSTS = ("tienda.mercadona.es", "tienda.consum.es")  # tools/fetch_prices.py reads these shops whole every Monday
+AUTO_HOSTS = ("tienda.mercadona.es", "tienda.consum.es", "www.ametllerorigen.com", "www.bonarea-online.com")  # tools/fetch_prices.py reads these shops whole every Monday
 
 
 def cmd_worklist(args):

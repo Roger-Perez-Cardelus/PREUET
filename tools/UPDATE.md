@@ -83,6 +83,14 @@ Fullet de Lidl: la pàgina de radarsuper carrega els fullets després d'obrir-se
 
 Lidl i Aldi no tenen preus de producte a la seva web: radarsuper.com només en té 2 d'actuals, la resta queden antics.
 
+### Ametller Origen i bonÀrea: llegits sencers cada dilluns
+
+La mateixa acció dels dilluns llegeix totes les pàgines de categoria d'Ametller Origen i de bonÀrea
+(`tools/fetch_prices.py`). Els paquets que Preuet ja hi segueix reben el preu del dia pel nom exacte; els productes que
+encara no hi tenen preu s'hi busquen pel nom català, amb la mida llegida del nom i un preu per kg o litre coherent amb
+les altres botigues. Un salt de més del 50 % no s'aplica i surt a l'informe de l'acció amb un «?». La tasca setmanal ja
+no ha de llegir aquestes dues botigues (`worklist` no les inclou).
+
 ### Mercadona i Consum: llegits directament
 
 Mercadona (tots els paquets que Preuet segueix) i Consum (tots els productes) no cal llegir-los amb WebFetch: l'acció **Preus de productes nous** s'executa sola cada dilluns a les 4:23 (UTC) i torna a publicar la web. També es pot llançar a mà: **Actions → Preus de productes nous → Run workflow** (mode `update`, branca `main`). Cada execució torna a llegir la botiga en línia de Mercadona i el cercador de Consum, en refà els preus i els desa amb la data del dia. Les regles de Consum dels productes originals són a `tools/existing_rules.py`; per afegir productes nous, a `tools/new_products.py` (noms, unitat, paraules obligatòries i excloses, mides) i es torna a executar.

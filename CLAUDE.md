@@ -32,8 +32,8 @@ queda pendent.
 - **Mai no s'inventa un preu.** Només el que mostra la botiga aquell dia (vegeu `tools/UPDATE.md`).
 - **Un push a `main` publica la web.** L'acció passa les proves abans i, si alguna falla, no publica res. Passa-les
   sempre abans de fer push: `node --test tests/*.test.mjs` i `python3 tools/build.py && node tests/smoke.mjs`.
-- **Mercadona i Consum s'actualitzen sols** cada dilluns a les 4:23 UTC (`.github/workflows/prices.yml`). No els llegeixis
-  amb WebFetch. Si el push et falla perquè `main` ha canviat, fes `git pull --rebase origin main`, torna a passar
+- **Mercadona, Consum, Ametller Origen i bonÀrea s'actualitzen sols** cada dilluns a les 4:23 UTC
+  (`.github/workflows/prices.yml`). No els llegeixis amb WebFetch. Si el push et falla perquè `main` ha canviat, fes `git pull --rebase origin main`, torna a passar
   `check` i torna a fer push.
 - **Només hi ha la versió web.** No tornis a afegir la versió d'artifact ni dades dins la pàgina.
 - **Mode equip** (`src/team.js`): el mode prova i el panell d'equip només s'obren amb el codi d'equip, que comprova
@@ -49,8 +49,8 @@ queda pendent.
 ```
 Actualització setmanal de preus i ofertes de Preuet.
 1. Clona el repositori Roger-Perez-Cardelus/PREUET o, si ja el tens, fes git pull origin main. Treballa només sobre main.
-2. Segueix tools/UPDATE.md tal com està al repositori, pas a pas. No llegeixis Mercadona ni Consum: l'acció
-   «Preus de productes nous» els actualitza sola cada dilluns.
+2. Segueix tools/UPDATE.md tal com està al repositori, pas a pas. No llegeixis Mercadona, Consum, Ametller Origen ni
+   bonÀrea: l'acció «Preus de productes nous» els actualitza sola cada dilluns.
 3. No facis servir ni publiquis l'artifact antic: l'app només es publica a GitHub Pages amb el push a main.
 4. Abans del push: python3 tools/update_data.py check, python3 tools/build.py i node --test tests/*.test.mjs.
 5. Després del push, comprova a Actions que «Publica Preuet a GitHub Pages» acaba en verd.

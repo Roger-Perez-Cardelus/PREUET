@@ -238,7 +238,7 @@ MORE = [
       [["nuggets", "nugget"]], ["vegetal", "vegano", "queso", "pescado", "picantes", "sin gluten", "mini"], (0.2, 1.5),
       N(250, 14, 2, 17, 0.5, 14, 1.2), [], ["gluten"], qca="nuggets de pollastre"),
     P("pizza-margarita", "Pizza de formatge (margarita o 4 formatges)", "Pizza de queso (margarita o 4 quesos)", "carn", "kg", 0.4, "≈ 400 g", "≈ 400 g", "pizza margarita",
-      [["pizza"], ["margarita", "margherita", "mozzarella", "4 quesos", "cuatro quesos"]], ["mini", "jamon", "barbacoa", "atun", "pollo", "sin gluten", "familiar", "masa", "base", "harina", "salsa", "pepperoni", "york", "vegana", "bacon", "kebab", "4 estaciones", "champi", "integral", "rellena"], (0.25, 0.8),
+      [["pizza"], ["margarita", "margherita", "mozzarella", "4 quesos", "cuatro quesos"]], ["mini", "jamon", "barbacoa", "atun", "pollo", "sin gluten", "familiar", "masa", "base", "harina", "salsa", "pepperoni", "york", "vegana", "bacon", "kebab", "4 estaciones", "champi", "integral", "rellena", "escalivada", "verduras"], (0.25, 0.8),
       N(240, 8, 3.5, 32, 3, 10, 1.2), ["vt"], ["gluten", "llet"], qca="pizza formatge"),
     P("lasanya", "Lasanya bolonyesa", "Lasaña boloñesa", "carn", "kg", 0.6, "≈ 600 g", "≈ 600 g", "lasaña boloñesa",
       [["lasana", "lasagna"], ["bolonesa", "carne"]], ["verduras", "vegetal", "atun", "pollo", "salmon", "espinacas", "placas", "pasta para", "laminas"], (0.25, 1.5),
