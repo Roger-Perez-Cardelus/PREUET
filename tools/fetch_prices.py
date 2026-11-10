@@ -585,7 +585,7 @@ def cmd_build():
     refresh_bonpreu(d, bon, day, report, {p["id"] for p in PRODUCTS})
     sys.path.insert(0, str(ROOT / "tools"))
     import update_data
-    update_data.fix(d, d["meta"]["updated"])
+    update_data.fix(d, max(day, d["meta"]["updated"]))  # the data date moves forward with every automatic read
     update_data.save(d)
     for pid, keep in report:
         print(f"{pid:22s} {'NEW' if pid not in have else '   '} " + (" | ".join(f"{x['c'][:4]} {x['name'][:42]} {x['price']}€/{x['size']}" for x in keep) or "— nothing found"))
