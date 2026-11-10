@@ -11,7 +11,7 @@ queda pendent.
 1. **Agafa la versió actual:** `git pull origin main`. Treballa sempre sobre `main`, mai sobre una còpia antiga.
 2. **Llegeix sencers** `docs/TRASPAS.md` (què ha canviat i per què), `README.md` i `tools/UPDATE.md`.
 3. **Comprova que tot funciona:**
-   - `node --test tests/*.test.mjs`: han de passar les 19 proves.
+   - `node --test tests/*.test.mjs`: han de passar les 20 proves.
    - `python3 tools/build.py`: ha de construir `dist/web`.
    - `python3 tools/update_data.py check`: no ha de mostrar cap problema.
 4. **Revisa la teva tasca setmanal de preus.** Si en tens una de programada, llegeix-ne el missatge i substitueix-lo

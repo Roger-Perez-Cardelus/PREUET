@@ -14,7 +14,7 @@ nou, quines decisions s'han pres i què queda pendent.
 
 ## 1. Abans de tocar res
 
-- **Proves:** `node --test tests/*.test.mjs` (19 proves) i `python3 tools/build.py web && node tests/smoke.mjs`
+- **Proves:** `node --test tests/*.test.mjs` (20 proves) i `python3 tools/build.py web && node tests/smoke.mjs`
   (recorregut amb Playwright; amb `AXE=1` també revisa l'accessibilitat). L'acció de GitHub les passa abans de publicar:
   si alguna falla, la web no es publica.
 - **Dades:** `python3 tools/update_data.py check` ha d'acabar sense problemes.

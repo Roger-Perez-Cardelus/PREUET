@@ -187,4 +187,9 @@ Object.assign(STR, {
   tm_tests_server: ["Fitxes al servidor", "Fichas en el servidor"],
   tm_c_stock: ["Estoc", "Stock"], tm_c_price: ["Preus", "Precios"], tm_c_comment: ["Comentaris", "Comentarios"], tm_c_rating: ["Valoracions", "Valoraciones"], tm_c_origin: ["Origen", "Origen"], tm_c_suggest: ["Suggeriments", "Sugerencias"],
   tm_data: ["Dades de preus", "Datos de precios"], tm_data_sub: ["Actualitzades el {d}: {n} preus de {p} productes. Data més recent de cada súper:", "Actualizados el {d}: {n} precios de {p} productos. Fecha más reciente de cada súper:"],
+  chains_left_out: ["No hi entren perquè tenen preus antics: {list}.", "No entran porque tienen precios antiguos: {list}."],
+  chains_add_old: ["Compara'ls igualment", "Compararlos igualmente"],
+  chain_old_tag: ["preus antics", "precios antiguos"],
+  chain_old_note: ["Preus de fa més de {n} dies: no entren a la comparació si no els tries tu.", "Precios de hace más de {n} días: no entran en la comparación si no los eliges tú."],
+  chains_default: ["Torna a la tria automàtica", "Volver a la selección automática"],
 });

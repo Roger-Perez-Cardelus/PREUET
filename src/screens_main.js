@@ -220,13 +220,16 @@ function CompareOptions() {
 }
 function ChainPicker() {
   const sel = activeChains();
+  const old = new Set(oldChains());
   const toggle = id => {
     const cur = activeChains();
     const next = cur.includes(id) ? cur.filter(x => x !== id) : cur.concat([id]);
     updUser({ chains: next.length ? next : [] });
   };
   return html`<div class="field"><span class="lab">${t("chains_label")}</span>
-    <div class="chips">${X.D.chains.map(c => html`<button type="button" key=${c.id} class="filter" aria-pressed=${String(sel.includes(c.id))} onClick=${() => toggle(c.id)}>${c.name}</button>`)}</div></div>`;
+    <div class="chips">${X.D.chains.map(c => html`<button type="button" key=${c.id} class="filter" aria-pressed=${String(sel.includes(c.id))} onClick=${() => toggle(c.id)}>${c.name}${old.has(c.id) ? html` <${Icon} n="clock" s=${13} label=${t("chain_old_tag")} />` : null}</button>`)}</div>
+    ${old.size ? html`<p class="xs muted"><${Icon} n="clock" s=${12} /> ${t("chain_old_note", { n: OLD_CHAIN_DAYS })}</p>` : null}
+    ${S.user.chains && S.user.chains.length ? html`<button type="button" class="link-btn xs" style="align-self:flex-start;padding:0" onClick=${() => updUser({ chains: null })}>${t("chains_default")}</button>` : null}</div>`;
 }
 function CompareResults({ cmp }) {
   const u = S.user;
@@ -255,6 +258,8 @@ function CompareResults({ cmp }) {
       ${view === "bars" ? html`<${BasketBars} cmp=${cmp} selId=${selId} />` : html`<${BasketTable} cmp=${cmp} selId=${selId} />`}
       ${cmp.low.length ? html`<p class="xs faint">${t("insufficient", { list: cmp.low.map(r => X.C.get(r.cid).name + " (" + r.k + "/" + r.n + ")").join(", ") })}</p>` : null}
       ${cmp.minTotal ? html`<p class="xs muted">${t("theoretical", { x: eur(cmp.minTotal) })}</p>` : null}
+      ${(() => { const out = leftOutChains();
+        return out.length ? html`<p class="stale-line" role="status"><${Icon} n="clock" s=${14} /><span>${t("chains_left_out", { list: out.map(c => X.C.get(c).name + " (" + fmtD(chainNewest(c)) + ")").join(", ") })} <button type="button" class="link-btn xs" style="padding:0" onClick=${() => updUser({ chains: allChains() })}>${t("chains_add_old")}</button></span></p>` : null; })()}
       ${(() => { const old = cmp.ranked.filter(r => (chainStaleDays(r.cid) || 0) > STALE_DAYS);
         return old.length ? html`<p class="stale-line" role="status"><${Icon} n="clock" s=${14} />${t("chains_old", { list: old.map(r => X.C.get(r.cid).name + " (" + fmtD(chainNewest(r.cid)) + ")").join(", ") })}</p>` : null; })()}
       <p class="xs muted">${t("how_calc", { k: best.k, n: best.n })}${best.ne && u.estimate ? " " + t("how_calc_est", { n: best.ne, idx: best.idx ? Math.round(best.idx) : "—" }) : ""} <button type="button" class="link-btn xs" style="padding:0" onClick=${() => openSheet({ type: "method" })}>${t("how_more")}</button></p>

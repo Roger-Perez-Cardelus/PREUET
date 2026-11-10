@@ -9,6 +9,7 @@ const ALLERGENS = ["gluten", "crustacis", "ous", "peix", "cacauets", "soja", "ll
 const AMB_TOWNS = ["Badalona", "Badia del Vallès", "Barberà del Vallès", "Barcelona", "Begues", "Castellbisbal", "Castelldefels", "Cerdanyola del Vallès", "Cervelló", "Corbera de Llobregat", "Cornellà de Llobregat", "el Papiol", "el Prat de Llobregat", "Esplugues de Llobregat", "Gavà", "l'Hospitalet de Llobregat", "la Palma de Cervelló", "Molins de Rei", "Montcada i Reixac", "Montgat", "Pallejà", "Ripollet", "Sant Adrià de Besòs", "Sant Andreu de la Barca", "Sant Boi de Llobregat", "Sant Climent de Llobregat", "Sant Cugat del Vallès", "Sant Feliu de Llobregat", "Sant Joan Despí", "Sant Just Desvern", "Sant Vicenç dels Horts", "Santa Coloma de Cervelló", "Santa Coloma de Gramenet", "Tiana", "Torrelles de Llobregat", "Viladecans"];
 const FRESH_DAYS = 30;
 const STALE_DAYS = 7; // weekly updates: older data gets a warning
+const OLD_CHAIN_DAYS = 15; // a shop whose prices are this far behind the data's date is left out of the comparison by default
 
 function pad2(n) { return (n < 10 ? "0" : "") + n; }
 function isoOf(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }

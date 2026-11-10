@@ -124,7 +124,22 @@ function chainNewest(cid) {
   }).get(cid) || null;
 }
 function chainStaleDays(cid) { const d = chainNewest(cid); return d ? daysBetween(d, isoToday()) : null; }
-function defaultChains() { return X.D.chains.filter(c => ["complet", "parcial", "antic"].includes(c.status)).map(c => c.id); }
+function allChains() { return X.D.chains.filter(c => ["complet", "parcial", "antic"].includes(c.status)).map(c => c.id); }
+/* shops whose prices are far behind the rest (measured against the data's own date, so a late update does not empty the list) */
+function oldChains() {
+  return allChains().filter(c => { const d = chainNewest(c); return !d || daysBetween(d, X.D.meta.updated) > OLD_CHAIN_DAYS; });
+}
+/* without a choice of their own, people compare the shops with current prices */
+function defaultChains() {
+  const old = new Set(oldChains());
+  const cur = allChains().filter(c => !old.has(c));
+  return cur.length >= 2 ? cur : allChains();
+}
+function leftOutChains() { // old-price shops that are out only because of the default
+  if (S.user.chains && S.user.chains.length) return [];
+  const def = new Set(defaultChains());
+  return oldChains().filter(c => !def.has(c));
+}
 function activeChains() {
   const a = S.user.chains && S.user.chains.length ? S.user.chains : defaultChains();
   const reach = hasPlus() ? chainsInReach() : null; // with a distance set (Plus): only chains with a shop that close

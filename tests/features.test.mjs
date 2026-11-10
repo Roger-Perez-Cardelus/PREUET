@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { loadApp } from "./harness.mjs";
+import { loadApp, DATA } from "./harness.mjs";
 
 test("nearest town from coordinates, and nothing far from the AMB", () => {
   const app = loadApp();
@@ -63,4 +63,17 @@ test("a periodic purchase with bad fields is repaired instead of hanging the app
   assert.equal(s.freq, "w");
   assert.equal(s.dow, 1);
   assert.equal(s.start, "2026-11-05");
+});
+
+test("shops with old prices are left out of the default comparison, never all of them", () => {
+  const app = loadApp();
+  const old = app.oldChains(), def = app.defaultChains();
+  assert.ok(def.length >= 2);
+  assert.ok(def.includes("mercadona") && def.includes("consum"));
+  for (const c of old) assert.ok(!def.includes(c), c + " has old prices but is compared by default");
+  // if every shop were old, all of them stay
+  const data = JSON.parse(JSON.stringify(DATA));
+  data.meta.updated = "2027-06-01";
+  const late = loadApp({ data });
+  assert.deepEqual(JSON.parse(JSON.stringify(late.defaultChains())), JSON.parse(JSON.stringify(late.allChains())));
 });
