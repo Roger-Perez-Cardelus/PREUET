@@ -1,5 +1,5 @@
 # Reads shelf prices straight from the supermarkets' online shops (tools/fetch_prices.py).
-# - Every Monday (and on demand, mode "update"): Mercadona's and Consum's prices for the whole catalogue, committed to main,
+# - Every Monday (and on demand, mode "update"): Mercadona, Consum, Ametller Origen and bonÀrea, read whole, committed to main,
 #   then the web is published again.
 # - "collect" / "pages": only saves what the shops list, or the source pages of older prices, to tmp-raw/ on a branch,
 #   to build and check prices by hand. "probe": which shops answer from GitHub's runners.
@@ -63,7 +63,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/preuet-data.json data/history.json
           if git diff --cached --quiet; then echo "Cap preu nou"; exit 0; fi
-          git commit -m "Preus de Mercadona i Consum del $day"
+          git commit -m "Preus de Mercadona, Consum, Ametller i bonÀrea del $day"
           git push origin "HEAD:$BRANCH"
           echo "pushed=1" >> "$GITHUB_OUTPUT"
       - name: Torna a publicar la web
