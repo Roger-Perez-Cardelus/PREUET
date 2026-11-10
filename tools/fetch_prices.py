@@ -11,6 +11,7 @@ Only Mercadona (tienda.mercadona.es, its shop's public JSON) and Consum (tienda.
 Dia and Carrefour refuse automated reads (403). The tool waits between calls.
 """
 import gzip
+import html
 import collections
 import json
 import os
@@ -94,6 +95,15 @@ def cmd_collect():
         consum[p["id"]] = items
         print(f"consum {p['id']}: {len(items)}", flush=True)
     (RAW / "consum.json.gz").write_bytes(gzip.compress(json.dumps(consum, ensure_ascii=False).encode()))
+    for chain, read in (("ametller", ametller_shelves), ("bonarea", bonarea_shelves)):
+        try:
+            items = read()
+        except Exception as e:  # noqa: BLE001  one shop failing must not lose the others
+            print(f"{chain}: failed ({e})", flush=True)
+            items = []
+        print(f"{chain}: {len(items)} shelf items", flush=True)
+        if items:
+            (RAW / f"{chain}.json.gz").write_bytes(gzip.compress(json.dumps(items, ensure_ascii=False).encode()))
     if os.environ.get("PREUET_BONPREU") != "1":  # Bonpreu answers 202 (its bot check) to automated searches: not asked by default
         return
     d = json.loads(DATA.read_text(encoding="utf-8"))
@@ -109,6 +119,167 @@ def cmd_collect():
                       "ametller": "https://www.ametllerorigen.com/ca/catalogsearch/result/?q=llet"}.items():
         st, ct, body = fetch(url)
         print(f"== {name}: {st} {ct} {len(body)}: {body[:300]!r}")
+
+
+# ---------------------------------------------------------------- Ametller Origen and bonÀrea (their category pages, whole)
+AMETLLER = "https://www.ametllerorigen.com"
+BONAREA = "https://www.bonarea-online.com"
+AMETLLER_SKIP = ("colleccions", "client-area", "blog", "botigues", "promocions", "lots-estalvi", "mascotes", "novetats", "online", "faqs",
+                 "codis-postals", "fes-te-del-club", "sol-licitar-factura")
+BONAREA_FOOD = ("13_205", "13_300", "13_320", "13_330", "13_340", "13_400")  # fresh food, groceries, drinks, cleaning, personal care, baby
+
+
+def get_text(url):
+    for attempt in range(2):
+        time.sleep(1.2 + 6 * attempt)
+        st, ct, body = fetch(url)
+        if st == 200:
+            return body.decode("utf-8", "replace")
+        if st in (401, 403, 404, 410):
+            break
+    print("  !", st, url, flush=True)
+    return ""
+
+
+def ametller_shelves(limit=230):
+    """Every product on Ametller Origen's category pages (the page's own schema.org list): name, price, link."""
+    home = get_text(AMETLLER + "/ca/rebost/pasta-seca")
+    cats = sorted({c for c in re.findall(r'href="(/ca/[a-z0-9-]+/[a-z0-9-]+)"', home) if c.split("/")[2] not in AMETLLER_SKIP})[:limit]
+    seen, out = set(), []
+    for i, c in enumerate(cats):
+        for m in re.finditer(r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>', get_text(AMETLLER + c), re.S):
+            try:
+                j = json.loads(m.group(1))
+            except ValueError:
+                continue
+            for el in j.get("itemListElement", []) if isinstance(j, dict) else []:
+                it = el.get("item") if isinstance(el, dict) else None
+                if not isinstance(it, dict) or not isinstance(it.get("offers"), dict) or it.get("sku") in seen:
+                    continue
+                if it.get("name") and it["offers"].get("price") is not None:
+                    seen.add(it.get("sku"))
+                    out.append({"name": html.unescape(it["name"]), "price": float(it["offers"]["price"]), "src": AMETLLER + c, "cat": c})
+        print(f"ametller {i + 1}/{len(cats)} {c}: {len(out)}", flush=True)
+    return out
+
+
+def bonarea_shelves(limit=160):
+    """Every product on bonÀrea's food, drink, cleaning and care category pages: name with its weight, price, link."""
+    home = get_text(BONAREA + "/categories/llegums-secs-i-arrossos/13_205_100_010")
+    cats = sorted({c for c in re.findall(r'href="?(/categories/[^"\s>]+)', home) if c.rsplit("/", 1)[-1].startswith(BONAREA_FOOD)})[:limit]
+    seen, out = set(), []
+    for i, c in enumerate(cats):
+        body = get_text(BONAREA + c)
+        for m in re.finditer(r'<div class=text><p>(.*?)<div class=weight>(.*?)</div>.*?<div class=price><span>([\d.,]+)\s*€', body, re.S):
+            name = html.unescape(re.sub(r"<[^>]+>", "", m.group(1))).strip()
+            weight = html.unescape(re.sub(r"<[^>]+>", "", m.group(2))).strip()
+            price = float(m.group(3).replace(".", "").replace(",", "."))
+            if (name, weight) not in seen and 0 < price < 500:
+                seen.add((name, weight))
+                out.append({"name": f"{name} bonÀrea {weight}".strip(), "bare": name, "price": price, "src": BONAREA + c, "cat": c})
+        print(f"bonarea {i + 1}/{len(cats)} {c}: {len(out)}", flush=True)
+    return out
+
+
+SIZE_RX = re.compile(r"(?:(\d+)\s*x\s*)?(\d+(?:[.,]\d+)?)\s*(kg|g|gr|ml|cl|l|litres|litre)\b")
+OWN_CA = re.compile(r"\b(ametller origen|essencials|bonarea)\b")
+
+
+def name_size(name, unit):
+    """Pack size in the product's unit read from the shelf name ("500g", "6 x 1 L", "12 u."), or None."""
+    t = norm(name).replace(",", ".")
+    if unit in ("kg", "l"):
+        best = None
+        for n, q, u in SIZE_RX.findall(t):
+            q = float(q) * (int(n) if n else 1)
+            kind, v = {"kg": ("kg", q), "g": ("kg", q / 1000), "gr": ("kg", q / 1000), "ml": ("l", q / 1000), "cl": ("l", q / 100),
+                       "l": ("l", q), "litre": ("l", q), "litres": ("l", q)}[u]
+            if kind == unit:
+                best = round(v, 3)
+        return best
+    m = re.search(r"(\d+)\s*(?:u|ud|uds|unitats|bossetes|rotlles|capsules|pastilles|rentats|dosis)\b", t)
+    if not m:
+        return None
+    return round(int(m.group(1)) / 12, 3) if unit == "dotzena" else int(m.group(1))
+
+
+def catalan_items(raw, p, chain, ref_up):
+    """A Catalan-named shop's packs for a product: every word of the product's Catalan name in the shelf name, the name
+    beginning with the product, a size readable from the name, and a price per unit within 0.4–2.5 times the other shops'."""
+    must, avoid = ca_rules(p)
+    rule = {"must": must, "avoid": avoid}
+    out = []
+    for it in raw:
+        bare = it.get("bare") or it["name"]
+        if not matches(rule, bare) or not starts_with_product(rule, bare):
+            continue
+        size = 1 if p["unit"] == "ud" and p["ref"] == 1 else name_size(it["name"], p["unit"])
+        if not size or not it["price"]:
+            continue
+        up = it["price"] / size
+        if not ref_up or not (ref_up * 0.4 <= up <= ref_up * 2.5):
+            continue
+        out.append({"c": chain, "name": it["name"], "price": round(it["price"], 2), "size": size, "src": it["src"],
+                    "own": bool(OWN_CA.search(norm(it["name"])))})
+    return out
+
+
+def refresh_catalan(d, chain, raw, day, report, rules):
+    """Ametller Origen or bonÀrea, read whole: the packs Preuet already follows there get today's price (same name);
+    products without a price there get the shop's packs through the product's Catalan name."""
+    if not raw:
+        return
+    by_name = {norm(it["name"]): it for it in raw}
+    by_bare = {norm(it.get("bare") or ""): it for it in raw if it.get("bare")}
+    hit = added = 0
+    have = set()
+    for o in d["offerings"]:
+        if o["c"] != chain:
+            continue
+        have.add(o["p"])
+        it = by_name.get(norm(o["name"]))
+        if not it and chain == "bonarea":  # Preuet's older names: "Arròs llarg bonÀrea 1 kg"
+            it = by_name.get(norm(o["name"])) or by_bare.get(norm(re.sub(r"\s*bon.rea.*$", "", o["name"], flags=re.I)))
+            if it and name_size(it["name"], "kg") and abs(name_size(it["name"], "kg") - o["size"]) > 0.1 * o["size"]:
+                it = None
+        if not it or not o.get("size"):
+            continue
+        new_up = it["price"] / o["size"]
+        if o.get("up") and abs(new_up - o["up"]) / o["up"] > 0.5:  # too big a jump: left for a person to check
+            report.append(("?" + chain + " " + o["p"], [{"c": chain, "name": o["name"][:44] + f" (abans {o['price']}) ", "price": it["price"], "size": o["size"]}]))
+            continue
+        o.update(price=round(it["price"], 2), up=round(new_up, 4), date=day, src=it["src"], st="web")
+        hit += 1
+    for prod in d["products"]:
+        pid = prod["id"]
+        if pid in have:
+            continue
+        others = [o for o in d["offerings"] if o["p"] == pid and o.get("up")]
+        if not others:
+            continue
+        ref_up = statistics.median(o["up"] for o in others)
+        r = rules.get(pid, {})
+        lo, hi = r.get("size") or (min(o["size"] for o in others) * 0.5, max(o["size"] for o in others) * 2)
+        p = dict(prod, avoid=r.get("avoid", []), qca=r.get("qca") or ca_query(prod["ca"]))
+        found = [x for x in catalan_items(raw, p, chain, ref_up) if lo <= x["size"] <= hi]
+        for x in found:
+            x["up"] = round(x["price"] / x["size"], 4)
+        seen, uniq = set(), []
+        for x in sorted(found, key=lambda x: x["up"]):
+            if (x["price"], x["size"]) not in seen:
+                seen.add((x["price"], x["size"]))
+                uniq.append(x)
+        keep = [x for x in uniq if x["own"]][:2] + [x for x in uniq if not x["own"]][:1]
+        if not keep:
+            continue
+        added += 1
+        report.append(("+" + chain + " " + pid, keep))
+        fresh = prod["cat"] == "fruita"
+        for x in keep:
+            d["offerings"].append({"p": pid, "c": chain, "name": x["name"][:120], "price": x["price"], "size": x["size"], "up": x["up"], "promo": "",
+                                   "src": x["src"], "date": day, "st": "web", "desde": False,
+                                   "bk": "fresc" if fresh and not x["own"] else ("mb" if x["own"] else "fab"), "rank": 0})
+    print(f"{chain}: {hit} prices refreshed, {added} products added from its shelves")
 
 
 # ---------------------------------------------------------------- Bonpreu (its own search page, read like Consum's)
@@ -583,6 +754,13 @@ def cmd_build():
             d["offerings"].append(keep_photo(prev, o))
     refresh_existing(d, merc, cons, day, report)
     refresh_bonpreu(d, bon, day, report, {p["id"] for p in PRODUCTS})
+    from existing_rules import RULES
+    rules = {pid: {"avoid": r[2], "size": r[3]} for pid, r in RULES.items()}
+    rules.update({p["id"]: {"avoid": p.get("avoid", []), "size": p["size"], "qca": p.get("qca")} for p in PRODUCTS})
+    for chain in ("ametller", "bonarea"):
+        f = RAW / f"{chain}.json.gz"
+        if f.exists():
+            refresh_catalan(d, chain, json.loads(gzip.decompress(f.read_bytes())), day, report, rules)
     sys.path.insert(0, str(ROOT / "tools"))
     import update_data
     update_data.fix(d, max(day, d["meta"]["updated"]))  # the data date moves forward with every automatic read
